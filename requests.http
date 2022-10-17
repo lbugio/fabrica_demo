@@ -1,0 +1,21 @@
+@api = http://localhost:3000/api
+@id = 634986d11d05dd5a14ca25d1
+
+GET {{api}}/telas
+
+### POST
+POST {{api}}/telas
+Content-Type: application/json
+
+{"nombre":"Tela 1", "precio":8}
+
+### PUT
+PUT {{api}}/telas/{{id}}
+Content-Type: application/json
+
+{"title":"Titulo 2",
+"description":"Descripción 2"}
+
+
+### DELETE
+DELETE {{api}}/telas/{{id}}

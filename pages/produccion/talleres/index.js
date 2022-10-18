@@ -1,51 +1,44 @@
 import { useState, useEffect } from "react";
 import { Table } from "components/Table";
 import { ModalDelete } from "components/ModalDelete";
-import { ModalTelas } from "components/ModalTelas";
+import { ModalTalleres } from "components/ModalTalleres";
 
-export default function Telas({ telas, columnas }) {
-  const tela = { nombre: "", precio: "", ultimoPrecio: "" };
+export default function Talleres({ talleres, columnas }) {
+  const taller = { nombre: "", precio:'', ultimoPrecio:0};
 
   const [createEdit, setCreateEdit] = useState(false);
 
   const [confirm, setConfirm] = useState(false);
 
-  const [data, setData] = useState(telas);
+  const [data, setData] = useState(talleres);
 
   const [id, setId] = useState(null);
 
-  const [newTela, setNewTela] = useState(tela);
+  const [newTaller, setNewTaller] = useState(taller);
 
   const [ultimoPrecio, setUltimoPrecio] = useState(0);
 
   useEffect(() => {
-    const getTelas = async () => {
-      const res2 = await fetch("http://localhost:3000/api/telas/");
+    const getTalleres = async () => {
+      const res2 = await fetch("http://localhost:3000/api/talleres/");
       const dato2 = await res2.json();
-      console.log("🚀 ~ file: index.js ~ line 25 ~ getTelas ~ dato2", dato2);
-
+      console.log("🚀 ~ file: index.js ~ line 25 ~ getTalleres ~ dato2", dato2)
+      
       setData(dato2);
     };
-    getTelas();
-  }, [newTela]);
+    getTalleres();
+  }, [newTaller]);
 
   useEffect(() => {
-    const getTelas = async () => {
-      const res = await fetch("http://localhost:3000/api/telas/" + id);
-      const tela = await res.json();
-      console.log("🚀 ~ file: index.js ~ line 34 ~ getTelas ~ tela", tela);
-      setUltimoPrecio(tela.precio);
-      console.log(
-        "🚀 ~ file: index.js ~ line 34 ~ getTelas ~ tela",
-        ultimoPrecio
-      );
-      setNewTela({
-        nombre: tela.nombre,
-        precio: tela.precio,
-        ultimoPrecio: ultimoPrecio,
-      });
+    const getTalleres = async () => {
+      const res = await fetch("http://localhost:3000/api/talleres/" + id);
+      const taller = await res.json();
+      console.log("🚀 ~ file: index.js ~ line 34 ~ getTalleres ~ taller", taller)
+      setUltimoPrecio(taller.precio)
+      console.log("🚀 ~ file: index.js ~ line 34 ~ getTalleres ~ taller", ultimoPrecio)
+      setNewTaller({ nombre: taller.nombre, precio: taller.precio, ultimoPrecio: ultimoPrecio});
     };
-    if (id) getTelas();
+    if (id) getTalleres();
   }, [id, ultimoPrecio]);
 
   const openDelete = () => setConfirm(true);
@@ -57,15 +50,15 @@ export default function Telas({ telas, columnas }) {
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) =>
-    setNewTela({ ...newTela, [e.target.name]: e.target.value });
+    setNewTaller({ ...newTaller, [e.target.name]: e.target.value });
 
   const validate = () => {
     const isNumber = /^(0|[1-9][0-9]*)$/;
     const errors = {};
 
-    if (!newTela.nombre) errors.nombre = "Ingrese el nombre.";
-    if (!newTela.precio) errors.precio = "Ingrese el precio.";
-    if (newTela.precio && !isNumber.test(newTela.precio))
+    if (!newTaller.nombre) errors.nombre = "Ingrese el nombre.";
+    if (!newTaller.precio) errors.precio = "Ingrese el precio.";
+    if (newTaller.precio && !isNumber.test(newTaller.precio))
       errors.precio = "El precio tiene que ser un número.";
 
     return errors;
@@ -79,7 +72,7 @@ export default function Telas({ telas, columnas }) {
 
     if (id) {
       await updateTela();
-      setNewTela(tela);
+      setNewTaller(taller);
       setId(null);
       closeCreateEdit();
     } else {
@@ -90,27 +83,27 @@ export default function Telas({ telas, columnas }) {
 
   const createTela = async () => {
     try {
-      await fetch("http://localhost:3000/api/telas", {
+      await fetch("http://localhost:3000/api/talleres", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newTela),
+        body: JSON.stringify(newTaller),
       });
     } catch (error) {
       console.error(error);
     }
-    setNewTela(tela);
+    setNewTaller(taller);
   };
 
   const updateTela = async () => {
     try {
-      await fetch(`http://localhost:3000/api/telas/${id}`, {
+      await fetch(`http://localhost:3000/api/talleres/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newTela),
+        body: JSON.stringify(newTaller),
       });
     } catch (error) {
       console.error(error);
@@ -121,13 +114,13 @@ export default function Telas({ telas, columnas }) {
   const handleDelete = async () => {
     deleteTela();
     closeDelete();
-    setNewTela(tela);
+    setNewTaller(taller);
     setId(null);
   };
 
   const deleteTela = async () => {
     try {
-      await fetch(`http://localhost:3000/api/telas/${id}`, {
+      await fetch(`http://localhost:3000/api/talleres/${id}`, {
         method: "DELETE",
       });
     } catch (error) {
@@ -138,7 +131,7 @@ export default function Telas({ telas, columnas }) {
   return (
     <>
       <Table
-        tableName="Telas"
+        tableName="Talleres"
         columnas={columnas}
         data={data}
         openCreateEdit={openCreateEdit}
@@ -146,7 +139,7 @@ export default function Telas({ telas, columnas }) {
         handleDelete={handleDelete}
         setId={setId}
       />
-      <ModalTelas
+      <ModalTalleres
         createEdit={createEdit}
         setCreateEdit={setCreateEdit}
         handleDelete={handleDelete}
@@ -155,8 +148,8 @@ export default function Telas({ telas, columnas }) {
         setErrors={setErrors}
         setId={setId}
         handleSubmit={handleSubmit}
-        newTela={newTela}
-        setNewTela={setNewTela}
+        newTaller={newTaller}
+        setNewTaller={setNewTaller}
       />
       <ModalDelete
         confirm={confirm}
@@ -169,14 +162,14 @@ export default function Telas({ telas, columnas }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch("http://localhost:3000/api/telas");
-  const telas = await res.json();
-  const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
+  const res = await fetch("http://localhost:3000/api/talleres");
+  const talleres = await res.json();
+  const columnas = ["nombre", "precio","aumento", "actualizado", "Acción"]
 
   return {
     props: {
-      telas,
-      columnas,
+      talleres,
+      columnas
     },
   };
 };

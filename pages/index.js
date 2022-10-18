@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+//import { useRouter } from "next/router";
 import { Card } from "components/Card";
 
 const items = [
@@ -19,7 +19,7 @@ const items = [
     name: "Talleres",
     description: "Datos acerca de los talleres.",
     href: "/produccion/talleres",
-    img: "/talleres.svg",
+    img: "/talleres.svg"
   },
   {
     name: "Articulos",
@@ -31,8 +31,8 @@ const items = [
 ];
 
 export default function HomePage({tasks}) {
-  const router = useRouter();
-  if (tasks.length === 0) return <p>No Hay Datos</p>;
+  //const router = useRouter();
+  //if (tasks.length === 0) return <p>No Hay Datos</p>;
 
   return (
     <>
@@ -46,7 +46,7 @@ export default function HomePage({tasks}) {
           priority={item.priority}
         />
       ))}
-       {tasks.map((task) => (
+       {/* {tasks.map((task) => (
         <div
           className="max-w-sm rounded overflow-hidden shadow-lg"
           key={task._id}
@@ -70,12 +70,12 @@ export default function HomePage({tasks}) {
             </button>
           </div>
         </div>
-      ))} 
+      ))}  */}
     </>
   );
 }
 
-export const getServerSideProps = async () => {
+/* export const getServerSideProps = async () => {
   const res = await fetch("http://localhost:3000/api/tasks");
   const tasks = await res.json();
 
@@ -84,4 +84,4 @@ export const getServerSideProps = async () => {
       tasks,
     },
   };
-};
+}; */

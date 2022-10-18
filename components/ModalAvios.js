@@ -1,14 +1,14 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef } from "react";
 
-export const ModalCreateEdit = ({
+export const ModalAvios = ({
   createEdit,
   setCreateEdit,
   errors,
   setErrors,
   handleSubmit,
   handleChange,
-  newTela,
+  newAvio,
   setNewTela,
   setId,
 }) => {
@@ -85,7 +85,7 @@ export const ModalCreateEdit = ({
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         placeholder="Nombre"
                                         onChange={handleChange}
-                                        value={newTela.nombre}
+                                        value={newAvio.nombre}
                                         ref={nameInput}
                                       />
                                       <p className="text-red-500 text-s italic">
@@ -111,7 +111,7 @@ export const ModalCreateEdit = ({
                                           autoComplete="family-name"
                                           className="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                           onChange={handleChange}
-                                          value={newTela.precio}
+                                          value={newAvio.precio}
                                           placeholder="0,00"
                                         />
                                       </div>

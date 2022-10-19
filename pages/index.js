@@ -19,7 +19,9 @@ const items = [
     name: "Talleres",
     description: "Datos acerca de los talleres.",
     href: "/produccion/talleres",
-    img: "/talleres.svg"
+    img: "/talleres.svg",
+    priority:true
+
   },
   {
     name: "Articulos",

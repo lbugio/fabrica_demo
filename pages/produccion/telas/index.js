@@ -18,6 +18,7 @@ export default function Telas({ telas, columnas }) {
 
   const [ultimoPrecio, setUltimoPrecio] = useState(0);
 
+
   useEffect(() => {
     const getTelas = async () => {
       const res2 = await fetch("/api/telas/");
@@ -90,7 +91,7 @@ export default function Telas({ telas, columnas }) {
 
   const createTela = async () => {
     try {
-      await fetch("/api/telas", {
+      await fetch(` /api/telas`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,7 +106,7 @@ export default function Telas({ telas, columnas }) {
 
   const updateTela = async () => {
     try {
-      await fetch(`http://localhost:300/api/telas/${id}`, {
+      await fetch(`api/telas/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -169,11 +170,7 @@ export default function Telas({ telas, columnas }) {
 }
 
 export const getServerSideProps = async () => {
-
-  
-  const res = await fetch("https://fabrica2022.vercel.app/api/telas");
-  console.log("🚀 ~ file: index.js ~ line 175 ~ getServerSideProps ~ res", res)
-  
+  const res = await fetch(`${process.env.API}/api/telas`);
   const telas = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
 

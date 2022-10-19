@@ -20,7 +20,7 @@ export default function Telas({ telas, columnas }) {
 
   useEffect(() => {
     const getTelas = async () => {
-      const res2 = await fetch("http://localhost:3000/api/telas/");
+      const res2 = await fetch("/api/telas/");
       const dato2 = await res2.json();
       console.log("🚀 ~ file: index.js ~ line 25 ~ getTelas ~ dato2", dato2);
 
@@ -31,7 +31,7 @@ export default function Telas({ telas, columnas }) {
 
   useEffect(() => {
     const getTelas = async () => {
-      const res = await fetch("http://localhost:3000/api/telas/" + id);
+      const res = await fetch("/api/telas/" + id);
       const tela = await res.json();
       console.log("🚀 ~ file: index.js ~ line 34 ~ getTelas ~ tela", tela);
       setUltimoPrecio(tela.precio);
@@ -90,7 +90,7 @@ export default function Telas({ telas, columnas }) {
 
   const createTela = async () => {
     try {
-      await fetch("http://localhost:3000/api/telas", {
+      await fetch("/api/telas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,7 +105,7 @@ export default function Telas({ telas, columnas }) {
 
   const updateTela = async () => {
     try {
-      await fetch(`http://localhost:3000/api/telas/${id}`, {
+      await fetch(`/api/telas/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -127,7 +127,7 @@ export default function Telas({ telas, columnas }) {
 
   const deleteTela = async () => {
     try {
-      await fetch(`http://localhost:3000/api/telas/${id}`, {
+      await fetch(`/api/telas/${id}`, {
         method: "DELETE",
       });
     } catch (error) {

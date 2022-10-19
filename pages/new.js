@@ -25,7 +25,7 @@ export default function TaskFromPage() {
 
   useEffect(() => {
     const getTask = async () => {
-      const res = await fetch("http://localhost:3000/api/tasks/" + query.id);
+      const res = await fetch("/api/tasks/" + query.id);
       const data = await res.json();
       setNewTask({ title: data.title, description: data.description });
     };
@@ -49,7 +49,7 @@ export default function TaskFromPage() {
 
   const createTask = async () => {
     try {
-      await fetch("http://localhost:3000/api/tasks", {
+      await fetch("/api/tasks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export default function TaskFromPage() {
 
   const updateTask = async () => {
     try {
-      await fetch("http://localhost:3000/api/tasks/" + query.id, {
+      await fetch("/api/tasks/" + query.id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

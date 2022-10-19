@@ -6,7 +6,7 @@ const items = [
     name: "Telas",
     description: "Datos acerca de las telas.",
     href: "/produccion/telas",
-    img: "/telas.svg" || "default.svg",
+    img: "/telas.svg" ,
     current: true,
   },
   {

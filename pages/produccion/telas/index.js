@@ -169,7 +169,11 @@ export default function Telas({ telas, columnas }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch("/api/telas");
+
+  
+  const res = await fetch("https://fabrica2022.vercel.app/api/telas");
+  console.log("🚀 ~ file: index.js ~ line 175 ~ getServerSideProps ~ res", res)
+  
   const telas = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
 

@@ -1,16 +1,17 @@
 @api = http://localhost:3000/api
+@apideploy = https://fabrica2022.vercel.app/api
 @id = 634986d11d05dd5a14ca25d1
 
-GET {{api}}/telas
+GET {{apideploy}}/telas
 
 ### POST
-POST {{api}}/telas
+POST {{apideploy}}/telas
 Content-Type: application/json
 
 {"nombre":"Tela 1", "precio":8}
 
 ### PUT
-PUT {{api}}/telas/{{id}}
+PUT {{apideploy}}/telas/{{id}}
 Content-Type: application/json
 
 {"title":"Titulo 2",
@@ -18,4 +19,4 @@ Content-Type: application/json
 
 
 ### DELETE
-DELETE {{api}}/telas/{{id}}
+DELETE {{apideploy}}/telas/{{id}}

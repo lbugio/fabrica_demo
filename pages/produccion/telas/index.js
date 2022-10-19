@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { Table } from "components/Table";
 import { ModalDelete } from "components/ModalDelete";
 import { ModalTelas } from "components/ModalTelas";
-import { dbConnect } from "utils/mongoose";
-import Tela from "models/Tela";
 
 export default function Telas({ telas, columnas }) {
   const tela = { nombre: "", precio: "", ultimoPrecio: "" };
@@ -171,17 +169,13 @@ export default function Telas({ telas, columnas }) {
 }
 
 export const getServerSideProps = async () => {
-  //const res = await fetch("http://localhost:3000/api/telas");
-  //const telas = await res.json();
-
-  await dbConnect();
-  const res = await Tela.find();
-
+  const res = await fetch("/api/telas");
+  const telas = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
 
   return {
     props: {
-      telas: JSON.parse(JSON.stringify(res)),
+      telas,
       columnas,
     },
   };

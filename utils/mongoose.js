@@ -5,7 +5,7 @@ const conn = {
 };
 
 export async function dbConnect() {
-  const db = await connect(process.env.MONGODB_URI);
+  const db = await connect(process.env.MONGODB_URI|| process.env.MONGODB_LOCAL);
   console.log(db.connection.db.databaseName);
   conn.isConnected = db.connections[0].readyState;
 }

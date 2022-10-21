@@ -188,7 +188,7 @@ export default function Telas({ telas, columnas, loaderImage }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(`${process.env.API_LOCAL}/api/telas`);
+  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/telas`);
   const telas = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
   const loaderImage ="/telas.svg";

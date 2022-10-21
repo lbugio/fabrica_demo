@@ -182,7 +182,7 @@ export default function Talleres({ talleres, columnas, laoderImage }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(`${process.env.API_LOCAL}/api/articulos`);
+  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`);
   const talleres = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
   const laoderImage = "/talleres.svg";

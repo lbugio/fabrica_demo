@@ -14,6 +14,7 @@ export const Table = ({
   openCreateEdit,
   setSearch,
   search,
+  isLoadingData
 }) => {
   const dateOptions = {
     year: "numeric",
@@ -65,9 +66,11 @@ export const Table = ({
           />
         </div>
       </div>
-      {data.length > 0 ? (
+      {data.length > 0 ? ( isLoadingData? <div className="flex justify-center py-4 text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+          <p className="animate-pulse italic">Cargando Datos...</p>
+        </div> :
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="p-4">
                 <div className="flex items-center">
@@ -87,7 +90,7 @@ export const Table = ({
                 </th>
               ))}
             </tr>
-          </thead>
+          </thead> 
           <tbody>
             {data.map((item) => (
               <tr
@@ -169,8 +172,8 @@ export const Table = ({
           </tbody>
         </table>
       ) : (
-        <div className="flex justify-center font-bold py-4 text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-          No hay datos cargados
+        <div className="flex justify-center py-4 text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+          <p className="animate-pulse italic">No hay datos cargados</p>
         </div>
       )}
       <div className="flex px-4 pt-4 pb-4 lg:px-6 text-slate-800 hover:brightness-200">

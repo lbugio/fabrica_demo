@@ -11,6 +11,9 @@ export const ModalTelas = ({
   newTela,
   setNewTela,
   setId,
+  isSaving,
+  isLoadingFieldData,
+  tela,
 }) => {
   const nameInput = useRef(null);
 
@@ -82,8 +85,12 @@ export const ModalTelas = ({
                                         name="nombre"
                                         id="nombre"
                                         autoComplete="given-name"
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        placeholder="Nombre"
+                                        className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        placeholder={
+                                          isLoadingFieldData
+                                            ? "Cargando Nombre..."
+                                            : "Nombre"
+                                        }
                                         onChange={handleChange}
                                         value={newTela.nombre}
                                         ref={nameInput}
@@ -109,10 +116,14 @@ export const ModalTelas = ({
                                           name="precio"
                                           id="precio"
                                           autoComplete="family-name"
-                                          className="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                          className="placeholder:italic block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                           onChange={handleChange}
                                           value={newTela.precio}
-                                          placeholder="0,00"
+                                          placeholder={
+                                            isLoadingFieldData
+                                              ? "Cargando Precio..."
+                                              : "0,00"
+                                          }
                                         />
                                       </div>
                                       <p className="text-red-500 text-s italic">
@@ -225,6 +236,22 @@ export const ModalTelas = ({
                                     type="submit"
                                     className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                   >
+                                    {isSaving && (
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth="1.5"
+                                        stroke="currentColor"
+                                        className="animate-spin w-6 h-6"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"
+                                        />
+                                      </svg>
+                                    )}
                                     Save
                                   </button>
                                   <button
@@ -232,8 +259,9 @@ export const ModalTelas = ({
                                     className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                     onClick={() => {
                                       setCreateEdit(false);
+                                      setNewTela(tela);
+
                                       setErrors({});
-                                      setNewTela({ nombre: "" });
                                       setId(null);
                                     }}
                                   >

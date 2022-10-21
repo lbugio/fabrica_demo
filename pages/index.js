@@ -1,4 +1,3 @@
-//import { useRouter } from "next/router";
 import { Card } from "components/Card";
 
 const items = [
@@ -6,8 +5,9 @@ const items = [
     name: "Telas",
     description: "Datos acerca de las telas.",
     href: "/produccion/telas",
-    img: "/telas.svg" ,
+    img: "/telas.svg",
     current: true,
+    priority: true
   },
   {
     name: "Avíos",
@@ -20,19 +20,19 @@ const items = [
     description: "Datos acerca de los talleres.",
     href: "/produccion/talleres",
     img: "/talleres.svg",
-    priority:true
-
+    priority: true,
   },
   {
     name: "Articulos",
     description: "Datos acerca de los articulos.",
     href: "/produccion/articulos",
     img: "/articulos.svg",
-    priority:true
+    priority: true,
   },
 ];
 
-export default function HomePage({tasks}) {
+export default function HomePage({ tasks }) {
+
   //const router = useRouter();
   //if (tasks.length === 0) return <p>No Hay Datos</p>;
 
@@ -48,7 +48,7 @@ export default function HomePage({tasks}) {
           priority={item.priority}
         />
       ))}
-       {/* {tasks.map((task) => (
+      {/* {tasks.map((task) => (
         <div
           className="max-w-sm rounded overflow-hidden shadow-lg"
           key={task._id}

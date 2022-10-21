@@ -2,9 +2,15 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { useState, Fragment, useRef } from "react";
 
-export const ModalDelete = ({ confirm, setConfirm, handleDelete,setId }) => {
-  const [isDeleting, setIsDeleting] = useState(false);
-
+export const ModalDelete = ({
+  confirm,
+  setConfirm,
+  handleDelete,
+  setId,
+  isLoading,
+  setNewTela,
+  tela
+}) => {
   const cancelButtonRef = useRef(null);
 
   return (
@@ -64,19 +70,35 @@ export const ModalDelete = ({ confirm, setConfirm, handleDelete,setId }) => {
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="button"
-                    className={
-                      isDeleting
-                        ? "spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
-                        : "inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                    }
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={handleDelete}
                   >
+                    {isLoading && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="animate-spin w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"
+                        />
+                      </svg>
+                    )}
                     Borrar
                   </button>
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={() => {setConfirm(false); setId(null)}}
+                    onClick={() => {
+                      setConfirm(false);
+                      setId(null);
+                      setNewTela(tela)
+                    }}
                     ref={cancelButtonRef}
                   >
                     Cancel

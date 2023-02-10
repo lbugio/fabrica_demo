@@ -1,12 +1,42 @@
 import { useState, useEffect } from "react";
 import { Table } from "components/Table";
-import { ModalDelete } from "components/ModalDelete";
-import { ModalArticulos } from "components/ModalArticulos";
+import { ModalDelete } from "components/Modal/ModalDelete";
+import { ModalArticulos } from "components/Modal/ModalArticulos";
+import { ModalArticulo } from "components/Modal/ModalArticulo";
 
-export default function Articulos({ articulos, columnas, laoderImage }) {
-  const articulo = { nombre: "" };
+export default function Articulos({
+  articulos,
+  columnas,
+  laoderImage,
+  telas,
+  avios,
+  diseños,
+}) {
+  const tela = {
+    nombre: "",
+    cantidad: "",
+  };
+
+  const avio = {
+    nombre: "",
+    cantidad: "",
+  };
+
+  const diseño = {
+    nombre: "",
+    cantidad: "",
+  };
+
+  const articulo = {
+    numero: "",
+    tipo: "",
+    descripcion: "",
+    linea: "",
+  };
 
   const [createEdit, setCreateEdit] = useState(false);
+
+  const [ficha, setFicha] = useState(false);
 
   const [confirm, setConfirm] = useState(false);
 
@@ -15,6 +45,12 @@ export default function Articulos({ articulos, columnas, laoderImage }) {
   const [id, setId] = useState(null);
 
   const [newArticulo, setNewArticulo] = useState(articulo);
+
+  const [inputTelas, setInputTelas] = useState([tela]);
+
+  const [inputAvios, setInputAvios] = useState([avio]);
+
+  const [inputDiseños, setInputDiseños] = useState([diseño]);
 
   const [ultimoPrecio, setUltimoPrecio] = useState(0);
 
@@ -26,6 +62,7 @@ export default function Articulos({ articulos, columnas, laoderImage }) {
     const getArticulos = async () => {
       const res2 = await fetch("/api/articulos/");
       const dato2 = await res2.json();
+      console.log("🚀 ~ file: articulos.js:65 ~ getArticulos ~ dato2", dato2);
       setData(dato2);
     };
     getArticulos();
@@ -38,7 +75,15 @@ export default function Articulos({ articulos, columnas, laoderImage }) {
       setIsLoadingData(false);
       const articulo = await res.json();
       setUltimoPrecio(articulo.precio);
-      setNewArticulo({ nombre: articulo.nombre });
+      setNewArticulo({
+        numero: articulo.numero,
+        tipo: articulo.tipo,
+        descripcion: articulo.descripcion,
+        linea: articulo.linea,
+      });
+      setInputTelas(articulo.telas);
+      setInputAvios(articulo.avios);
+      setInputDiseños(articulo.diseños);
     };
     if (id) getArticulos();
   }, [id, ultimoPrecio]);
@@ -47,6 +92,8 @@ export default function Articulos({ articulos, columnas, laoderImage }) {
   const closeDelete = () => setConfirm(false);
   const openCreateEdit = () => setCreateEdit(true);
   const closeCreateEdit = () => setCreateEdit(false);
+  const openFicha = () => setFicha(true);
+  const closeFicha = () => setFicha(false);
 
   const [errors, setErrors] = useState({});
 
@@ -57,7 +104,11 @@ export default function Articulos({ articulos, columnas, laoderImage }) {
     const isNumber = /^(0|[1-9][0-9]*)$/;
     const errors = {};
 
-    if (!newArticulo.nombre) errors.nombre = "Ingrese el nombre.";
+    if (!newArticulo.numero) errors.numero = "Ingrese el número.";
+    if (!newArticulo.tipo) errors.tipo = "Ingrese el tipo.";
+    if (!newArticulo.descripcion)
+      errors.descripcion = "Ingrese la descripción.";
+    if (!newArticulo.linea) errors.linea = "Ingrese la línea.";
 
     return errors;
   };
@@ -72,6 +123,9 @@ export default function Articulos({ articulos, columnas, laoderImage }) {
     if (id) {
       await updateArticulo();
       setNewArticulo(articulo);
+      setInputTelas([tela]);
+      setInputAvios([avio]);
+      setInputDiseños([diseño]);
       setId(null);
       closeCreateEdit();
     } else {
@@ -83,17 +137,24 @@ export default function Articulos({ articulos, columnas, laoderImage }) {
 
   const createArticulo = async () => {
     try {
-      await fetch("/api/articulos", {
+      await fetch(`/api/articulos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newArticulo),
       });
+      console.log(
+        "🚀 ~ file: articulos.js:145 ~ createArticulo ~ newArticulo",
+        newArticulo
+      );
     } catch (error) {
       console.error(error);
     }
     setNewArticulo(articulo);
+    setInputTelas([tela]);
+    setInputAvios([avio]);
+    setInputDiseños([diseño]);
   };
 
   const updateArticulo = async () => {
@@ -137,6 +198,7 @@ export default function Articulos({ articulos, columnas, laoderImage }) {
         columnas={columnas}
         data={data}
         openCreateEdit={openCreateEdit}
+        openFicha={openFicha}
         openDelete={openDelete}
         handleDelete={handleDelete}
         setId={setId}
@@ -158,7 +220,21 @@ export default function Articulos({ articulos, columnas, laoderImage }) {
         isSaving={isSaving}
         isLoadingData={isLoadingData}
         articulo={articulo}
+        tela={tela}
+        telas={telas}
+        inputTelas={inputTelas}
+        setInputTelas={setInputTelas}
+        avio={avio}
+        avios={avios}
+        inputAvios={inputAvios}
+        setInputAvios={setInputAvios}
+        diseños={diseños}
+        diseño={diseño}
+        inputDiseños={inputDiseños}
+        setInputDiseños={setInputDiseños}
       />
+      <ModalArticulo ficha={ficha} setFicha={setFicha} setId={setId} />
+
       <ModalDelete
         confirm={confirm}
         setConfirm={setConfirm}
@@ -173,16 +249,35 @@ export default function Articulos({ articulos, columnas, laoderImage }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`);
-  const articulos = await res.json();
-  const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
-  const laoderImage = "/articulos.svg";
+  const resArticulos = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`
+  );
+  const articulos = await resArticulos.json();
+
+  const resTelas = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/telas`
+  );
+  const telas = await resTelas.json();
+
+  const resAvios = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/avios`
+  );
+  const avios = await resAvios.json();
+
+  const resDiseños = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/disenos`
+  );
+  const diseños = await resDiseños.json();
+
+  const columnas = ["articulo", "precio", "aumento", "actualizado", "accíón"];
 
   return {
     props: {
       articulos,
+      telas,
+      avios,
+      diseños,
       columnas,
-      laoderImage,
     },
   };
 };

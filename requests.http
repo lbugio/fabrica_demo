@@ -1,21 +1,44 @@
 @api = http://localhost:3000/api
 @apideploy = https://fabrica2022.vercel.app/api
-@id = 6352dbaae0a221a13ce7b74a
+@id = 6367d0a64cea182f1ac39081
 
-GET {{api}}/telas
+@colection = articulos
+
+
+GET {{api}}/{{colection}}
+
+
+###GET
+GET {{api}}/{{colection}}/{{id}}
+
 
 ### POST
-POST {{apideploy}}/telas
+POST {{api}}/{{colection}}
 Content-Type: application/json
 
-{"nombre":"Tela 1", "precio":8}
+{
+    "numero": "1",
+    "tipo": "mdd",
+    "descripcion": "ssss",
+    "linea": "m",
+    "componentes": [
+      "Jersey"
+    ]
+  }
 
 ### PUT
-PUT {{api}}/telas/{{id}}
+PUT {{api}}/{{colection}}/{{id}}
 Content-Type: application/json
 
-{"title":"Titulo 2",
-"description":"Descripción 2"}
+  {
+    "numero": "09000ddd",
+    "tipo": "mdd",
+    "descripcion": "ssss",
+    "linea": "m",
+    "componentes": [
+      "Jersey"
+    ]
+  }
 
 
 ### DELETE

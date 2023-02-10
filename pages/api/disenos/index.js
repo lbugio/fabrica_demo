@@ -1,5 +1,5 @@
 import { dbConnect } from "utils/mongoose";
-import Avio from "models/Avio"
+import Diseño from "models/Diseño"
 
 
 dbConnect()
@@ -11,17 +11,16 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const avios = await Avio.find();
-        return res.status(200).json(avios);
+        const diseños = await Diseño.find();
+        return res.status(200).json(diseños);
       } catch (error) {
         return res.status(400).json({ msg: error.message });
       } 
     case "POST":
       try {
-        const newAvio = new Avio(body);
-        const savedAvio = await newAvio.save();
-        console.log("🚀 ~ file: index.js:24 ~ handler ~ savedAvio", savedAvio)
-        return res.status(201).json(savedAvio);
+        const newDiseño = new Diseño(body);
+        const savedDiseño = await newDiseño.save();
+        return res.status(201).json(savedDiseño);
       } catch (error) {
         return res.status(400).json({ msg: error.message });
       }

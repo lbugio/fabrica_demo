@@ -10,8 +10,6 @@ const classNames = (...classes) => {
 };
 
 export const Navbar = () => {
-
-
   const router = useRouter();
 
   const navigation = [
@@ -22,7 +20,6 @@ export const Navbar = () => {
       onclick: () => router.push("/new"),
     },
   ];
-
 
   //reloj
   const [dateState, setDateState] = useState(new Date());
@@ -35,9 +32,8 @@ export const Navbar = () => {
   };
 
   useEffect(() => {
-         setInterval(() => setDateState(new Date()), 30000);
+    setInterval(() => setDateState(new Date()), 30000);
   }, []);
-
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -58,10 +54,8 @@ export const Navbar = () => {
               </div>
 
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-
-              <div className="flex flex-shrink-0 items-center">
+                <div className="flex flex-shrink-0 items-center">
                   <Link href="/">
-                  <a>
                     <Image
                       className="hidden h-8 w-auto lg:block"
                       src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
@@ -69,24 +63,23 @@ export const Navbar = () => {
                       width={47}
                       height={40}
                     />
-                  </a>
                   </Link>
                 </div>
-                <div className="flex text-white italic items-center text-sm mx-2">{dateState.toLocaleDateString(
-                    "es-ES",
-                    dateOptions
-                  )} hs.</div> 
-                
-            {/*   <div className="flex text-white italic items-center text-sm mx-2">{new Date().toLocaleDateString(
+                <div className="flex text-white italic items-center text-sm mx-2">
+                  {dateState.toLocaleDateString("es-ES", dateOptions)} hs.
+                </div>
+
+                {/*   <div className="flex text-white italic items-center text-sm mx-2">{new Date().toLocaleDateString(
                     "es-ES",
                     dateOptions
                   )} hs.</div> */}
-                
+
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <Link  key={item.name} href={item.href}>
-                      <a
+                      <Link
+                        key={item.name}
+                        href={item.href}
                         onClick={
                           item.onclick ? item.onclick : () => alert(item.name)
                         }
@@ -99,7 +92,6 @@ export const Navbar = () => {
                         aria-current={item.current ? "page" : undefined}
                       >
                         {item.name}
-                      </a>
                       </Link>
                     ))}
                   </div>

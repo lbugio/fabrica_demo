@@ -17,6 +17,13 @@ export const ModalTelas = ({
 }) => {
   const nameInput = useRef(null);
 
+  const unidades = [
+    { id: 1, nombre: "kg." },
+    { id: 2, nombre: "grms." },
+    { id: 3, nombre: "u." },
+    { id: 3, nombre: "m." }
+  ];
+
   return (
     <Transition.Root show={createEdit} as={Fragment}>
       <Dialog
@@ -52,18 +59,7 @@ export const ModalTelas = ({
                   <div className="sm:flex sm:items-start">
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                       <div className="mt-10 sm:mt-0">
-                        <div className="md:grid md:grid-cols-3 md:gap-6">
-                          <div className="md:col-span-1">
-                            <div className="px-4 sm:px-0">
-                              <h3 className="text-lg font-medium leading-6 text-gray-900">
-                                Personal Information
-                              </h3>
-                              <p className="mt-1 text-sm text-gray-600">
-                                Use a permanent address where you can receive
-                                mail.
-                              </p>
-                            </div>
-                          </div>
+                        <div className="md:grid md:grid-cols-2 md:gap-6">
                           <div className="mt-5 md:col-span-2 md:mt-0">
                             <form
                               action="#"
@@ -107,16 +103,16 @@ export const ModalTelas = ({
                                       >
                                         Precio
                                       </label>
-                                      <div className="mt-1 flex rounded-md shadow-sm">
-                                        <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
+                                      <div className="mt-1 flex rounded-md shadow-sm text-gray-500">
+                                        <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm">
                                           $
                                         </span>
                                         <input
                                           type="text"
                                           name="precio"
                                           id="precio"
-                                          autoComplete="family-name"
-                                          className="placeholder:italic block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                          autoComplete="precio"
+                                          className="placeholder:italic block w-full flex-1 rounded-none  border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                           onChange={handleChange}
                                           value={newTela.precio}
                                           placeholder={
@@ -125,109 +121,34 @@ export const ModalTelas = ({
                                               : "0,00"
                                           }
                                         />
+                                        <span className="inline-flex items-center border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm">
+                                          /
+                                        </span>
+                                         <div className="col-span-6 sm:col-span-3">
+                                          <select
+                                            id="unidad"
+                                            name="unidad"
+                                            autoComplete="unidad"
+                                            className="italic block w-full flex-1 rounded-none border-l-0 rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            onChange={handleChange}
+                                            value={newTela.unidad}
+                                          >
+                                            {unidades.map((item) => (
+                                              <option
+                                              className=""
+                                                key={item.id}
+                                                value={item.nombre}
+                                              >
+                                                {item.nombre}
+                                              </option>
+                                            ))}
+                                          </select>
+                                        </div> 
+                                      
                                       </div>
                                       <p className="text-red-500 text-s italic">
                                         {errors.precio ? errors.precio : null}
                                       </p>
-                                    </div>
-
-                                    <div className="col-span-6 sm:col-span-4">
-                                      <label
-                                        htmlFor="email-address"
-                                        className="block text-sm font-medium text-gray-700"
-                                      >
-                                        Email address
-                                      </label>
-                                      <input
-                                        type="text"
-                                        name="email-address"
-                                        id="email-address"
-                                        autoComplete="email"
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                      />
-                                    </div>
-
-                                    <div className="col-span-6 sm:col-span-3">
-                                      <label
-                                        htmlFor="country"
-                                        className="block text-sm font-medium text-gray-700"
-                                      >
-                                        Country
-                                      </label>
-                                      <select
-                                        id="country"
-                                        name="country"
-                                        autoComplete="country-name"
-                                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                      >
-                                        <option>United States</option>
-                                        <option>Canada</option>
-                                        <option>Mexico</option>
-                                      </select>
-                                    </div>
-
-                                    <div className="col-span-6">
-                                      <label
-                                        htmlFor="street-address"
-                                        className="block text-sm font-medium text-gray-700"
-                                      >
-                                        Street address
-                                      </label>
-                                      <input
-                                        type="text"
-                                        name="street-address"
-                                        id="street-address"
-                                        autoComplete="street-address"
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                      />
-                                    </div>
-
-                                    <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                                      <label
-                                        htmlFor="city"
-                                        className="block text-sm font-medium text-gray-700"
-                                      >
-                                        City
-                                      </label>
-                                      <input
-                                        type="text"
-                                        name="city"
-                                        id="city"
-                                        autoComplete="address-level2"
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                      />
-                                    </div>
-
-                                    <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                                      <label
-                                        htmlFor="region"
-                                        className="block text-sm font-medium text-gray-700"
-                                      >
-                                        State / Province
-                                      </label>
-                                      <input
-                                        type="text"
-                                        name="region"
-                                        id="region"
-                                        autoComplete="address-level1"
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                      />
-                                    </div>
-
-                                    <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                                      <label
-                                        htmlFor="postal-code"
-                                        className="block text-sm font-medium text-gray-700"
-                                      >
-                                        ZIP / Postal code
-                                      </label>
-                                      <input
-                                        type="text"
-                                        name="postal-code"
-                                        id="postal-code"
-                                        autoComplete="postal-code"
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                      />
                                     </div>
                                   </div>
                                 </div>
@@ -252,7 +173,7 @@ export const ModalTelas = ({
                                         />
                                       </svg>
                                     )}
-                                    Save
+                                    Guardar
                                   </button>
                                   <button
                                     type="button"
@@ -260,12 +181,11 @@ export const ModalTelas = ({
                                     onClick={() => {
                                       setCreateEdit(false);
                                       setNewTela(tela);
-
                                       setErrors({});
                                       setId(null);
                                     }}
                                   >
-                                    Cancel
+                                    Cancelar
                                   </button>
                                 </div>
                               </div>

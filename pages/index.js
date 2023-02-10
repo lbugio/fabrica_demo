@@ -29,6 +29,20 @@ const items = [
     img: "/articulos.svg",
     priority: true,
   },
+  {
+    name: "Diseños",
+    description: "Datos acerca de los articulos.",
+    href: "/produccion/disenos",
+    img: "/articulos.svg",
+    priority: true,
+  },
+  {
+    name: "Procesos",
+    description: "Datos acerca de los procesos.",
+    href: "/produccion/procesos",
+    img: "/articulos.svg",
+    priority: true,
+  },
 ];
 
 export default function HomePage({ tasks }) {

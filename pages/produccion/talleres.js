@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Table } from "components/Table";
-import { ModalDelete } from "components/ModalDelete";
-import { ModalTalleres } from "components/ModalTalleres";
+import { ModalDelete } from "components/Modal/ModalDelete";
+import { ModalTalleres } from "components/Modal/ModalTalleres";
 
 export default function Talleres({ talleres, columnas, laoderImage }) {
   const taller = { nombre: "", precio: "", ultimoPrecio: 0 };
@@ -182,7 +182,7 @@ export default function Talleres({ talleres, columnas, laoderImage }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`);
+  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/talleres`);
   const talleres = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
   const laoderImage = "/talleres.svg";

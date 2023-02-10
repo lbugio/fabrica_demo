@@ -2,6 +2,7 @@ import {
   TrashIcon,
   PencilSquareIcon,
   ChevronLeftIcon,
+  DocumentIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
@@ -14,7 +15,8 @@ export const Table = ({
   openCreateEdit,
   setSearch,
   search,
-  isLoadingData
+  isLoadingData,
+  openFicha
 }) => {
   const dateOptions = {
     year: "numeric",
@@ -24,6 +26,7 @@ export const Table = ({
     minute: "2-digit",
   };
 
+
   const porcentajeAumento = (precio, ultimoPrecio) => {
     const resultado = (precio / ultimoPrecio - 1) * 100;
     return isFinite(resultado) ? resultado.toFixed() + "%" : "0%";
@@ -31,7 +34,7 @@ export const Table = ({
 
   return (
     <div className="overflow-x-auto relative shadow-md sm:rounded-lg w-full   ">
-      <div className="flex justify-around items-center py-4 bg-white dark:bg-gray-800">
+      <div className="flex justify-between items-center py-4 px-4 bg-white dark:bg-gray-800">
         <div className="uppercase font-bold text-xl">{tableName}</div>
         <button
           onClick={openCreateEdit}
@@ -66,75 +69,98 @@ export const Table = ({
           />
         </div>
       </div>
-      {data.length > 0 ? ( isLoadingData? <div className="flex justify-center py-4 text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-          <p className="animate-pulse italic">Cargando Datos...</p>
-        </div> :
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-all-search"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label htmlFor="checkbox-all-search" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </th>
-              {columnas.map((item) => (
-                <th scope="col" className="py-3 px-6" key={item}>
-                  {item}
-                </th>
-              ))}
-            </tr>
-          </thead> 
-          <tbody>
-            {data.map((item) => (
-              <tr
-                key={item._id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-              >
-                <td className="p-4 w-4">
+      {data.length > 0 ? (
+        isLoadingData ? (
+          <div className="flex justify-center py-4 text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+            <p className="animate-pulse italic">Cargando Datos...</p>
+          </div>
+        ) : (
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="p-4">
                   <div className="flex items-center">
                     <input
-                      id="checkbox-table-search-1"
+                      id="checkbox-all-search"
                       type="checkbox"
                       className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
+                    <label htmlFor="checkbox-all-search" className="sr-only">
                       checkbox
                     </label>
                   </div>
-                </td>
-                <th
-                  scope="row"
-                  className="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  <div className="pl-3">
-                    <div className="text-base font-semibold">{item.nombre}</div>
-                  </div>
                 </th>
-                <td className="py-4 px-6">$ {item.precio}</td>
+                {columnas.map((item) => (
+                  <th scope="col" className="py-3 px-6" key={item}>
+                    {item}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item) => (
+                <tr
+                  key={item._id}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  <td className="p-4 w-4">
+                    <div className="flex items-center">
+                      <input
+                        id="checkbox-table-search-1"
+                        type="checkbox"
+                        className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      />
+                      <label
+                        htmlFor="checkbox-table-search-1"
+                        className="sr-only"
+                      >
+                        checkbox
+                      </label>
+                    </div>
+                  </td>
+                  <th
+                    scope="row"
+                    className="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    <div className="pl-3">
+                      <div className="text-base font-semibold">
+                        {item.nombre || item.numero}
+                      </div>
+                    </div>  
+                  </th>
+                  <td className="py-4 px-6">
+                    {"$" + item.precio} {item.unidad ? "/" + item.unidad : ""}
+                  </td>
 
-                <td className="py-4 px-6">
-                  {porcentajeAumento(item.precio, item.ultimoPrecio)}
-                </td>
-                <td className="py-4 px-6">
-                  {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
-                   */}{" "}
-                  {`${new Date(item.updatedAt).toLocaleDateString(
-                    "es-ES",
-                    dateOptions
-                  )} hs.`}
-                </td>
-                <td className="py-4 px-6">
-                  <div className="flex flex-row">
+                  <td className="py-4 px-6">
+                    {porcentajeAumento(item.precio, item.ultimoPrecio)}
+                  </td>
+                  <td className="py-4 px-6">
+                    {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
+                     */}{" "}
+                    {`${new Date(item.updatedAt).toLocaleDateString(
+                      "es-ES",
+                      dateOptions
+                    )} hs.`}
+                  </td>
+                  <td className="py-4 px-4 flex justify-between">
+                    {tableName == "Articulos" ? (
+                      <a
+                        href="#"
+                        type="button"
+                        data-modal-toggle="editUserModal"
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        onClick={() => {
+                          openFicha();
+                          setId(item._id);
+                        }}
+                      >
+                        <DocumentIcon
+                          className="h-6 w-6 text-blue-800 hover:brightness-200"
+                          aria-hidden="true"
+                        />
+                      </a>
+                    ) : null}
                     <a
                       href="#"
                       type="button"
@@ -165,26 +191,25 @@ export const Table = ({
                         aria-hidden="true"
                       />
                     </a>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )
       ) : (
         <div className="flex justify-center py-4 text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
           <p className="animate-pulse italic">No hay datos cargados</p>
         </div>
       )}
       <div className="flex px-4 pt-4 pb-4 lg:px-6 text-slate-800 hover:brightness-200">
-        <Link href="/">
-          <a
-            type="button"
-            className="group flex font-semibold text-sm leading-6  dark:text-slate-200 dark:hover:text-white"
-          >
-            <ChevronLeftIcon className="h-6 w-6" aria-hidden="true" />
-            Volver
-          </a>
+        <Link
+          href="/"
+          type="button"
+          className="group flex font-semibold text-sm leading-6  dark:text-slate-200 dark:hover:text-white"
+        >
+          <ChevronLeftIcon className="h-6 w-6" aria-hidden="true" />
+          Volver
         </Link>
       </div>
     </div>

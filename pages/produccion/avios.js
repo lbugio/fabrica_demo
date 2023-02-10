@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Table } from "components/Table";
-import { ModalDelete } from "components/ModalDelete";
-import { ModalAvios } from "components/ModalAvios";
+import { ModalDelete } from "components/Modal/ModalDelete";
+import { ModalAvios } from "components/Modal/ModalAvios";
 
-export default function Avios({ avios, columnas, laoderImage, }) {
+export default function Avios({ avios, columnas, laoderImage }) {
   const avio = { nombre: "", precio:'', ultimoPrecio:0};
 
   const [createEdit, setCreateEdit] = useState(false);
@@ -22,16 +22,14 @@ export default function Avios({ avios, columnas, laoderImage, }) {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
+   useEffect(() => {
     const getAvios = async () => {
-      const res2 = await fetch("/api/avios/");
+      const res2 = await fetch("/api/avios");
       const dato2 = await res2.json();
-      console.log("🚀 ~ file: index.js ~ line 25 ~ getAvios ~ dato2", dato2)
-      
       setData(dato2);
     };
     getAvios();
-  }, [newAvio]);
+  }, [newAvio]); 
 
   useEffect(() => {
     const getAvios = async () => {
@@ -176,7 +174,7 @@ export default function Avios({ avios, columnas, laoderImage, }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`);
+  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/avios`);
   const avios = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "acción"]
   const laoderImage ="/avios.svg";

@@ -5,7 +5,6 @@ export const Card = ({ name, href, img, description, priority }) => {
   return (
     <>
       <Link href={href}>
-        <a>
           <div className="shadow-lg rounded-xl flex flex-col p-4 hover:border-4 hover:border-gray-800 hover:bg-gray-400/25  ">
             <Image
               src={img}
@@ -21,7 +20,6 @@ export const Card = ({ name, href, img, description, priority }) => {
               </p>
             </div>
           </div>
-        </a>
       </Link>
     </>
   );

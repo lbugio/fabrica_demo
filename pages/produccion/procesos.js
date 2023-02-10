@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
 import { Table } from "components/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
-import { ModalTelas } from "components/Modal/ModalTelas";
-export default function Telas({ telas, columnas, loaderImage }) {
-
-  const tela = { nombre: "", unidad:"", precio: "", ultimoPrecio: ""};
+import { ModalProcesos } from "components/Modal/ModalProcesos";
+export default function Procesos({ procesos, columnas, loaderImage }) {
+  const proceso = { nombre: "", unidad:"", precio: "", ultimoPrecio: ""};
 
   const [createEdit, setCreateEdit] = useState(false);
 
   const [confirm, setConfirm] = useState(false);
 
-  const [data, setData] = useState(telas);
+  const [data, setData] = useState(procesos);
 
   const [id, setId] = useState(null);
 
-  const [newTela, setNewTela] = useState(tela);
+  const [newProceso, setNewProceso] = useState(proceso);
 
   const [ultimoPrecio, setUltimoPrecio] = useState(0);
 
@@ -25,32 +24,32 @@ export default function Telas({ telas, columnas, loaderImage }) {
 
 
 
- useEffect(() => {
-    const getTelas = async () => {
+  useEffect(() => {
+    const getProcesos = async () => {
       setisLoadingData(true)
-      const res2 = await fetch("/api/telas/");
+      const res2 = await fetch("/api/procesos/");
       setisLoadingData(false)
       const dato2 = await res2.json();
       setData(dato2);
     };
-    getTelas();
-  }, [newTela]); 
+    getProcesos();
+  }, [newProceso]);
 
   useEffect(() => {
-    const getTelas = async () => {
+    const getProcesos = async () => {
       setisLoadingFieldData(true)
-      const res = await fetch("/api/telas/" + id);
+      const res = await fetch("/api/procesos/" + id);
       setisLoadingFieldData(false)
-      const tela = await res.json();
-      setUltimoPrecio(tela.precio);
-      setNewTela({
-        nombre: tela.nombre,
-        unidad: tela.unidad,
-        precio: tela.precio,
+      const proceso = await res.json();
+      setUltimoPrecio(proceso.precio);
+      setNewProceso({
+        nombre: proceso.nombre,
+        unidad: proceso.unidad,
+        precio: proceso.precio,
         ultimoPrecio: ultimoPrecio,
       });
     };
-    if (id) getTelas();
+    if (id) getProcesos();
   }, [id, ultimoPrecio]);
 
   const openDelete = () => setConfirm(true);
@@ -62,15 +61,15 @@ export default function Telas({ telas, columnas, loaderImage }) {
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) =>
-    setNewTela({ ...newTela, [e.target.name]: e.target.value });
+    setNewProceso({ ...newProceso, [e.target.name]: e.target.value });
 
   const validate = () => {
     const isNumber = /^(0|[1-9][0-9]*)$/;
     const errors = {};
 
-    if (!newTela.nombre) errors.nombre = "Ingrese el nombre.";
-    if (!newTela.precio) errors.precio = "Ingrese el precio.";
-    if (newTela.precio && !isNumber.test(newTela.precio))
+    if (!newProceso.nombre) errors.nombre = "Ingrese el nombre.";
+    if (!newProceso.precio) errors.precio = "Ingrese el precio.";
+    if (newProceso.precio && !isNumber.test(newProceso.precio))
       errors.precio = "El precio tiene que ser un número.";
 
     return errors;
@@ -84,41 +83,41 @@ export default function Telas({ telas, columnas, loaderImage }) {
 
     setIsSaving(true)
     if (id) {
-      await updateTela();
-      setNewTela(tela);
+      await updateProceso();
+      setNewProceso(proceso);
       setId(null);
       closeCreateEdit();
     } else {
-      await createTela();
+      await createProceso();
       closeCreateEdit();
     }
     setIsSaving(false)
   };
 
-  const createTela = async () => {
+  const createProceso = async () => {
     try {
-      await fetch(`/api/telas`, {
+      await fetch(`/api/procesos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newTela),
+        body: JSON.stringify(newProceso),
       });
     } catch (error) {
       console.error(error);
     }
-    setNewTela(tela);
+    setNewProceso(proceso);
   };
 
-  const updateTela = async () => {
+  const updateProceso = async () => {
 
     try {
-      await fetch(`/api/telas/${id}`, {
+      await fetch(`/api/procesos/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newTela),
+        body: JSON.stringify(newProceso),
       });
     } catch (error) {
       console.error(error);
@@ -128,15 +127,15 @@ export default function Telas({ telas, columnas, loaderImage }) {
 
   const handleDelete = async () => {
     setIsLoading(true)
-    deleteTela();
+    deleteProceso();
     closeDelete();
-    setNewTela(tela);
+    setNewProceso(proceso);
     setId(null);
   };
 
-  const deleteTela = async () => {
+  const deleteProceso = async () => {
     try {
-      await fetch(`/api/telas/${id}`, {
+      await fetch(`/api/procesos/${id}`, {
         method: "DELETE",
       });
     } catch (error) {
@@ -148,7 +147,7 @@ export default function Telas({ telas, columnas, loaderImage }) {
   return (
     <>
       <Table
-        tableName="Telas"
+        tableName="Procesos"
         columnas={columnas}
         data={data}
         openCreateEdit={openCreateEdit}
@@ -159,7 +158,7 @@ export default function Telas({ telas, columnas, loaderImage }) {
         setIsLoading={setIsLoading}
         isLoadingData={isLoadingData}
       />
-      <ModalTelas
+      <ModalProcesos
         createEdit={createEdit}
         setCreateEdit={setCreateEdit}
         handleDelete={handleDelete}
@@ -168,12 +167,12 @@ export default function Telas({ telas, columnas, loaderImage }) {
         setErrors={setErrors}
         setId={setId}
         handleSubmit={handleSubmit}
-        newTela={newTela}
-        setNewTela={setNewTela}
+        newProceso={newProceso}
+        setNewProceso={setNewProceso}
         isLoading={isLoading}
         isSaving={isSaving}
         isLoadingFieldData={isLoadingFieldData}
-        tela={tela}
+        proceso={proceso}
       />
       <ModalDelete
         confirm={confirm}
@@ -181,22 +180,22 @@ export default function Telas({ telas, columnas, loaderImage }) {
         handleDelete={handleDelete}
         setId={setId}
         isLoading={isLoading}
-        setNewTela={setNewTela}
-        tela={tela}
+        setNewProceso={setNewProceso}
+        proceso={proceso}
       />
     </>
   );
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/telas`);
-  const telas = await res.json();
+  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/procesos`);
+  const procesos = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
-  const loaderImage ="/telas.svg";
+  const loaderImage ="/procesos.svg";
 
   return {
     props: {
-      telas,
+      procesos,
       columnas,
       loaderImage
     },

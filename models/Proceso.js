@@ -1,6 +1,6 @@
 import { Schema, model, models } from "mongoose";
 
-const TelaSchema = new Schema(
+const ProcesoSchema = new Schema(
   {
     nombre: {
       type: String,
@@ -8,11 +8,6 @@ const TelaSchema = new Schema(
       unique: [true, "Este valor ya existe"],
       trim: true,
       maxlength: [40, "Nombre no puede cotener mas de 49 caracteres."],
-    },
-    unidad: {
-      type: String,
-      required: [true, "La unidad es requerida"],
-      trim: true,
     },
     precio: {
       type: Number,
@@ -25,9 +20,6 @@ const TelaSchema = new Schema(
       trim: true,
       maxlength: [40, "Precio no puede cotener mas de 49 caracteres."],
     },
-    tipoComponente:{
-      type:String
-    }
   },
   {
     timestamps: true,
@@ -35,4 +27,4 @@ const TelaSchema = new Schema(
   }
 );
 
-export default models.Tela || model("Tela", TelaSchema);
+export default models.Proceso || model("Proceso", ProcesoSchema);

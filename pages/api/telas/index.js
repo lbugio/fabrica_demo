@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     case "GET":
       try {
         const telas = await Tela.find();
-        return res.status(200).json(telas);
+        return res.status(200).json(telas); 
       } catch (error) {
         return res.status(400).json({ msg: error.message });
       } 

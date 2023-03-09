@@ -1,68 +1,71 @@
 import { dbConnect } from "utils/mongoose";
 import Articulo from "models/Articulo";
 
-dbConnect();
-
 export default async function handler(req, res) {
-  const { method, body } = req;
+  await dbConnect();
+
+  const { method = "", body = {} } = req;
 
   switch (method) {
     case "GET":
       try {
-        let articulos = await Articulo.find()
-          .populate("telas.nombre", ["precio", "unidad"])
-          .populate("avios.nombre", ["precio"])
-          .populate("diseños.nombre", ["precio"]);
-        console.log("🚀 ~ file: index.js:15 ~ handler ~ articulos", articulos);
-
-        articulos = articulos.map((dato) => ({
-          ...dato.toObject(),
-          precioTelas: Number(
-            dato.telas
-              .map((tela) => {
-                switch (tela.nombre.unidad) {
+        const articulos = await Articulo.find().populate([
+          { path: "telas.nombre", select: "precio unidad" },
+          { path: "avios.nombre", select: "nombre precio" },
+          { path: "diseños.nombre", select: "nombre precio" },
+          { path: "procesos.nombre", select: "nombre precio" },
+        ]);
+        const articulosConPrecios = articulos.map((articulo) => {
+          const precioTelas = Number(
+            articulo.telas
+              .map(({ nombre, cantidad }) => {
+                switch (nombre.unidad) {
                   case "kg.":
-                    return (
-                      (tela.cantidad * (tela.nombre ? tela.nombre.precio : 0)) /
-                      1000
-                    );
+                    return (cantidad * (nombre ? nombre.precio : 0)) / 1000;
                   case "m.":
-                    return (tela.cantidad * tela.nombre.precio) / 100;
+                    return (cantidad * nombre.precio) / 100;
                   default:
-                    return tela.cantidad * tela.nombre.precio;
+                    return cantidad * nombre.precio;
                 }
               })
               .reduce((prev, curr) => prev + curr, 0)
               .toFixed(2)
-          ),
-          precioAvios: Number(
-            dato.avios
+          );
+
+          const precioAvios = Number(
+            articulo.avios
               .map(
-                (avio) => avio.cantidad * (avio.nombre ? avio.nombre.precio : 0)
+                ({ nombre, cantidad }) =>
+                  cantidad * (nombre ? nombre.precio : 0)
               )
               .reduce((prev, curr) => prev + curr, 0)
               .toFixed(2)
-          ),
-          precioDiseños: dato.diseños
+          );
+
+          const precioDiseños = articulo.diseños
             ? Number(
-                dato.diseños
+                articulo.diseños
                   .map(
-                    (diseño) =>
-                      diseño.cantidad *
-                      (diseño.nombre ? diseño.nombre.precio : 0)
+                    ({ nombre, cantidad }) =>
+                      cantidad * (nombre ? nombre.precio : 0)
                   )
                   .reduce((prev, curr) => prev + curr, 0)
                   .toFixed(2)
               )
-            : 0,
-        }));
+            : 0;
 
-        articulos = articulos.map((dato) => ({
-          ...dato,
-          precio: dato.precioTelas + dato.precioAvios + dato.precioDiseños,
-        }));
+          const precio = precioTelas + precioAvios + precioDiseños;
 
-        return res.status(200).json(articulos);
+          return {
+            ...articulo.toObject(),
+            precioTelas,
+            precioAvios,
+            precioDiseños,
+            precio,
+          };
+        });
+
+        return res.status(200).json(articulosConPrecios);
       } catch (error) {
         return res.status(400).json({ msg: error.message });
       }
@@ -70,11 +73,15 @@ export default async function handler(req, res) {
       try {
         const newArticulo = new Articulo(body);
         const savedArticulo = await newArticulo.save();
-        return res.status(201).json(savedArticulo);
+        return res
+          .status(201)
+          .json({ msg: `Se creo el articulo "${savedArticulo.numero}"` });
       } catch (error) {
-        return res.status(400).json({ msg: error.message });
+        return res.status(400).json({ msg: `El articulos no se pudo crear ${error.message}` });
       }
     default:
-      return res.status(400).json({ msg: "This method is not supported" });
+      return res
+        .status(400)
+        .json({ msg: `This method (${method}) is not supported` });
   }
 }

@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { useState, Fragment, useRef } from "react";
+import {  Fragment, useRef } from "react";
 
 export const ModalDelete = ({
   confirm,
@@ -8,8 +8,7 @@ export const ModalDelete = ({
   handleDelete,
   setId,
   isLoading,
-  setNewTela,
-  tela
+  limpiarFormulario
 }) => {
   const cancelButtonRef = useRef(null);
 
@@ -57,7 +56,7 @@ export const ModalDelete = ({
                         as="h3"
                         className="text-lg font-medium leading-6 text-gray-900"
                       >
-                        Borrar Registro
+                        Borrar
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
@@ -71,7 +70,11 @@ export const ModalDelete = ({
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={handleDelete}
+                    onClick={() => {
+                      handleDelete();
+                      setConfirm(false);
+                      setId(null);
+                    }}
                   >
                     {isLoading && (
                       <svg
@@ -97,7 +100,7 @@ export const ModalDelete = ({
                     onClick={() => {
                       setConfirm(false);
                       setId(null);
-                      setNewTela(tela)
+                      //limpiarFormulario()
                     }}
                     ref={cancelButtonRef}
                   >

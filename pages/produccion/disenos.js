@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { Table } from "components/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalDiseños } from "components/Modal/ModalDiseños";
@@ -22,13 +22,47 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const initialState = {
+    nombre: "",
+    precio: "",
+  };
+
+  function reducer(state, action) {
+    switch (action.type) {
+      case "ACTUALIZAR_CAMPO":
+        return {
+          ...state,
+          [action.campo]: action.valor,
+        };
+      case "LIMPIAR_FORMULARIO":
+        return initialState;
+      default:
+        throw new Error(`Acción desconocida: ${action.type}`);
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const actualizarCampo = (event) => {
+    dispatch({
+      type: "ACTUALIZAR_CAMPO",
+      campo: event.target.id,
+      valor: event.target.value,
+    });
+  };
+
+  const limpiarFormulario = () => {
+    dispatch({
+      type: "LIMPIAR_FORMULARIO",
+    });
+  };
+
   useEffect(() => {
     const getDiseños = async () => {
       setisLoadingData(true);
       const res2 = await fetch("/api/disenos/");
       setisLoadingData(false);
       const dato2 = await res2.json();
-      
       setData(dato2);
     };
     getDiseños();
@@ -39,17 +73,13 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
       setisLoadingFieldData(true);
       const res = await fetch("/api/disenos/" + id);
       setisLoadingFieldData(false);
-      const diseño = await res.json();
-      setUltimoPrecio(diseño.precio);
-      setNewDiseño({
-        nombre: diseño.nombre,
-        unidad: diseño.unidad,
-        precio: diseño.precio,
-        ultimoPrecio: ultimoPrecio,
-      });
+      const { nombre, precio } = await res.json();
+      setUltimoPrecio(precio);
+      dispatch({ type: "ACTUALIZAR_CAMPO", campo: "nombre", valor: nombre });
+      dispatch({ type: "ACTUALIZAR_CAMPO", campo: "precio", valor: precio });
     };
     if (id) getDiseños();
-  }, [id, ultimoPrecio]);
+  }, [id, ultimoPrecio, dispatch]);
 
   const openDelete = () => setConfirm(true);
   const closeDelete = () => setConfirm(false);
@@ -63,34 +93,41 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
     setNewDiseño({ ...newDiseño, [e.target.name]: e.target.value });
 
   const validate = () => {
-    const isNumber = /^(0|[1-9][0-9]*)$/;
+    const { nombre, precio } = state;
     const errors = {};
 
-    if (!newDiseño.nombre) errors.nombre = "Ingrese el nombre.";
-    if (!newDiseño.precio) errors.precio = "Ingrese el precio.";
-    if (newDiseño.precio && !isNumber.test(newDiseño.precio))
-      errors.precio = "El precio tiene que ser un número.";
-
+    !nombre?.trim() && (errors.nombre = "Ingrese el nombre.");
+    !precio && (errors.precio = "Ingrese el precio.");
+    isNaN(precio) && (errors.precio = "El precio tiene que ser un número.");
     return errors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let errors = validate();
+    const errors = validate();
 
-    if (Object.keys(errors).length) return setErrors(errors);
+    if (Object.keys(errors).length) {
+      setErrors(errors);
+      return;
+    }
 
     setIsSaving(true);
-    if (id) {
-      await updateDiseño();
-      setNewDiseño(diseño);
-      setId(null);
+    try {
+      if (id) {
+        await updateDiseño();
+        setNewDiseño(diseño);
+        setId(null);
+        closeCreateEdit();
+      } else {
+        await createDiseño();
+      }
       closeCreateEdit();
-    } else {
-      await createDiseño();
-      closeCreateEdit();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSaving(false);
+      limpiarFormulario();
     }
-    setIsSaving(false);
   };
 
   const createDiseño = async () => {
@@ -100,7 +137,7 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newDiseño),
+        body: JSON.stringify(state),
       });
     } catch (error) {
       console.error(error);
@@ -115,7 +152,7 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newDiseño),
+        body: JSON.stringify(state),
       });
     } catch (error) {
       console.error(error);
@@ -165,12 +202,14 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
         setErrors={setErrors}
         setId={setId}
         handleSubmit={handleSubmit}
-        newDiseño={newDiseño}
+        state={state}
         setNewDiseño={setNewDiseño}
         isLoading={isLoading}
         isSaving={isSaving}
         isLoadingFieldData={isLoadingFieldData}
         diseño={diseño}
+        actualizarCampo={actualizarCampo}
+        limpiarFormulario={limpiarFormulario}
       />
       <ModalDelete
         confirm={confirm}
@@ -180,6 +219,7 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
         isLoading={isLoading}
         setNewDiseño={setNewDiseño}
         diseño={diseño}
+        limpiarFormulario={limpiarFormulario}
       />
     </>
   );

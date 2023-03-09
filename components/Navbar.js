@@ -22,18 +22,18 @@ export const Navbar = () => {
   ];
 
   //reloj
-  const [dateState, setDateState] = useState(new Date());
+/*   const [dateState, setDateState] = useState(new Date());
   const dateOptions = {
     year: "numeric",
     month: "long",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  };
+  }; */
 
-  useEffect(() => {
+ /*  useEffect(() => {
     setInterval(() => setDateState(new Date()), 30000);
-  }, []);
+  }, []); */
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -65,9 +65,9 @@ export const Navbar = () => {
                     />
                   </Link>
                 </div>
-                <div className="flex text-white italic items-center text-sm mx-2">
+               {/*  <div className="flex text-white italic items-center text-sm mx-2">
                   {dateState.toLocaleDateString("es-ES", dateOptions)} hs.
-                </div>
+                </div> */}
 
                 {/*   <div className="flex text-white italic items-center text-sm mx-2">{new Date().toLocaleDateString(
                     "es-ES",

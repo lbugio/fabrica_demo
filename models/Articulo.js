@@ -27,9 +27,31 @@ const ArticuloSchema = new Schema(
       trim: true,
       maxlength: [40, "Linea no puede cotener mas de 49 caracteres."],
     },
-    telas: [{nombre:{type: Schema.Types.ObjectId, ref: 'Tela' }, cantidad:{type:Number}}],
-    avios: [{nombre:{type: Schema.Types.ObjectId, ref: 'Avio' }, cantidad:{type:Number}}],
-    diseños: [{nombre:{type: Schema.Types.ObjectId, ref: 'Diseño' }, cantidad:{type:Number}}]
+    procesos: [
+      {
+        id: { type: Schema.Types.ObjectId, ref: "Proceso" },
+        nombre: { type: String },
+        cantidad: { type: Number },
+      },
+    ],
+    telas: [
+      {
+        nombre: { type: Schema.Types.ObjectId, ref: "Tela" },
+        cantidad: { type: Number },
+      },
+    ],
+    avios: [
+      {
+        nombre: { type: Schema.Types.ObjectId, ref: "Avio" },
+        cantidad: { type: Number },
+      },
+    ],
+    diseños: [
+      {
+        nombre: { type: Schema.Types.ObjectId, ref: "Diseño" },
+        cantidad: { type: Number },
+      },
+    ],
   },
   {
     timestamps: true,

@@ -1,17 +1,27 @@
 import { useState, useEffect } from "react";
+
 import { Table } from "components/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalArticulos } from "components/Modal/ModalArticulos";
 import { ModalArticulo } from "components/Modal/ModalArticulo";
+import { Notification } from "components/Notification";
+
+import { API_ARTICULOS } from "constants/enpoints";
 
 export default function Articulos({
   articulos,
   columnas,
   laoderImage,
+  procesosBack,
   telas,
   avios,
   diseños,
 }) {
+  /* const proceso = {
+    nombre: "",
+    cantidad: "",
+  };
+
   const tela = {
     nombre: "",
     cantidad: "",
@@ -25,18 +35,20 @@ export default function Articulos({
   const diseño = {
     nombre: "",
     cantidad: "",
-  };
+  }; */
 
-  const articulo = {
+  const initialItem = {
     numero: "",
     tipo: "",
     descripcion: "",
     linea: "",
+    procesos: [],
+    /* telas: [],
+    avios: [],
+    diseños: [] */
   };
 
   const [createEdit, setCreateEdit] = useState(false);
-
-  const [ficha, setFicha] = useState(false);
 
   const [confirm, setConfirm] = useState(false);
 
@@ -44,48 +56,58 @@ export default function Articulos({
 
   const [id, setId] = useState(null);
 
-  const [newArticulo, setNewArticulo] = useState(articulo);
-
-  const [inputTelas, setInputTelas] = useState([tela]);
-
-  const [inputAvios, setInputAvios] = useState([avio]);
-
-  const [inputDiseños, setInputDiseños] = useState([diseño]);
+  const [ficha, setFicha] = useState(false);
 
   const [ultimoPrecio, setUltimoPrecio] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const componentes = [
+    //...inputTelas,
+    //...inputAvios,
+    //...inputProcesos,
+    //...inputDiseños,
+  ];
+
+  const [selectedOption, setSelectedOption] = useState("");
+  console.log("🚀 ~ file: articulos.js:75 ~ selectedOption:", selectedOption);
+
+  const [value, setValue] = useState(initialItem.procesos)
+
+
+  const [item, setItem] = useState(initialItem);
+
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationType, setNotificationType] = useState("");
+
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const getArticulos = async () => {
-      const res2 = await fetch("/api/articulos/");
+      const res2 = await fetch(API_ARTICULOS);
       const dato2 = await res2.json();
-      console.log("🚀 ~ file: articulos.js:65 ~ getArticulos ~ dato2", dato2);
       setData(dato2);
     };
     getArticulos();
-  }, [newArticulo]);
+  }, [item]);
 
   useEffect(() => {
-    const getArticulos = async () => {
+    const getArticulo = async () => {
       setIsLoadingData(true);
-      const res = await fetch("/api/articulos/" + id);
+      const res = await fetch(API_ARTICULOS + id);
       setIsLoadingData(false);
-      const articulo = await res.json();
-      setUltimoPrecio(articulo.precio);
-      setNewArticulo({
-        numero: articulo.numero,
-        tipo: articulo.tipo,
-        descripcion: articulo.descripcion,
-        linea: articulo.linea,
-      });
-      setInputTelas(articulo.telas);
+      const articuloBack = await res.json();
+      //setUltimoPrecio(precio);
+      setItem(articuloBack);
+      //setValue(articuloBack.procesos);
+      //setInputProcesos([procesos]);
+      /* setInputTelas(articulo.telas);
       setInputAvios(articulo.avios);
-      setInputDiseños(articulo.diseños);
+      setInputDiseños(articulo.diseños); */
     };
-    if (id) getArticulos();
+    if (id) getArticulo();
   }, [id, ultimoPrecio]);
 
   const openDelete = () => setConfirm(true);
@@ -93,22 +115,49 @@ export default function Articulos({
   const openCreateEdit = () => setCreateEdit(true);
   const closeCreateEdit = () => setCreateEdit(false);
   const openFicha = () => setFicha(true);
-  const closeFicha = () => setFicha(false);
 
-  const [errors, setErrors] = useState({});
+  const handleChange = ({ target: { name, value } }) => {
+    if (name === "numero") {
+      setErrors((prevErrors) => {
+        const newPrevErrors = { ...prevErrors };
+        delete newPrevErrors[name];
+        return newPrevErrors;
+      });
+    }
+    setItem({ ...item, [name]: value });
+  };
 
-  const handleChange = (e) =>
-    setNewArticulo({ ...newArticulo, [e.target.name]: e.target.value });
+  const handleBlur = async ({ target: { name, value } }) => {
+    const newErrors = {};
+
+    if (name === "numero" && value) {
+      // Check if the entered "numero" value already exists in the database
+      const response = await fetch(
+        API_ARTICULOS + `check-unique?value=${value}`
+      );
+      const { unique } = await response.json();
+      newErrors[name] = unique ? "" : `El articulo ${value} existe.`;
+
+      // Clear the error message
+      setErrors((prevErrors) => {
+        const newPrevErrors = { ...prevErrors };
+        delete newPrevErrors[name];
+        return newPrevErrors;
+      });
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+  };
 
   const validate = () => {
-    const isNumber = /^(0|[1-9][0-9]*)$/;
+    const { numero, tipo, descripcion, linea } = item;
+
     const errors = {};
 
-    if (!newArticulo.numero) errors.numero = "Ingrese el número.";
-    if (!newArticulo.tipo) errors.tipo = "Ingrese el tipo.";
-    if (!newArticulo.descripcion)
-      errors.descripcion = "Ingrese la descripción.";
-    if (!newArticulo.linea) errors.linea = "Ingrese la línea.";
+    if (!numero) errors.numero = "Ingrese el número.";
+    if (!tipo) errors.tipo = "Ingrese el tipo.";
+    if (!descripcion) errors.descripcion = "Ingrese la descripción.";
+    if (!linea) errors.linea = "Ingrese la línea.";
 
     return errors;
   };
@@ -122,53 +171,63 @@ export default function Articulos({
     setIsSaving(true);
     if (id) {
       await updateArticulo();
-      setNewArticulo(articulo);
-      setInputTelas([tela]);
+      //setItem(articulo);
+      //setInputProcesos([procesos]);
+      /* setInputTelas([tela]);
       setInputAvios([avio]);
-      setInputDiseños([diseño]);
+      setInputDiseños([diseño]); */
       setId(null);
       closeCreateEdit();
     } else {
       await createArticulo();
       closeCreateEdit();
     }
-    setIsSaving(true);
   };
 
   const createArticulo = async () => {
     try {
-      await fetch(`/api/articulos`, {
+      const response = await fetch(API_ARTICULOS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newArticulo),
+        body: JSON.stringify(item),
       });
-      console.log(
-        "🚀 ~ file: articulos.js:145 ~ createArticulo ~ newArticulo",
-        newArticulo
-      );
+      const { msg } = await response.json();
+
+      response.ok
+        ? setNotificationType("create")
+        : setNotificationType("error");
+
+      setNotificationMessage(msg);
     } catch (error) {
       console.error(error);
     }
-    setNewArticulo(articulo);
-    setInputTelas([tela]);
-    setInputAvios([avio]);
-    setInputDiseños([diseño]);
+    setItem(initialItem);
+    setShowNotification(true);
   };
 
   const updateArticulo = async () => {
+    console.log("🚀 ~ file: articulos.js:212 ~ updateArticulo ~ item:", item);
     try {
-      await fetch(`/api/articulos/${id}`, {
+      const response = await fetch(`/api/articulos/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newArticulo),
+        body: JSON.stringify(item),
       });
+      const { msg } = await response.json();
+      console.log("🚀 ~ file: articulos.js:215 ~ updateArticulo ~ msg:", msg);
+
+      response.ok ? setNotificationType("edit") : setNotificationType("error");
+
+      setNotificationMessage(msg);
     } catch (error) {
       console.error(error);
     }
+    setItem(initialItem);
+    setShowNotification(true);
     setId(null);
   };
 
@@ -176,19 +235,27 @@ export default function Articulos({
     setIsLoading(true);
     deleteArticulo();
     closeDelete();
-    setNewArticulo(articulo);
     setId(null);
   };
 
   const deleteArticulo = async () => {
     try {
-      await fetch(`/api/articulos/${id}`, {
+      const response = await fetch(`/api/articulos/${id}`, {
         method: "DELETE",
       });
+
+      const { msg } = await response.json();
+
+      if (response.ok) {
+        setNotificationMessage(msg);
+      }
     } catch (error) {
       console.error(error);
     }
+    setShowNotification(true);
+    setNotificationType("delete");
     setIsLoading(false);
+    setItem(initialItem);
   };
 
   return (
@@ -206,51 +273,87 @@ export default function Articulos({
         setIsLoading={setIsLoading}
       />
       <ModalArticulos
+        /* avio={avio}
+        avios={avios} */
+        //articulo={articulo}
         createEdit={createEdit}
-        setCreateEdit={setCreateEdit}
-        handleDelete={handleDelete}
-        handleChange={handleChange}
+        /* diseños={diseños}
+        diseño={diseño} */
         errors={errors}
-        setErrors={setErrors}
-        setId={setId}
+        handleDelete={handleDelete}
         handleSubmit={handleSubmit}
-        newArticulo={newArticulo}
-        setNewArticulo={setNewArticulo}
+        handleChange={handleChange}
+        handleBlur={handleBlur}
+        //inputDiseños={inputDiseños}
+        item={item}
         isLoading={isLoading}
         isSaving={isSaving}
         isLoadingData={isLoadingData}
-        articulo={articulo}
-        tela={tela}
-        telas={telas}
-        inputTelas={inputTelas}
-        setInputTelas={setInputTelas}
-        avio={avio}
-        avios={avios}
-        inputAvios={inputAvios}
+        /*   inputTelas={inputTelas}
+        inputAvios={inputAvios} */
+        //inputProcesos={inputProcesos}
+        //proceso={proceso}
+        procesosBack={procesosBack}
+        setCreateEdit={setCreateEdit}
+        setErrors={setErrors}
+        setId={setId}
+        setItem={setItem}
+        /*   tela={tela}
+        telas={telas} */
+        /* setInputTelas={setInputTelas}
         setInputAvios={setInputAvios}
-        diseños={diseños}
-        diseño={diseño}
-        inputDiseños={inputDiseños}
-        setInputDiseños={setInputDiseños}
+        setInputDiseños={setInputDiseños} */
+        //setInputProcesos={setInputProcesos}
+        initialItem={initialItem}
+        setSelectedOption={setSelectedOption}
+        selectedOption={selectedOption}
+        value={value}
+        setValue={setValue}
       />
-      <ModalArticulo ficha={ficha} setFicha={setFicha} setId={setId} />
+      <ModalArticulo
+        ficha={ficha}
+        setFicha={setFicha}
+        id={id}
+        setId={setId}
+        item={item}
+        componentes={componentes}
+        //articulo={articulo}
+        setItem={setItem}
+        /* setInputTelas={setInputTelas}
+        setInputAvios={setInputAvios}
+        setInputDiseños={setInputDiseños} */
+        //setInputProcesos={setInputProcesos}
+        handleBlur={handleBlur}
+      />
 
       <ModalDelete
         confirm={confirm}
         setConfirm={setConfirm}
         handleDelete={handleDelete}
         setId={setId}
+        id={id}
         isLoading={isLoading}
-        setNewArticulo={setNewArticulo}
-        articulo={articulo}
+        setItem={setItem}
+        initialItem={initialItem}
+      />
+      <Notification
+        setShowNotification={setShowNotification}
+        showNotification={showNotification}
+        notificationMessage={notificationMessage}
+        notificationType={notificationType}
       />
     </>
   );
 }
 
 export const getServerSideProps = async () => {
+  const resProcesos = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/procesos`
+  );
+  const procesosBack = await resProcesos.json();
+
   const resArticulos = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`
+    process.env.API_PRODUCCION || process.env.API_LOCAL + API_ARTICULOS
   );
   const articulos = await resArticulos.json();
 
@@ -273,6 +376,7 @@ export const getServerSideProps = async () => {
 
   return {
     props: {
+      procesosBack,
       articulos,
       telas,
       avios,

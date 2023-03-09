@@ -1,31 +1,35 @@
 import { dbConnect } from "utils/mongoose";
-import Diseño from "models/Diseño"
+import Diseño from "models/Diseño";
+import {
+  STATUS_OK,
+  STATUS_CREATED,
+  STATUS_BAD_REQUEST,
+} from "constants/status";
 
-
-dbConnect()
+dbConnect();
 
 export default async function handler(req, res) {
-
   const { method, body } = req;
 
   switch (method) {
     case "GET":
       try {
         const diseños = await Diseño.find();
-        return res.status(200).json(diseños);
+        return res.status(STATUS_OK).json(diseños);
       } catch (error) {
-        return res.status(400).json({ msg: error.message });
-      } 
+        return res.status(STATUS_BAD_REQUEST).json({ msg: error.message });
+      }
     case "POST":
       try {
         const newDiseño = new Diseño(body);
         const savedDiseño = await newDiseño.save();
-        return res.status(201).json(savedDiseño);
+        return res.status(STATUS_CREATED).json(savedDiseño);
       } catch (error) {
-        return res.status(400).json({ msg: error.message });
+        return res.status(STATUS_BAD_REQUEST).json({ msg: error.message });
       }
     default:
-      return res.status(400).json({ msg: "This method is not supported" });
+      return res
+        .status(STATUS_BAD_REQUEST)
+        .json({ msg: `This method (${method}) is not supported` });
   }
-
 }

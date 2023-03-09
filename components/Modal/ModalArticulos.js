@@ -1,8 +1,12 @@
-import { Fragment, useRef, useState, useEffect } from "react";
-import Image from "next/image";
-import { Dialog, Transition, Combobox } from "@headlessui/react";
-import { Autocomplete } from "components/Autocomplete";
+import { Fragment, useRef, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { Combobox } from "@headlessui/react";
+
+import { ComboBox } from "components/Form/ComboBox";
+import { ListBox } from "components/Form/ListBox";
+import { Select } from "components/Form/Select";
+import { useStyleRegistry } from "styled-jsx";
 
 export const ModalArticulos = ({
   createEdit,
@@ -11,40 +15,125 @@ export const ModalArticulos = ({
   setErrors,
   handleSubmit,
   handleChange,
-  newArticulo,
-  setNewArticulo,
+  handleBlur,
+  item,
+  setItem,
   setId,
   articulo,
   tela,
   telas,
-  inputTelas,
-  setInputTelas,
+  /* inputTelas,
+  setInputTelas, */
   avio,
   avios,
   inputAvios,
   setInputAvios,
   diseño,
   diseños,
-  inputDiseños,
-  setInputDiseños,
+  /* inputDiseños,
+  setInputDiseños, */
+  inputProcesos,
+  setInputProcesos,
+  procesosBack,
+  initialProceso,
+  initialItem,
+  setValue,
+  value,
 }) => {
+  console.log("🚀 ~ file: ModalArticulos.js:43 ~ procesosBack:", procesosBack);
   //campos dinamicos
 
-  let addTelas = () => {
-    setInputTelas([...inputTelas, tela]);
+  const { procesos } = item;
+
+  const nuevoProceso = {
+    nombre: "",
+    cantidad: "",
+    id:""
   };
 
-  const handleChangeTelas = (i, e) => {
-    const telas = [...inputTelas];
-    telas[i][e.target.name] = e.target.value;
-    setInputTelas(telas);
-    setNewArticulo({ ...newArticulo, telas });
+  const addProceso = () => {
+    setItem({
+      ...item,
+      procesos: [...item.procesos, nuevoProceso],
+    });
+  };
+  const handleSelectOption = (i, e) => {
+  console.log("🚀 ~ file: ModalArticulos.js:56 ~ handleSelectOption ~ e:", e)
+
+    const procesos = [...item.procesos];
+    procesos[i]["nombre"] = e.nombre;
+    procesos[i]["id"] = e._id;
+    setItem({ ...item, procesos });
+  };
+
+  const handleChangeProcesosInput = (i, e) => {
+    const { name, value } = e.target;
+    const procesos = [...item.procesos];
+
+    procesos[i][name] = value;
+    setItem({ ...item, procesos });
+  };
+
+  
+
+  /* const handleChangeProcesos = (i, e) => {
+    const { name, value } = e.target;
+    const procesos = [...item.procesos];
+    procesos[i][name] = value;
+    setItem({ ...item, procesos });
+    console.log("🚀 ~ file: ModalArticulos.js:77 ~ handleChangeProcesos ~ item:", item)
+  }; */
+
+  const removeProceso = (i) => {
+    const procesos = [...item.procesos];
+    procesos.splice(i, 1);
+    setItem({ ...item, procesos });
+  };
+
+  /*const handleChangeProcesos = (i, e) => {
+    const { name, value } = e.target;
+    const telas = [...item.telas];
+    telas[i][name] = value;
+    setItem({ ...item, telas });
+  }; */
+
+  /* const handleChangeProcesosInput = (i, e) => {
+    const { name, value } = e.target;
+    const procesos = [...item.procesos];
+
+    procesos[i][name] = value;
+    setItem({ ...item, procesos });
+  };
+
+  const removeProceso = (i) => {
+    const procesos = [...item.procesos];
+    procesos.splice(i, 1);
+    setItem({ ...item, procesos });
+  }; */
+
+  /*  const handlePersonChange = (nombre, index) => {
+    console.log("🚀 ~ file: ModalArticulos.js:68 ~ handlePersonChange ~ index:", index)
+    console.log("🚀 ~ file: ModalArticulos.js:68 ~ handlePersonChange ~ proceso:", nombre)
+    
+  } */
+  /* let addTela = () => {
+    setItem({
+      ...item,
+      procesos: [...item.procesos, nuevaTela],
+    });
+  }; */
+
+  /* const handleChangeTelas = (i, e) => {
+    const { name, value } = e.target;
+    const telas = [...item.telas];
+    telas[i][name] = value;
+    setItem({ ...item, telas });
   };
 
   const removeTelas = (i) => {
-    let telas = [...inputTelas];
+    const telas = [...item.telas];
     telas.splice(i, 1);
-    setInputTelas(telas);
+    setItem({ ...item, telas });
   };
 
   let addAvios = () => {
@@ -55,7 +144,7 @@ export const ModalArticulos = ({
     const avios = [...inputAvios];
     avios[i][e.target.name] = e.target.value;
     setInputAvios(avios);
-    setNewArticulo({ ...newArticulo, avios });
+    setItem({ ...item, avios });
   };
 
   const removeAvios = (i) => {
@@ -72,19 +161,19 @@ export const ModalArticulos = ({
     const diseños = [...inputDiseños];
     diseños[i][e.target.name] = e.target.value;
     setInputDiseños(diseños);
-    setNewArticulo({ ...newArticulo, diseños });
+    setItem({ ...item, diseños });
   };
 
   const removeDiseños = (i) => {
     let diseños = [...inputDiseños];
     diseños.splice(i, 1);
     setInputTelas(diseños);
-  };
+  }; */
 
   const nameInput = useRef(null);
 
   //Imagen
-  const imageMimeType = /image\/(png|jpg|jpeg|svg)/i;
+  /*const imageMimeType = /image\/(png|jpg|jpeg|svg)/i;
 
   const [file, setFile] = useState(null);
 
@@ -118,7 +207,7 @@ export const ModalArticulos = ({
         fileReader.abort();
       }
     };
-  }, [file, fileDataURL]);
+  }, [file, fileDataURL]);  */
 
   //imagen
 
@@ -162,6 +251,7 @@ export const ModalArticulos = ({
                             <form
                               action="#"
                               method="POST"
+                              encType="multipart/form-data"
                               onSubmit={handleSubmit}
                             >
                               <div className="overflow-hidden shadow sm:rounded-md">
@@ -182,7 +272,8 @@ export const ModalArticulos = ({
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         placeholder="Número"
                                         onChange={handleChange}
-                                        value={newArticulo.numero}
+                                        onBlur={handleBlur}
+                                        value={item.numero}
                                         ref={nameInput}
                                       />
                                       <p className="text-red-500 text-s italic animate-pulse">
@@ -204,7 +295,7 @@ export const ModalArticulos = ({
                                         placeholder="Tipo"
                                         autoComplete="address-level2"
                                         onChange={handleChange}
-                                        value={newArticulo.tipo}
+                                        value={item.tipo}
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                       />
                                       <p className="text-red-500 text-s italic animate-pulse">
@@ -219,6 +310,8 @@ export const ModalArticulos = ({
                                       >
                                         Línea
                                       </label>
+                                      {/*                                       <ListBox options={["niño", "bebe"]}/>
+                                       */}{" "}
                                       <input
                                         type="text"
                                         name="linea"
@@ -226,7 +319,7 @@ export const ModalArticulos = ({
                                         placeholder="Línea"
                                         autoComplete="address-level2"
                                         onChange={handleChange}
-                                        value={newArticulo.linea}
+                                        value={item.linea}
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                       />
                                       <p className="text-red-500 text-s italic animate-pulse">
@@ -248,7 +341,7 @@ export const ModalArticulos = ({
                                         placeholder="Descripción"
                                         autoComplete="descripcion"
                                         onChange={handleChange}
-                                        value={newArticulo.descripcion}
+                                        value={item.descripcion}
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                       />
                                       <p className="text-red-500 text-s italic animate-pulse">
@@ -260,9 +353,98 @@ export const ModalArticulos = ({
                                   </div>
                                   <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
                                     <p className="inline uppercase text-gray-700">
+                                      Procesos
+                                    </p>
+                                    <a onClick={() => addProceso()}>
+                                      <PlusIcon
+                                        className="h-6 w-6 inline ml-2"
+                                        aria-hidden="true"
+                                      />
+                                    </a>
+                                  </div>
+                                  {procesos.map((proceso, index) => (
+                                    <div
+                                      className="grid grid-cols-6 gap-6 mt-3"
+                                      key={index}
+                                    >
+                                      <div className="col-span-6 sm:col-span-3 lg:col-span-3">
+                                        <label
+                                          htmlFor="descripcion"
+                                          className="block text-sm font-medium text-gray-700"
+                                        >
+                                          Nombre
+                                        </label>
+                                        <ListBox
+                                          options={procesosBack}
+                                          selectedOption={proceso}
+                                          onChange={(e) =>
+                                            handleSelectOption(index, e)
+                                          }
+                                        /> 
+                                        {/*  <select
+                                            id="nombreComponente"
+                                            name="nombre"
+                                            autoComplete="nombre"
+                                            className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            onChange={(e) =>
+                                              handleChangeProcesos(index, e)
+                                            }
+                                            value={procesos.nombre}
+                                          >
+                                            {procesosBack.map((item) => (
+                                              <option
+                                                className=""
+                                                key={item._id}
+                                                value={item._id}
+                                              >
+                                                {item.nombre}
+                                              </option>
+                                            ))}
+                                          </select>   */}
+                                        <p className="text-red-500 text-s italic animate-pulse">
+                                          {errors.nombre ? errors.nombre : null}
+                                        </p>
+                                      </div>
+                                      <div className="col-span-6 sm:col-span-2 lg:col-span-2">
+                                        <label
+                                          htmlFor="descripcion"
+                                          className="flex justify-between text-sm font-medium text-gray-700"
+                                        >
+                                          Cantidad
+                                          <button
+                                            type="button"
+                                            onClick={() => removeProceso(index)}
+                                          >
+                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                          </button>
+                                        </label>
+
+                                        <input
+                                          type="text"
+                                          name="cantidad"
+                                          id="cantidad"
+                                          placeholder="Cantidad"
+                                          autoComplete="cantidad"
+                                          onChange={(e) =>
+                                            handleChangeProcesos(index, e)
+                                          }
+                                          value={proceso.cantidad}
+                                          className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        />
+
+                                        <p className="text-red-500 text-s italic animate-pulse">
+                                          {errors.cantidad
+                                            ? errors.cantidad
+                                            : null}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                  {/* <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
+                                    <p className="inline uppercase text-gray-700">
                                       Telas
                                     </p>
-                                    <a onClick={() => addTelas()}>
+                                    <a onClick={() => addTela()}>
                                       <PlusIcon
                                         className="h-6 w-6 inline ml-2"
                                         aria-hidden="true"
@@ -426,7 +608,6 @@ export const ModalArticulos = ({
                                       </div>
                                     </div>
                                   ))}
-
                                   <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
                                     <p className="inline uppercase text-gray-700">
                                       Diseño
@@ -512,9 +693,8 @@ export const ModalArticulos = ({
                                         </p>
                                       </div>
                                     </div>
-                                  ))}
-
-                                  <div className="border border-gray-300 rounded p-2 col-span-6">
+                                  ))} */}
+                                  {/* <div className="border border-gray-300 rounded p-2 col-span-6">
                                     <label className="block text-sm font-medium text-gray-700">
                                       Foto del artículo
                                     </label>
@@ -598,7 +778,7 @@ export const ModalArticulos = ({
                                         )}
                                       </div>
                                     </div>
-                                  </div>
+                                  </div>  */}
                                 </div>
                                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                                   <button
@@ -613,13 +793,14 @@ export const ModalArticulos = ({
                                     onClick={() => {
                                       setCreateEdit(false);
                                       setErrors({});
-                                      setNewArticulo(articulo);
+                                      setItem(initialItem);
                                       setId(null);
-                                      setInputTelas([tela]);
+                                      /* setInputTelas([tela]);
                                       setInputAvios([avio]);
-                                      setInputDiseños([diseño]);
+                                      setInputDiseños([diseño]); */
+                                      /* setInputProcesos(procesos);
                                       setFile(null);
-                                      setFileDataURL(null);
+                                      setFileDataURL(null); */
                                     }}
                                   >
                                     Cancelar

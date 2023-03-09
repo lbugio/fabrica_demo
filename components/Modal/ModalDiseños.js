@@ -1,5 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useRef } from "react";
+import { Fragment, useRef, useReducer } from "react";
+
+
 
 export const ModalDiseños = ({
   createEdit,
@@ -13,9 +15,20 @@ export const ModalDiseños = ({
   setId,
   isSaving,
   isLoadingFieldData,
-  diseño,
+  diseño, 
+  state,
+  actualizarCampo,
+  limpiarFormulario
 }) => {
   const nameInput = useRef(null);
+
+
+ 
+
+  const enviarFormulario = (event) => {
+    event.preventDefault();
+    dispatch({ type: 'ENVIAR_FORMULARIO' });
+  };
 
   return (
     <Transition.Root show={createEdit} as={Fragment}>
@@ -80,8 +93,8 @@ export const ModalDiseños = ({
                                             ? "Cargando Nombre..."
                                             : "Nombre"
                                         }
-                                        onChange={handleChange}
-                                        value={newDiseño.nombre}
+                                        onChange={actualizarCampo}
+                                        value={state.nombre}
                                         ref={nameInput}
                                       />
                                       <p className="text-red-500 text-s italic">
@@ -106,8 +119,8 @@ export const ModalDiseños = ({
                                           id="precio"
                                           autoComplete="precio"
                                           className="placeholder:italic block w-full flex-1 rounded-none  border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                          onChange={handleChange}
-                                          value={newDiseño.precio}
+                                          onChange={actualizarCampo}
+                                          value={state.precio}
                                           placeholder={
                                             isLoadingFieldData
                                               ? "Cargando Precio..."
@@ -150,9 +163,9 @@ export const ModalDiseños = ({
                                     onClick={() => {
                                       setCreateEdit(false);
                                       setNewDiseño(diseño);
-
                                       setErrors({});
                                       setId(null);
+                                      limpiarFormulario()
                                     }}
                                   >
                                     Cancel

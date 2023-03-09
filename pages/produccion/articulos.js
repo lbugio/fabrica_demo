@@ -6,36 +6,19 @@ import { ModalArticulos } from "components/Modal/ModalArticulos";
 import { ModalArticulo } from "components/Modal/ModalArticulo";
 import { Notification } from "components/Notification";
 
-import { API_ARTICULOS } from "constants/enpoints";
+import API_ENDPOINTS from "constants/enpoints";
+
+const { ARTICULOS, PROCESOS, TELAS, AVIOS, DISEÑOS } = API_ENDPOINTS;
 
 export default function Articulos({
   articulos,
   columnas,
   laoderImage,
   procesosBack,
-  telas,
-  avios,
-  diseños,
+  telasBack,
+  aviosBack,
+  diseñosBack,
 }) {
-  /* const proceso = {
-    nombre: "",
-    cantidad: "",
-  };
-
-  const tela = {
-    nombre: "",
-    cantidad: "",
-  };
-
-  const avio = {
-    nombre: "",
-    cantidad: "",
-  };
-
-  const diseño = {
-    nombre: "",
-    cantidad: "",
-  }; */
 
   const initialItem = {
     numero: "",
@@ -43,9 +26,9 @@ export default function Articulos({
     descripcion: "",
     linea: "",
     procesos: [],
-    /* telas: [],
+    telas: [],
     avios: [],
-    diseños: [] */
+    diseños: []
   };
 
   const [createEdit, setCreateEdit] = useState(false);
@@ -73,8 +56,7 @@ export default function Articulos({
   const [selectedOption, setSelectedOption] = useState("");
   console.log("🚀 ~ file: articulos.js:75 ~ selectedOption:", selectedOption);
 
-  const [value, setValue] = useState(initialItem.procesos)
-
+  const [value, setValue] = useState(initialItem.procesos);
 
   const [item, setItem] = useState(initialItem);
 
@@ -86,7 +68,7 @@ export default function Articulos({
 
   useEffect(() => {
     const getArticulos = async () => {
-      const res2 = await fetch(API_ARTICULOS);
+      const res2 = await fetch(ARTICULOS);
       const dato2 = await res2.json();
       setData(dato2);
     };
@@ -96,7 +78,7 @@ export default function Articulos({
   useEffect(() => {
     const getArticulo = async () => {
       setIsLoadingData(true);
-      const res = await fetch(API_ARTICULOS + id);
+      const res = await fetch(ARTICULOS + id);
       setIsLoadingData(false);
       const articuloBack = await res.json();
       //setUltimoPrecio(precio);
@@ -132,9 +114,7 @@ export default function Articulos({
 
     if (name === "numero" && value) {
       // Check if the entered "numero" value already exists in the database
-      const response = await fetch(
-        API_ARTICULOS + `check-unique?value=${value}`
-      );
+      const response = await fetch(ARTICULOS + `check-unique?value=${value}`);
       const { unique } = await response.json();
       newErrors[name] = unique ? "" : `El articulo ${value} existe.`;
 
@@ -186,7 +166,7 @@ export default function Articulos({
 
   const createArticulo = async () => {
     try {
-      const response = await fetch(API_ARTICULOS, {
+      const response = await fetch(ARTICULOS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -277,22 +257,17 @@ export default function Articulos({
         avios={avios} */
         //articulo={articulo}
         createEdit={createEdit}
-        /* diseños={diseños}
-        diseño={diseño} */
+       
         errors={errors}
         handleDelete={handleDelete}
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         handleBlur={handleBlur}
-        //inputDiseños={inputDiseños}
         item={item}
         isLoading={isLoading}
         isSaving={isSaving}
         isLoadingData={isLoadingData}
-        /*   inputTelas={inputTelas}
-        inputAvios={inputAvios} */
-        //inputProcesos={inputProcesos}
-        //proceso={proceso}
+        
         procesosBack={procesosBack}
         setCreateEdit={setCreateEdit}
         setErrors={setErrors}
@@ -347,40 +322,27 @@ export default function Articulos({
 }
 
 export const getServerSideProps = async () => {
-  const resProcesos = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/procesos`
-  );
-  const procesosBack = await resProcesos.json();
 
-  const resArticulos = await fetch(
-    process.env.API_PRODUCCION || process.env.API_LOCAL + API_ARTICULOS
-  );
-  const articulos = await resArticulos.json();
+  const api = process.env.API_PRODUCCION || process.env.API_LOCAL;
 
-  const resTelas = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/telas`
-  );
-  const telas = await resTelas.json();
-
-  const resAvios = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/avios`
-  );
-  const avios = await resAvios.json();
-
-  const resDiseños = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/disenos`
-  );
-  const diseños = await resDiseños.json();
+  const [articulos, procesosBack, telasBack, aviosBack, diseñosBack] =
+    await Promise.all([
+      fetch(api + ARTICULOS).then((res) => res.json()),
+      fetch(api + PROCESOS).then((res) => res.json()),
+      fetch(api + TELAS).then((res) => res.json()),
+      fetch(api + AVIOS).then((res) => res.json()),
+      fetch(api + DISEÑOS).then((res) => res.json()),
+    ]);
 
   const columnas = ["articulo", "precio", "aumento", "actualizado", "accíón"];
 
   return {
     props: {
-      procesosBack,
       articulos,
-      telas,
-      avios,
-      diseños,
+      procesosBack,
+      telasBack,
+      aviosBack,
+      diseñosBack,
       columnas,
     },
   };

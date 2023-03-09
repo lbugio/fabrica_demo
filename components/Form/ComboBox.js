@@ -13,10 +13,6 @@ export function ComboBox({ options, placeholder, value, selectedOption, setSelec
           return item.nombre.toLowerCase().includes(query.toLowerCase());
         });
 
-  /* const handlePersonChange = (value) => {
-        setSelectedOption(value._id);
-        onPersonChange(value);
-  }; */
 
   return (
     <Combobox value={selectedOption} onChange={setSelectedOption}>

@@ -3,16 +3,11 @@ import { Listbox, Transition } from '@headlessui/react'
 import {ChevronDownIcon } from "@heroicons/react/20/solid";
 
 export function ListBox({ options, selectedOption, onChange}) {
-  console.log("🚀 ~ file: ListBox.js:6 ~ ListBox ~ selectedOption:", selectedOption)
-  //const [selectedOption, setSelectedOption] = useState(value);
 
- /*  const handleSelect = (option) => {
-    setSelectedOption(option);
-  }; */
 
 
    return (
-    <Listbox value={selectedOption} onChange={onChange} by="nombre" >
+    <Listbox value={selectedOption} onChange={onChange}>
       <div className="relative mt-1">
         <Listbox.Button className="relative mt-1 block w-full border-gray-300 rounded-md bg-white py-2 pl-3 pr-10 text-left focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
            <span className="block truncate">

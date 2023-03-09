@@ -1,12 +1,9 @@
 import { dbConnect } from "utils/mongoose";
 import Articulo from "models/Articulo";
 
-import {
-  STATUS_OK,
-  STATUS_NOT_FOUND,
-  STATUS_BAD_REQUEST,
-  STATUS_NO_CONTENT,
-} from "constants/status";
+import STATUS from "constants/status";
+
+const { OK, NOT_FOUND, BAD_REQUEST } = STATUS;
 
 // Connect to the database
 
@@ -24,12 +21,15 @@ export default async function articulosHandler(req, res) {
       try {
         // Busca el artículo por id y realiza el populate de los datos necesarios
         const articulo = await Articulo.findById(id).populate([
-         /*  { path: "telas.nombre", select: "precio unidad nombre" },
+          /*  { path: "telas.nombre", select: "precio unidad nombre" },
           { path: "avios.nombre", select: "precio nombre" },
           { path: "diseños.nombre", select: "precio nombre" }, */
           { path: "procesos.id", select: "precio nombre" },
         ]);
-        console.log("🚀 ~ file: [id].js:32 ~ articulosHandler ~ articulo:", articulo)
+        console.log(
+          "🚀 ~ file: [id].js:32 ~ articulosHandler ~ articulo:",
+          articulo
+        );
 
         const precioConsumoTelas = Number(
           articulo.telas
@@ -112,10 +112,10 @@ export default async function articulosHandler(req, res) {
           procesos: articulo.procesos.map(({ id, cantidad }) => ({
             id: id._id,
             nombre: id.nombre,
-             cantidad: cantidad,
+            cantidad: cantidad,
             precio: id.precio,
             unidad: "",
-            unidadConsumo: "", 
+            unidadConsumo: "",
           })),
           precioConsumoTelas,
           precioConsumoAvios,
@@ -127,13 +127,13 @@ export default async function articulosHandler(req, res) {
         // Devuelve el artículo si existe
         if (!formattedArticulo)
           return res
-            .status(STATUS_NOT_FOUND)
+            .status(NOT_FOUND)
             .json({ msg: "El articulo no existe" });
 
-        return res.status(STATUS_OK).json(formattedArticulo);
+        return res.status(OK).json(formattedArticulo);
       } catch (error) {
         // Maneja los errores de la solicitud
-        return res.status(STATUS_BAD_REQUEST).json({ msg: error.message });
+        return res.status(BAD_REQUEST).json({ msg: error.message });
       }
     case "PUT":
       try {
@@ -141,31 +141,36 @@ export default async function articulosHandler(req, res) {
           new: true,
           runValidators: true,
         });
-        console.log("🚀 ~ file: [id].js:143 ~ articulosHandler ~ articulo:", articulo)
+        console.log(
+          "🚀 ~ file: [id].js:143 ~ articulosHandler ~ articulo:",
+          articulo
+        );
         if (!articulo)
           return res
-            .status(STATUS_NOT_FOUND)
+            .status(NOT_FOUND)
             .json({ msg: "El articulo no existe" });
         return res
-          .status(STATUS_OK)
+          .status(OK)
           .json({ msg: `Se actualizo el articulo ${articulo.numero}` });
       } catch (error) {
-        return res.status(STATUS_BAD_REQUEST).json({ msg: error.message });
+        return res.status(BAD_REQUEST).json({ msg: error.message });
       }
     case "DELETE":
       try {
         const deletedArticulo = await Articulo.findByIdAndDelete(id);
         if (!deletedArticulo)
           return res
-            .status(STATUS_NOT_FOUND)
+            .status(NOT_FOUND)
             .json({ msg: "El articulo no existe" });
-        return res.status(STATUS_OK).json({msg:`Se elimino el articulo ${deletedArticulo.numero}`});
+        return res
+          .status(OK)
+          .json({ msg: `Se elimino el articulo ${deletedArticulo.numero}` });
       } catch (error) {
-        return res.status(STATUS_BAD_REQUEST).json({ msg: error.message });
+        return res.status(BAD_REQUEST).json({ msg: error.message });
       }
     default:
       return res
-        .status(STATUS_BAD_REQUEST)
+        .status(BAD_REQUEST)
         .json({ msg: "Este metodo no es soportado" });
   }
 }

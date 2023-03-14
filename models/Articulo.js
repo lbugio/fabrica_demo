@@ -36,19 +36,22 @@ const ArticuloSchema = new Schema(
     ],
     telas: [
       {
-        nombre: { type: Schema.Types.ObjectId, ref: "Tela" },
+        id: { type: Schema.Types.ObjectId, ref: "Tela" },
+        nombre: { type: String },
         cantidad: { type: Number },
       },
     ],
     avios: [
       {
-        nombre: { type: Schema.Types.ObjectId, ref: "Avio" },
+        id: { type: Schema.Types.ObjectId, ref: "Avio" },
+        nombre: { type: String },
         cantidad: { type: Number },
       },
     ],
     diseños: [
       {
-        nombre: { type: Schema.Types.ObjectId, ref: "Diseño" },
+        id: { type: Schema.Types.ObjectId, ref: "Diseño" },
+        nombre: { type: String },
         cantidad: { type: Number },
       },
     ],

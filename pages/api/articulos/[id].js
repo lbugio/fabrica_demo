@@ -21,26 +21,35 @@ export default async function articulosHandler(req, res) {
       try {
         // Busca el artículo por id y realiza el populate de los datos necesarios
         const articulo = await Articulo.findById(id).populate([
-          /*  { path: "telas.nombre", select: "precio unidad nombre" },
-          { path: "avios.nombre", select: "precio nombre" },
-          { path: "diseños.nombre", select: "precio nombre" }, */
           { path: "procesos.id", select: "precio nombre" },
+          { path: "telas.id", select: "precio unidad nombre" },
+          { path: "avios.id", select: "precio nombre" },
+          { path: "diseños.id", select: "precio nombre" },
         ]);
-        console.log(
-          "🚀 ~ file: [id].js:32 ~ articulosHandler ~ articulo:",
-          articulo
-        );
+        console.log("🚀 ~ file: [id].js:29 ~ articulosHandler ~ articulo:", articulo)
+
+        const precioConsumoProcesos = articulo.procesos
+          ? Number(
+              articulo.procesos
+                .map(
+                  ({ id, cantidad }) =>
+                    cantidad * (id ? id.precio : 0)
+                )
+                .reduce((prev, curr) => prev + curr, 0)
+                .toFixed(2)
+            )
+          : 0;
 
         const precioConsumoTelas = Number(
           articulo.telas
-            .map(({ nombre, cantidad }) => {
-              switch (nombre.unidad) {
+            .map(({ id, cantidad }) => {
+              switch (id.unidad) {
                 case "kg.":
-                  return (cantidad * (nombre ? nombre.precio : 0)) / 1000;
+                  return (cantidad * (id ? id.precio : 0)) / 1000;
                 case "m.":
-                  return (cantidad * nombre.precio) / 100;
+                  return (cantidad * id.precio) / 100;
                 default:
-                  return cantidad * nombre.precio;
+                  return cantidad * id.precio;
               }
             })
             .reduce((prev, curr) => prev + curr, 0)
@@ -50,7 +59,7 @@ export default async function articulosHandler(req, res) {
         const precioConsumoAvios = Number(
           articulo.avios
             .map(
-              ({ nombre, cantidad }) => cantidad * (nombre ? nombre.precio : 0)
+              ({ id, cantidad }) => cantidad * (id ? id.precio : 0)
             )
             .reduce((prev, curr) => prev + curr, 0)
             .toFixed(2)
@@ -60,20 +69,8 @@ export default async function articulosHandler(req, res) {
           ? Number(
               articulo.diseños
                 .map(
-                  ({ nombre, cantidad }) =>
-                    cantidad * (nombre ? nombre.precio : 0)
-                )
-                .reduce((prev, curr) => prev + curr, 0)
-                .toFixed(2)
-            )
-          : 0;
-
-        const precioConsumoProcesos = articulo.procesos
-          ? Number(
-              articulo.procesos
-                .map(
-                  ({ nombre, cantidad }) =>
-                    cantidad * (nombre ? nombre.precio : 0)
+                  ({ id, cantidad }) =>
+                    cantidad * (id ? id.precio : 0)
                 )
                 .reduce((prev, curr) => prev + curr, 0)
                 .toFixed(2)
@@ -88,34 +85,39 @@ export default async function articulosHandler(req, res) {
 
         const formattedArticulo = {
           ...articulo.toObject(),
-          telas: articulo.telas.map(({ nombre, cantidad }) => ({
-            nombre: nombre.nombre,
+          procesos: articulo.procesos.map(
+            ({ id: { _id, nombre, precio, unidad }, cantidad }) => ({
+              id: _id,
+              nombre: nombre,
+              cantidad: cantidad,
+              precio: precio,
+              unidad,
+              unidadConsumo: "",
+            })
+          ),
+          telas: articulo.telas.map(({ id, cantidad }) => ({
+            id: id._id,
+            nombre: id.nombre,
             cantidad,
-            precio: nombre.precio,
-            unidad: nombre.unidad,
+            precio: id.precio,
+            unidad: id.unidad,
             unidadConsumo: "grms.",
           })),
-          avios: articulo.avios.map(({ nombre, cantidad }) => ({
-            nombre: nombre.nombre,
-            cantidad: cantidad,
-            precio: nombre.precio,
-            unidad: "u.",
-            unidadConsumo: "u.",
-          })),
-          diseños: articulo.diseños.map(({ nombre, cantidad }) => ({
-            nombre: nombre.nombre,
-            cantidad: cantidad,
-            precio: nombre.precio,
-            unidad: "u.",
-            unidadConsumo: "u.",
-          })),
-          procesos: articulo.procesos.map(({ id, cantidad }) => ({
+          avios: articulo.avios.map(({ id, cantidad }) => ({
             id: id._id,
             nombre: id.nombre,
             cantidad: cantidad,
             precio: id.precio,
-            unidad: "",
-            unidadConsumo: "",
+            unidad: "u.",
+            unidadConsumo: "u.",
+          })),
+          diseños: articulo.diseños.map(({ id, cantidad }) => ({
+            id: id._id,
+            nombre: id.nombre,
+            cantidad: cantidad,
+            precio: id.precio,
+            unidad: "u.",
+            unidadConsumo: "u.",
           })),
           precioConsumoTelas,
           precioConsumoAvios,
@@ -124,11 +126,14 @@ export default async function articulosHandler(req, res) {
           costoDirecto,
         };
 
+        console.log(
+          "🚀 ~ file: [id].js:86 ~ articulosHandler ~ formattedArticulo:",
+          formattedArticulo
+        );
+
         // Devuelve el artículo si existe
         if (!formattedArticulo)
-          return res
-            .status(NOT_FOUND)
-            .json({ msg: "El articulo no existe" });
+          return res.status(NOT_FOUND).json({ msg: "El articulo no existe" });
 
         return res.status(OK).json(formattedArticulo);
       } catch (error) {
@@ -146,9 +151,7 @@ export default async function articulosHandler(req, res) {
           articulo
         );
         if (!articulo)
-          return res
-            .status(NOT_FOUND)
-            .json({ msg: "El articulo no existe" });
+          return res.status(NOT_FOUND).json({ msg: "El articulo no existe" });
         return res
           .status(OK)
           .json({ msg: `Se actualizo el articulo ${articulo.numero}` });
@@ -159,9 +162,7 @@ export default async function articulosHandler(req, res) {
       try {
         const deletedArticulo = await Articulo.findByIdAndDelete(id);
         if (!deletedArticulo)
-          return res
-            .status(NOT_FOUND)
-            .json({ msg: "El articulo no existe" });
+          return res.status(NOT_FOUND).json({ msg: "El articulo no existe" });
         return res
           .status(OK)
           .json({ msg: `Se elimino el articulo ${deletedArticulo.numero}` });

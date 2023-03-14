@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import {  Fragment, useRef } from "react";
+import { Fragment, useRef } from "react";
 
 export const ModalDelete = ({
   confirm,
@@ -8,7 +8,8 @@ export const ModalDelete = ({
   handleDelete,
   setId,
   isLoading,
-  limpiarFormulario
+  initialItem,
+  setItem
 }) => {
   const cancelButtonRef = useRef(null);
 
@@ -100,7 +101,7 @@ export const ModalDelete = ({
                     onClick={() => {
                       setConfirm(false);
                       setId(null);
-                      //limpiarFormulario()
+                      setItem(initialItem)
                     }}
                     ref={cancelButtonRef}
                   >

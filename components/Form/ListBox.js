@@ -40,7 +40,7 @@ export function ListBox({ options, selectedOption, onChange}) {
               }
               value={option}
             >
-              {option.nombre}
+              {option.nombre} <span className="">{'$'+option.precio}</span>
             </Listbox.Option>
           ))}
         </Listbox.Options>  

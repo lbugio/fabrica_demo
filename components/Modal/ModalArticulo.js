@@ -1,17 +1,32 @@
-import { Fragment } from "react";
+import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
+import { PrinterIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import ReactToPrint from "react-to-print";
 
 export const ModalArticulo = ({
-  articulo,
   ficha,
   setFicha,
   setId,
-  componentes,
   item,
-  setItem
+  setItem,
+  initialItem,
 }) => {
-  const { numero, linea, descripcion, costoDirecto } = item;
+  const {
+    numero,
+    tipo,
+    linea,
+    descripcion,
+    procesos,
+    telas,
+    avios,
+    diseños,
+    costoDirecto,
+  } = item;
+
+  const componentes = [...procesos, ...telas, ...avios, ...diseños];
+
+  const printRef = useRef();
 
   //funcion para calcular el precio unitario
   const totalPorItem = (precio, consumo, unidad) => {
@@ -25,9 +40,17 @@ export const ModalArticulo = ({
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <Transition.Root show={ficha} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setFicha}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        onClose={() => null}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -37,7 +60,10 @@ export const ModalArticulo = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity " />
+          <div
+            className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity 
+          "
+          />
         </Transition.Child>
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -59,90 +85,73 @@ export const ModalArticulo = ({
                     height={200}
                     className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
                   />
+
                   <section>
-                    <div className="max-w-5xl mx-auto bg-white">
+                    <div className="flex justify-end p-2 text-slate-500">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFicha(false);
+                          setId(null);
+                          setItem(initialItem);
+                        }}
+                      >
+                        <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                      </button>
+                    </div>
+                    <div className="max-w-5xl mx-auto bg-white" ref={printRef}>
                       <article className="overflow-hidden">
                         <div className="bg-[white] rounded-b-md">
-                          <div className="p-9">
-                            <div className="space-y-6 text-slate-700">
-                              <p className="text-xl font-extrabold tracking-tight uppercase font-body">
-                                {numero} {linea} {descripcion}
-                              </p>
-                            </div>
-                          </div>
-                          {/* <div className="p-9">
-                            <div className="flex w-full">
-                              <div className="grid grid-cols-4 gap-12">
-                                <div className="text-sm font-light text-slate-500">
-                                  <p className="text-sm font-normal text-slate-700">
-                                    Invoice Detail:
-                                  </p>
-                                  <p>Unwrapped</p>
-                                  <p>Fake Street 123</p>
-                                  <p>San Javier</p>
-                                  <p>CA 1234</p>
-                                </div>
-                                <div className="text-sm font-light text-slate-500">
-                                  <p className="text-sm font-normal text-slate-700">
-                                    Billed To
-                                  </p>
-                                  <p>The Boring Company</p>
-                                  <p>Tesla Street 007</p>
-                                  <p>Frisco</p>
-                                  <p>CA 0000</p>
-                                </div>
-                                <div className="text-sm font-light text-slate-500">
-                                  <p className="text-sm font-normal text-slate-700">
-                                    Invoice Number
-                                  </p>
-                                  <p>000000</p>
-
-                                  <p className="mt-2 text-sm font-normal text-slate-700">
-                                    Date of Issue
-                                  </p>
-                                  <p>00.00.00</p>
-                                </div>
-                                <div className="text-sm font-light text-slate-500">
-                                  <p className="text-sm font-normal text-slate-700">
-                                    Terms
-                                  </p>
-                                  <p>0 Days</p>
-
-                                  <p className="mt-2 text-sm font-normal text-slate-700">
-                                    Due
-                                  </p>
-                                  <p>00.00.00</p>
-                                </div>
+                          <div className="p-9 pb-2">
+                            <div className="flex justify-end w-full">
+                              <div className="text-sm font-light text-slate-500">
+                                <p className=" flex justify-end text-xl font-normal">
+                                  {numero}
+                                </p>
+                                <p className="flex justify-end p-1">
+                                  <span className="font-bold mr-2">Linea:</span>
+                                  {linea}
+                                </p>
+                                <p className=" flex justify-end p-1">
+                                  <span className="font-bold mr-2">Tipo:</span>
+                                  {tipo}
+                                </p>
+                                <p className=" flex justify-end p-1">
+                                  <span className="font-bold mr-2">
+                                    Descripcion:
+                                  </span>
+                                  {descripcion}
+                                </p>
                               </div>
                             </div>
-                          </div> */}
+                          </div>
 
-                          <div className="p-9">
+                          <div className="p-9 pt-1">
                             <div className="flex flex-col mx-0 mt-8">
                               <table className="min-w-full divide-y divide-slate-500">
                                 <thead>
                                   <tr>
                                     <th
                                       scope="col"
-                                      className="py-3.5 pl-4 pr-3 text-left text-sm font-normal text-slate-700 sm:pl-6 md:pl-0"
+                                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-slate-700 sm:pl-6 md:pl-0"
                                     >
                                       Descricpción
                                     </th>
                                     <th
                                       scope="col"
-                                      className="hidden py-3.5 px-3 text-right text-sm font-normal text-slate-700 sm:table-cell"
+                                      className="hidden py-3.5 px-3 text-right text-sm font-semibold text-slate-700 sm:table-cell"
                                     >
                                       Consumo
                                     </th>
                                     <th
                                       scope="col"
-                                      className="hidden py-3.5 px-3 text-right text-sm font-normal text-slate-700 sm:table-cell"
+                                      className="hidden py-3.5 px-3 text-right text-sm font-semibold text-slate-700 sm:table-cell"
                                     >
                                       Precio Unitario
                                     </th>
                                     <th
                                       scope="col"
-                                      className="py-3.5 pl-3 pr-4 text-right text-sm font-normal text-slate-700 sm:pr-6 md:pr-0"
+                                      className="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-slate-700 sm:pr-6 md:pr-0"
                                     >
                                       Total
                                     </th>
@@ -202,7 +211,7 @@ export const ModalArticulo = ({
                                     <th
                                       scope="row"
                                       colSpan="3"
-                                      className="hidden pt-4 pl-6 pr-3 text-sm font-normal text-right text-slate-700 sm:table-cell md:pl-0"
+                                      className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                     >
                                       Costo Directo
                                     </th>
@@ -213,7 +222,7 @@ export const ModalArticulo = ({
                                       Total
                                     </th>
                                     <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                                      {"$"} {costoDirecto}
+                                      {"$ " + costoDirecto}
                                     </td>
                                   </tr>
                                 </tfoot>
@@ -224,17 +233,27 @@ export const ModalArticulo = ({
                       </article>
                     </div>
                     <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                      <button
-                        type="button"
-                        className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                        onClick={() => {
-                          setFicha(false);
-                          setId(null);
-                          setItem([articulo]);
-                        }}
-                      >
-                        Cerrar
-                      </button>
+                      <ReactToPrint
+                        trigger={() => (
+                          <button
+                            type="button"
+                            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                            onClick={() => {
+                              setFicha(false);
+                              setId(null);
+                              setItem(initialItem);
+                            }}
+                          >
+                            {" "}
+                            Imprimir
+                            <PrinterIcon
+                              className="h-5 w-5 ml-1"
+                              aria-hidden="true"
+                            />
+                          </button>
+                        )}
+                        content={() => printRef.current}
+                      />
                     </div>
                   </section>
                 </div>

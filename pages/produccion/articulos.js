@@ -19,7 +19,6 @@ export default function Articulos({
   aviosBack,
   diseñosBack,
 }) {
-
   const initialItem = {
     numero: "",
     tipo: "",
@@ -28,7 +27,7 @@ export default function Articulos({
     procesos: [],
     telas: [],
     avios: [],
-    diseños: []
+    diseños: [],
   };
 
   const [createEdit, setCreateEdit] = useState(false);
@@ -54,7 +53,6 @@ export default function Articulos({
   ];
 
   const [selectedOption, setSelectedOption] = useState("");
-  console.log("🚀 ~ file: articulos.js:75 ~ selectedOption:", selectedOption);
 
   const [value, setValue] = useState(initialItem.procesos);
 
@@ -110,7 +108,9 @@ export default function Articulos({
   };
 
   const handleBlur = async ({ target: { name, value } }) => {
+
     const newErrors = {};
+
 
     if (name === "numero" && value) {
       // Check if the entered "numero" value already exists in the database
@@ -130,8 +130,8 @@ export default function Articulos({
   };
 
   const validate = () => {
-    const { numero, tipo, descripcion, linea } = item;
-
+    const { numero, tipo, descripcion, linea, procesos, telas, avios, diseños } = item;
+    
     const errors = {};
 
     if (!numero) errors.numero = "Ingrese el número.";
@@ -151,11 +151,6 @@ export default function Articulos({
     setIsSaving(true);
     if (id) {
       await updateArticulo();
-      //setItem(articulo);
-      //setInputProcesos([procesos]);
-      /* setInputTelas([tela]);
-      setInputAvios([avio]);
-      setInputDiseños([diseño]); */
       setId(null);
       closeCreateEdit();
     } else {
@@ -188,7 +183,6 @@ export default function Articulos({
   };
 
   const updateArticulo = async () => {
-    console.log("🚀 ~ file: articulos.js:212 ~ updateArticulo ~ item:", item);
     try {
       const response = await fetch(`/api/articulos/${id}`, {
         method: "PUT",
@@ -252,12 +246,9 @@ export default function Articulos({
         laoderImage={laoderImage}
         setIsLoading={setIsLoading}
       />
+
       <ModalArticulos
-        /* avio={avio}
-        avios={avios} */
-        //articulo={articulo}
         createEdit={createEdit}
-       
         errors={errors}
         handleDelete={handleDelete}
         handleSubmit={handleSubmit}
@@ -267,18 +258,14 @@ export default function Articulos({
         isLoading={isLoading}
         isSaving={isSaving}
         isLoadingData={isLoadingData}
-        
         procesosBack={procesosBack}
+        telasBack={telasBack}
+        aviosBack={aviosBack}
+        diseñosBack={diseñosBack}
         setCreateEdit={setCreateEdit}
         setErrors={setErrors}
         setId={setId}
         setItem={setItem}
-        /*   tela={tela}
-        telas={telas} */
-        /* setInputTelas={setInputTelas}
-        setInputAvios={setInputAvios}
-        setInputDiseños={setInputDiseños} */
-        //setInputProcesos={setInputProcesos}
         initialItem={initialItem}
         setSelectedOption={setSelectedOption}
         selectedOption={selectedOption}
@@ -292,13 +279,9 @@ export default function Articulos({
         setId={setId}
         item={item}
         componentes={componentes}
-        //articulo={articulo}
         setItem={setItem}
-        /* setInputTelas={setInputTelas}
-        setInputAvios={setInputAvios}
-        setInputDiseños={setInputDiseños} */
-        //setInputProcesos={setInputProcesos}
         handleBlur={handleBlur}
+        initialItem={initialItem}
       />
 
       <ModalDelete
@@ -322,7 +305,6 @@ export default function Articulos({
 }
 
 export const getServerSideProps = async () => {
-
   const api = process.env.API_PRODUCCION || process.env.API_LOCAL;
 
   const [articulos, procesosBack, telasBack, aviosBack, diseñosBack] =

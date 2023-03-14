@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const articulos = await Articulo.find().populate([
+        const articulos = await Articulo.find().sort({numero:1}).populate([
           { path: "telas.nombre", select: "precio unidad" },
           { path: "avios.nombre", select: "nombre precio" },
           { path: "diseños.nombre", select: "nombre precio" },

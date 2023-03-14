@@ -1,12 +1,7 @@
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/24/solid";
-import { Combobox } from "@headlessui/react";
-
-import { ComboBox } from "components/Form/ComboBox";
 import { ListBox } from "components/Form/ListBox";
-import { Select } from "components/Form/Select";
-import { useStyleRegistry } from "styled-jsx";
 
 export const ModalArticulos = ({
   createEdit,
@@ -19,158 +14,145 @@ export const ModalArticulos = ({
   item,
   setItem,
   setId,
-  articulo,
-  tela,
-  telas,
-  /* inputTelas,
-  setInputTelas, */
-  avio,
-  avios,
-  inputAvios,
-  setInputAvios,
-  diseño,
-  diseños,
-  /* inputDiseños,
-  setInputDiseños, */
-  inputProcesos,
-  setInputProcesos,
   procesosBack,
-  initialProceso,
+  telasBack,
+  aviosBack,
+  diseñosBack,
   initialItem,
-  setValue,
-  value,
 }) => {
-  console.log("🚀 ~ file: ModalArticulos.js:43 ~ procesosBack:", procesosBack);
-  //campos dinamicos
+  const { procesos, telas, avios, diseños } = item;
 
-  const { procesos } = item;
+  const nameInput = useRef(null);
 
-  const nuevoProceso = {
+  const nuevoComponente = {
     nombre: "",
     cantidad: "",
-    id:""
+    id: "",
   };
 
   const addProceso = () => {
     setItem({
       ...item,
-      procesos: [...item.procesos, nuevoProceso],
+      procesos: [...item.procesos, nuevoComponente],
     });
   };
-  const handleSelectOption = (i, e) => {
-  console.log("🚀 ~ file: ModalArticulos.js:56 ~ handleSelectOption ~ e:", e)
 
-    const procesos = [...item.procesos];
-    procesos[i]["nombre"] = e.nombre;
-    procesos[i]["id"] = e._id;
-    setItem({ ...item, procesos });
+  const handleChangeProcesoListbox = (i, e) => {
+    setItem((prevState) => {
+      const procesos = [...prevState.procesos];
+      procesos[i]["nombre"] = e.nombre;
+      procesos[i]["id"] = e._id;
+      return { ...prevState, procesos };
+    });
   };
 
-  const handleChangeProcesosInput = (i, e) => {
+  const handleChangeProcesoInput = (i, e) => {
     const { name, value } = e.target;
-    const procesos = [...item.procesos];
-
-    procesos[i][name] = value;
-    setItem({ ...item, procesos });
-  };
-
-  
-
-  /* const handleChangeProcesos = (i, e) => {
-    const { name, value } = e.target;
-    const procesos = [...item.procesos];
-    procesos[i][name] = value;
-    setItem({ ...item, procesos });
-    console.log("🚀 ~ file: ModalArticulos.js:77 ~ handleChangeProcesos ~ item:", item)
-  }; */
-
-  const removeProceso = (i) => {
-    const procesos = [...item.procesos];
-    procesos.splice(i, 1);
-    setItem({ ...item, procesos });
-  };
-
-  /*const handleChangeProcesos = (i, e) => {
-    const { name, value } = e.target;
-    const telas = [...item.telas];
-    telas[i][name] = value;
-    setItem({ ...item, telas });
-  }; */
-
-  /* const handleChangeProcesosInput = (i, e) => {
-    const { name, value } = e.target;
-    const procesos = [...item.procesos];
-
-    procesos[i][name] = value;
-    setItem({ ...item, procesos });
+    setItem((prevState) => {
+      const procesos = [...prevState.procesos];
+      procesos[i][name] = value;
+      return { ...prevState, procesos };
+    });
   };
 
   const removeProceso = (i) => {
     const procesos = [...item.procesos];
     procesos.splice(i, 1);
     setItem({ ...item, procesos });
-  }; */
+  };
 
-  /*  const handlePersonChange = (nombre, index) => {
-    console.log("🚀 ~ file: ModalArticulos.js:68 ~ handlePersonChange ~ index:", index)
-    console.log("🚀 ~ file: ModalArticulos.js:68 ~ handlePersonChange ~ proceso:", nombre)
-    
-  } */
-  /* let addTela = () => {
+  const addTela = () => {
     setItem({
       ...item,
-      procesos: [...item.procesos, nuevaTela],
+      telas: [...item.telas, nuevoComponente],
     });
-  }; */
-
-  /* const handleChangeTelas = (i, e) => {
-    const { name, value } = e.target;
-    const telas = [...item.telas];
-    telas[i][name] = value;
-    setItem({ ...item, telas });
   };
 
-  const removeTelas = (i) => {
+  const handleChangeTelaListbox = (i, e) => {
+    setItem((prevState) => {
+      const telas = [...prevState.telas];
+      telas[i]["nombre"] = e.nombre;
+      telas[i]["id"] = e._id;
+      return { ...prevState, telas };
+    });
+  };
+
+  const handleChangeTelaInput = (i, e) => {
+    const { name, value } = e.target;
+    setItem((prevState) => {
+      const telas = [...prevState.telas];
+      telas[i][name] = value;
+      return { ...prevState, telas };
+    });
+  };
+
+  const removeTela = (i) => {
     const telas = [...item.telas];
     telas.splice(i, 1);
     setItem({ ...item, telas });
   };
 
-  let addAvios = () => {
-    setInputAvios([...inputAvios, avio]);
+  const addAvio = () => {
+    setItem({
+      ...item,
+      avios: [...item.avios, nuevoComponente],
+    });
   };
 
-  const handleChangeAvios = (i, e) => {
-    const avios = [...inputAvios];
-    avios[i][e.target.name] = e.target.value;
-    setInputAvios(avios);
+  const handleChangeAvioListbox = (i, e) => {
+    setItem((prevState) => {
+      const avios = [...prevState.avios];
+      avios[i]["nombre"] = e.nombre;
+      avios[i]["id"] = e._id;
+      return { ...prevState, avios };
+    });
+  };
+
+  const handleChangeAvioInput = (i, e) => {
+    const { name, value } = e.target;
+    setItem((prevState) => {
+      const avios = [...prevState.avios];
+      avios[i][name] = value;
+      return { ...prevState, avios };
+    });
+  };
+
+  const removeAvio = (i) => {
+    const avios = [...item.avios];
+    avios.splice(i, 1);
     setItem({ ...item, avios });
   };
 
-  const removeAvios = (i) => {
-    let avios = [...inputAvios];
-    avios.splice(i, 1);
-    setInputAvios(avios);
+  const addDiseño = () => {
+    setItem({
+      ...item,
+      diseños: [...item.diseños, nuevoComponente],
+    });
   };
 
-  let addDiseños = () => {
-    setInputDiseños([...inputDiseños, diseño]);
+  const handleChangeDiseñoListbox = (i, e) => {
+    setItem((prevState) => {
+      const diseños = [...prevState.diseños];
+      diseños[i]["nombre"] = e.nombre;
+      diseños[i]["id"] = e._id;
+      return { ...prevState, diseños };
+    });
   };
 
-  const handleChangeDiseños = (i, e) => {
-    const diseños = [...inputDiseños];
-    diseños[i][e.target.name] = e.target.value;
-    setInputDiseños(diseños);
+  const handleChangeDiseñoInput = (i, e) => {
+    const { name, value } = e.target;
+    setItem((prevState) => {
+      const diseños = [...prevState.diseños];
+      diseños[i][name] = value;
+      return { ...prevState, diseños };
+    });
+  };
+
+  const removeDiseño = (i) => {
+    const diseños = [...item.diseños];
+    diseños.splice(i, 1);
     setItem({ ...item, diseños });
   };
-
-  const removeDiseños = (i) => {
-    let diseños = [...inputDiseños];
-    diseños.splice(i, 1);
-    setInputTelas(diseños);
-  }; */
-
-  const nameInput = useRef(null);
 
   //Imagen
   /*const imageMimeType = /image\/(png|jpg|jpeg|svg)/i;
@@ -268,7 +250,6 @@ export const ModalArticulos = ({
                                         type="text"
                                         name="numero"
                                         id="numero"
-                                        autoComplete="given-name"
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         placeholder="Número"
                                         onChange={handleChange}
@@ -293,7 +274,6 @@ export const ModalArticulos = ({
                                         name="tipo"
                                         id="tipo"
                                         placeholder="Tipo"
-                                        autoComplete="address-level2"
                                         onChange={handleChange}
                                         value={item.tipo}
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -317,7 +297,6 @@ export const ModalArticulos = ({
                                         name="linea"
                                         id="linea"
                                         placeholder="Línea"
-                                        autoComplete="address-level2"
                                         onChange={handleChange}
                                         value={item.linea}
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -339,7 +318,6 @@ export const ModalArticulos = ({
                                         name="descripcion"
                                         id="descripcion"
                                         placeholder="Descripción"
-                                        autoComplete="descripcion"
                                         onChange={handleChange}
                                         value={item.descripcion}
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -378,31 +356,11 @@ export const ModalArticulos = ({
                                           options={procesosBack}
                                           selectedOption={proceso}
                                           onChange={(e) =>
-                                            handleSelectOption(index, e)
+                                            handleChangeProcesoListbox(index, e)
                                           }
-                                        /> 
-                                        {/*  <select
-                                            id="nombreComponente"
-                                            name="nombre"
-                                            autoComplete="nombre"
-                                            className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                            onChange={(e) =>
-                                              handleChangeProcesos(index, e)
-                                            }
-                                            value={procesos.nombre}
-                                          >
-                                            {procesosBack.map((item) => (
-                                              <option
-                                                className=""
-                                                key={item._id}
-                                                value={item._id}
-                                              >
-                                                {item.nombre}
-                                              </option>
-                                            ))}
-                                          </select>   */}
+                                        />
                                         <p className="text-red-500 text-s italic animate-pulse">
-                                          {errors.nombre ? errors.nombre : null}
+                                          {errors.procesos ? errors.procesos : null}
                                         </p>
                                       </div>
                                       <div className="col-span-6 sm:col-span-2 lg:col-span-2">
@@ -424,9 +382,8 @@ export const ModalArticulos = ({
                                           name="cantidad"
                                           id="cantidad"
                                           placeholder="Cantidad"
-                                          autoComplete="cantidad"
                                           onChange={(e) =>
-                                            handleChangeProcesos(index, e)
+                                            handleChangeProcesoInput(index, e)
                                           }
                                           value={proceso.cantidad}
                                           className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -440,7 +397,7 @@ export const ModalArticulos = ({
                                       </div>
                                     </div>
                                   ))}
-                                  {/* <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
+                                  <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
                                     <p className="inline uppercase text-gray-700">
                                       Telas
                                     </p>
@@ -451,7 +408,7 @@ export const ModalArticulos = ({
                                       />
                                     </a>
                                   </div>
-                                  {inputTelas.map((tela, index) => (
+                                  {telas.map((tela, index) => (
                                     <div
                                       className="grid grid-cols-6 gap-6 mt-3"
                                       key={index}
@@ -463,26 +420,13 @@ export const ModalArticulos = ({
                                         >
                                           Nombre
                                         </label>
-                                        <select
-                                          id="nombreComponente"
-                                          name="nombre"
-                                          autoComplete="nombre"
-                                          className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        <ListBox
+                                          options={telasBack}
+                                          selectedOption={tela}
                                           onChange={(e) =>
-                                            handleChangeTelas(index, e)
+                                            handleChangeTelaListbox(index, e)
                                           }
-                                          value={tela.nombre}
-                                        >
-                                          {telas.map((item) => (
-                                            <option
-                                              className=""
-                                              key={item._id}
-                                              value={[item._id]}
-                                            >
-                                              {item.nombre}
-                                            </option>
-                                          ))}
-                                        </select>
+                                        />
                                         <p className="text-red-500 text-s italic animate-pulse">
                                           {errors.nombre ? errors.nombre : null}
                                         </p>
@@ -493,14 +437,12 @@ export const ModalArticulos = ({
                                           className="flex justify-between text-sm font-medium text-gray-700"
                                         >
                                           Cantidad
-                                          {index ? (
-                                            <button
-                                              type="button"
-                                              onClick={() => removeTelas(index)}
-                                            >
-                                              <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                            </button>
-                                          ) : null}
+                                          <button
+                                            type="button"
+                                            onClick={() => removeTela(index)}
+                                          >
+                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                          </button>
                                         </label>
 
                                         <input
@@ -508,9 +450,8 @@ export const ModalArticulos = ({
                                           name="cantidad"
                                           id="cantidad"
                                           placeholder="Cantidad"
-                                          autoComplete="cantidad"
                                           onChange={(e) =>
-                                            handleChangeTelas(index, e)
+                                            handleChangeTelaInput(index, e)
                                           }
                                           value={tela.cantidad}
                                           className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -528,14 +469,14 @@ export const ModalArticulos = ({
                                     <p className="inline uppercase text-gray-700">
                                       Avios
                                     </p>
-                                    <a onClick={() => addAvios()}>
+                                    <a onClick={() => addAvio()}>
                                       <PlusIcon
                                         className="h-6 w-6 inline ml-2"
                                         aria-hidden="true"
                                       />
                                     </a>
                                   </div>
-                                  {inputAvios.map((avio, index) => (
+                                  {avios.map((avio, index) => (
                                     <div
                                       className="grid grid-cols-6 gap-6 mt-3"
                                       key={index}
@@ -547,26 +488,13 @@ export const ModalArticulos = ({
                                         >
                                           Nombre
                                         </label>
-                                        <select
-                                          id="nombreComponente"
-                                          name="nombre"
-                                          autoComplete="nombre"
-                                          className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        <ListBox
+                                          options={aviosBack}
+                                          selectedOption={avio}
                                           onChange={(e) =>
-                                            handleChangeAvios(index, e)
+                                            handleChangeAvioListbox(index, e)
                                           }
-                                          value={avio.nombre}
-                                        >
-                                          {avios.map((item) => (
-                                            <option
-                                              className=""
-                                              key={item._id}
-                                              value={[item._id]}
-                                            >
-                                              {item.nombre}
-                                            </option>
-                                          ))}
-                                        </select>
+                                        />
                                         <p className="text-red-500 text-s italic animate-pulse">
                                           {errors.nombre ? errors.nombre : null}
                                         </p>
@@ -577,24 +505,20 @@ export const ModalArticulos = ({
                                           className="flex justify-between text-sm font-medium text-gray-700"
                                         >
                                           Cantidad
-                                          {index ? (
-                                            <button
-                                              type="button"
-                                              onClick={() => removeAvios(index)}
-                                            >
-                                              <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                            </button>
-                                          ) : null}
+                                          <button
+                                            type="button"
+                                            onClick={() => removeAvio(index)}
+                                          >
+                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                          </button>
                                         </label>
-
                                         <input
                                           type="text"
                                           name="cantidad"
                                           id="cantidad"
                                           placeholder="Cantidad"
-                                          autoComplete="cantidad"
                                           onChange={(e) =>
-                                            handleChangeAvios(index, e)
+                                            handleChangeAvioInput(index, e)
                                           }
                                           value={avio.cantidad}
                                           className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -612,14 +536,14 @@ export const ModalArticulos = ({
                                     <p className="inline uppercase text-gray-700">
                                       Diseño
                                     </p>
-                                    <a onClick={() => addDiseños()}>
+                                    <a onClick={() => addDiseño()}>
                                       <PlusIcon
                                         className="h-6 w-6 inline ml-2"
                                         aria-hidden="true"
                                       />
                                     </a>
                                   </div>
-                                  {inputDiseños.map((diseño, index) => (
+                                  {diseños.map((diseño, index) => (
                                     <div
                                       className="grid grid-cols-6 gap-6 mt-3"
                                       key={index}
@@ -631,26 +555,13 @@ export const ModalArticulos = ({
                                         >
                                           Nombre
                                         </label>
-                                        <select
-                                          id="nombreComponente"
-                                          name="nombre"
-                                          autoComplete="nombre"
-                                          className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        <ListBox
+                                          options={diseñosBack}
+                                          selectedOption={diseño}
                                           onChange={(e) =>
-                                            handleChangeDiseños(index, e)
+                                            handleChangeDiseñoListbox(index, e)
                                           }
-                                          value={diseño.nombre}
-                                        >
-                                          {diseños.map((item) => (
-                                            <option
-                                              className=""
-                                              key={item._id}
-                                              value={[item._id]}
-                                            >
-                                              {item.nombre}
-                                            </option>
-                                          ))}
-                                        </select>
+                                        />
                                         <p className="text-red-500 text-s italic animate-pulse">
                                           {errors.nombre ? errors.nombre : null}
                                         </p>
@@ -661,16 +572,12 @@ export const ModalArticulos = ({
                                           className="flex justify-between text-sm font-medium text-gray-700"
                                         >
                                           Cantidad
-                                          {index ? (
-                                            <button
-                                              type="button"
-                                              onClick={() =>
-                                                removeDiseños(index)
-                                              }
-                                            >
-                                              <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                            </button>
-                                          ) : null}
+                                          <button
+                                            type="button"
+                                            onClick={() => removeDiseño(index)}
+                                          >
+                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                          </button>
                                         </label>
 
                                         <input
@@ -678,9 +585,8 @@ export const ModalArticulos = ({
                                           name="cantidad"
                                           id="cantidad"
                                           placeholder="Cantidad"
-                                          autoComplete="cantidad"
                                           onChange={(e) =>
-                                            handleChangeDiseños(index, e)
+                                            handleChangeDiseñoInput(index, e)
                                           }
                                           value={diseño.cantidad}
                                           className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -693,7 +599,7 @@ export const ModalArticulos = ({
                                         </p>
                                       </div>
                                     </div>
-                                  ))} */}
+                                  ))}
                                   {/* <div className="border border-gray-300 rounded p-2 col-span-6">
                                     <label className="block text-sm font-medium text-gray-700">
                                       Foto del artículo
@@ -795,12 +701,6 @@ export const ModalArticulos = ({
                                       setErrors({});
                                       setItem(initialItem);
                                       setId(null);
-                                      /* setInputTelas([tela]);
-                                      setInputAvios([avio]);
-                                      setInputDiseños([diseño]); */
-                                      /* setInputProcesos(procesos);
-                                      setFile(null);
-                                      setFileDataURL(null); */
                                     }}
                                   >
                                     Cancelar

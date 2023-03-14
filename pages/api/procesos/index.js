@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const procesos = await Proceso.find();
+        const procesos = await Proceso.find().sort({nombre:1});
         return res.status(200).json(procesos);
       } catch (error) {
         return res.status(400).json({ msg: error.message });

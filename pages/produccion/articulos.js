@@ -292,7 +292,7 @@ export default function Articulos({
 }
 
 export const getServerSideProps = async () => {
-  const api = "https://fabrica-lbugiola.vercel.app";
+  const api = process.env.API_PRODUCCION || process.env.API_LOCAL;
 
   const [articulosBack, procesosBack, telasBack, aviosBack, diseñosBack] =
   await Promise.all([

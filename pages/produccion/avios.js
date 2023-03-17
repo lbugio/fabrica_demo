@@ -4,7 +4,7 @@ import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalAvios } from "components/Modal/ModalAvios";
 
 export default function Avios({ avios, columnas, laoderImage }) {
-  const avio = { nombre: "", precio:'', ultimoPrecio:0};
+  const avio = { nombre: "", unidad: "", precio: "", ultimoPrecio: "" };
 
   const [createEdit, setCreateEdit] = useState(false);
 
@@ -22,23 +22,26 @@ export default function Avios({ avios, columnas, laoderImage }) {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-   useEffect(() => {
+  useEffect(() => {
     const getAvios = async () => {
       const res2 = await fetch("/api/avios");
       const dato2 = await res2.json();
       setData(dato2);
     };
     getAvios();
-  }, [newAvio]); 
+  }, [newAvio]);
 
   useEffect(() => {
     const getAvios = async () => {
       const res = await fetch("/api/avios/" + id);
       const avio = await res.json();
-      console.log("🚀 ~ file: index.js ~ line 34 ~ getAvios ~ avio", avio)
-      setUltimoPrecio(avio.precio)
-      console.log("🚀 ~ file: index.js ~ line 34 ~ getAvios ~ avio", ultimoPrecio)
-      setNewAvio({ nombre: avio.nombre, precio: avio.precio, ultimoPrecio: ultimoPrecio});
+      setUltimoPrecio(avio.precio);
+      setNewAvio({
+        nombre: avio.nombre,
+        precio: avio.precio,
+        unidad: avio.unidad,
+        ultimoPrecio: ultimoPrecio,
+      });
     };
     if (id) getAvios();
   }, [id, ultimoPrecio]);
@@ -55,13 +58,14 @@ export default function Avios({ avios, columnas, laoderImage }) {
     setNewAvio({ ...newAvio, [e.target.name]: e.target.value });
 
   const validate = () => {
-    const isNumber = /^(0|[1-9][0-9]*)$/;
+    const isNumber = /^\d+(\.\d{1,2})?$/;
     const errors = {};
 
     if (!newAvio.nombre) errors.nombre = "Ingrese el nombre.";
     if (!newAvio.precio) errors.precio = "Ingrese el precio.";
     if (newAvio.precio && !isNumber.test(newAvio.precio))
       errors.precio = "El precio tiene que ser un número.";
+    if (!newAvio.unidad) errors.unidad = "Seleccione una unidad.";
 
     return errors;
   };
@@ -99,8 +103,9 @@ export default function Avios({ avios, columnas, laoderImage }) {
   };
 
   const updateAvio = async () => {
+
     try {
-      await fetch(`api/avios/${id}`, {
+      await fetch(`/api/avios/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -128,8 +133,7 @@ export default function Avios({ avios, columnas, laoderImage }) {
     } catch (error) {
       console.error(error);
     }
-    setIsLoading(false)
-
+    setIsLoading(false);
   };
 
   return (
@@ -174,17 +178,18 @@ export default function Avios({ avios, columnas, laoderImage }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/avios`);
+  const res = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/avios`
+  );
   const avios = await res.json();
-  const columnas = ["nombre", "precio", "aumento", "actualizado", "acción"]
-  const laoderImage ="/avios.svg";
-
+  const columnas = ["nombre", "precio", "aumento", "actualizado", "acción"];
+  const laoderImage = "/avios.svg";
 
   return {
     props: {
       avios,
       columnas,
-      laoderImage
+      laoderImage,
     },
   };
 };

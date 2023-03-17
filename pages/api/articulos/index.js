@@ -9,62 +9,81 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const articulos = await Articulo.find().sort({numero:1}).populate([
-          { path: "telas.nombre", select: "precio unidad" },
-          { path: "avios.nombre", select: "nombre precio" },
-          { path: "diseños.nombre", select: "nombre precio" },
-          { path: "procesos.nombre", select: "nombre precio" },
-        ]);
+        const articulos = await Articulo.find()
+          .sort({ numero: 1 })
+          .populate([
+            { path: "procesos.id", select: "precio nombre" },
+            { path: "telas.id", select: "precio unidad nombre" },
+            { path: "avios.id", select: "precio nombre unidad" },
+            { path: "diseños.id", select: "precio nombre" },
+          ]);
+
         const articulosConPrecios = articulos.map((articulo) => {
-          const precioTelas = Number(
+          const precioConsumoProcesos = articulo.procesos
+            ? Number(
+                articulo.procesos
+                  .map(({ id, cantidad }) => cantidad * (id ? id.precio : 0))
+                  .reduce((prev, curr) => prev + curr, 0)
+              )
+            : 0;
+
+          const precioConsumoTelas = Number(
             articulo.telas
-              .map(({ nombre, cantidad }) => {
-                switch (nombre.unidad) {
+              .map(({ id, cantidad }) => {
+                switch (id.unidad) {
                   case "kg.":
-                    return (cantidad * (nombre ? nombre.precio : 0)) / 1000;
+                    return (cantidad * (id ? id.precio : 0)) / 1000;
                   case "m.":
-                    return (cantidad * nombre.precio) / 100;
+                    return (cantidad * id.precio) / 100;
                   default:
-                    return cantidad * nombre.precio;
+                    return cantidad * id.precio;
                 }
               })
               .reduce((prev, curr) => prev + curr, 0)
               .toFixed(2)
           );
 
-          const precioAvios = Number(
+          const precioConsumoAvios = Number(
             articulo.avios
-              .map(
-                ({ nombre, cantidad }) =>
-                  cantidad * (nombre ? nombre.precio : 0)
-              )
+              .map(({ id, cantidad }) => {
+                switch (id.unidad) {
+                  case "kg.":
+                    return (cantidad * (id ? id.precio : 0)) / 1000;
+                  case "m.":
+                    return (cantidad * id.precio) / 100;
+                  default:
+                    return cantidad * id.precio;
+                }
+              })
               .reduce((prev, curr) => prev + curr, 0)
               .toFixed(2)
           );
 
-          const precioDiseños = articulo.diseños
+          const precioConsumoDiseño = articulo.diseños
             ? Number(
                 articulo.diseños
-                  .map(
-                    ({ nombre, cantidad }) =>
-                      cantidad * (nombre ? nombre.precio : 0)
-                  )
+                  .map(({ id, cantidad }) => cantidad * (id ? id.precio : 0))
                   .reduce((prev, curr) => prev + curr, 0)
                   .toFixed(2)
               )
             : 0;
 
-          const precio = precioTelas + precioAvios + precioDiseños;
+          const precio =
+            precioConsumoTelas +
+            precioConsumoAvios +
+            precioConsumoDiseño +
+            precioConsumoProcesos;
 
           return {
             ...articulo.toObject(),
-            precioTelas,
-            precioAvios,
-            precioDiseños,
-            precio,
+            precio: precio.toFixed(2),
           };
         });
 
+        console.log(
+          "🚀 ~ file: index.js:69 ~ handler ~ articulosConPrecios:",
+          articulosConPrecios
+        );
         return res.status(200).json(articulosConPrecios);
       } catch (error) {
         return res.status(400).json({ msg: error.message });
@@ -77,7 +96,9 @@ export default async function handler(req, res) {
           .status(201)
           .json({ msg: `Se creo el articulo "${savedArticulo.numero}"` });
       } catch (error) {
-        return res.status(400).json({ msg: `El articulos no se pudo crear ${error.message}` });
+        return res
+          .status(400)
+          .json({ msg: `El articulos no se pudo crear ${error.message}` });
       }
     default:
       return res

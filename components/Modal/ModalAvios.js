@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef } from "react";
+import { ListBox } from "components/Form/ListBox";
 
 export const ModalAvios = ({
   createEdit,
@@ -14,6 +15,13 @@ export const ModalAvios = ({
   setId,
 }) => {
   const nameInput = useRef(null);
+
+  const unidades = [
+    { id: 1, nombre: "kg." },
+    { id: 2, nombre: "grms." },
+    { id: 3, nombre: "u." },
+    { id: 4, nombre: "m." },
+  ];
 
   return (
     <Transition.Root show={createEdit} as={Fragment}>
@@ -104,9 +112,39 @@ export const ModalAvios = ({
                                           value={newAvio.precio}
                                           placeholder="0,00"
                                         />
+                                        <span className="inline-flex items-center border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm">
+                                          /
+                                        </span>
+                                        <div className="col-span-6 sm:col-span-3">
+                                          <select
+                                            id="unidad"
+                                            name="unidad"
+                                            autoComplete="unidad"
+                                            className="italic block w-full flex-1 rounded-none border-l-0 rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            onChange={handleChange}
+                                            value={newAvio.unidad}
+                                          >
+                                            <option value="" disabled>
+                                              Unidad
+                                            </option>
+
+                                            {unidades.map((item) => (
+                                              <option
+                                                className=""
+                                                key={item.id}
+                                                value={item.nombre}
+                                              >
+                                                {item.nombre}
+                                              </option>
+                                            ))}
+                                          </select>
+                                        </div>
                                       </div>
                                       <p className="text-red-500 text-s italic">
                                         {errors.precio ? errors.precio : null}
+                                      </p>
+                                      <p className="text-red-500 text-s italic">
+                                        {errors.unidad ? errors.unidad : null}
                                       </p>
                                     </div>
                                   </div>

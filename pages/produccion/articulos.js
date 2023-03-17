@@ -11,7 +11,7 @@ import API_ENDPOINTS from "constants/enpoints";
 const { ARTICULOS, PROCESOS, TELAS, AVIOS, DISEÑOS } = API_ENDPOINTS;
 
 export default function Articulos({
-  articulos,
+  articulosBack,
   columnas,
   laoderImage,
   procesosBack,
@@ -34,7 +34,7 @@ export default function Articulos({
 
   const [confirm, setConfirm] = useState(false);
 
-  const [data, setData] = useState(articulos);
+  const [data, setData] = useState(articulosBack);
 
   const [id, setId] = useState(null);
 
@@ -45,12 +45,6 @@ export default function Articulos({
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const componentes = [
-    //...inputTelas,
-    //...inputAvios,
-    //...inputProcesos,
-    //...inputDiseños,
-  ];
 
   const [selectedOption, setSelectedOption] = useState("");
 
@@ -79,13 +73,7 @@ export default function Articulos({
       const res = await fetch(ARTICULOS + id);
       setIsLoadingData(false);
       const articuloBack = await res.json();
-      //setUltimoPrecio(precio);
       setItem(articuloBack);
-      //setValue(articuloBack.procesos);
-      //setInputProcesos([procesos]);
-      /* setInputTelas(articulo.telas);
-      setInputAvios(articulo.avios);
-      setInputDiseños(articulo.diseños); */
     };
     if (id) getArticulo();
   }, [id, ultimoPrecio]);
@@ -184,7 +172,7 @@ export default function Articulos({
 
   const updateArticulo = async () => {
     try {
-      const response = await fetch(`/api/articulos/${id}`, {
+      const response = await fetch(ARTICULOS + id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -192,7 +180,6 @@ export default function Articulos({
         body: JSON.stringify(item),
       });
       const { msg } = await response.json();
-      console.log("🚀 ~ file: articulos.js:215 ~ updateArticulo ~ msg:", msg);
 
       response.ok ? setNotificationType("edit") : setNotificationType("error");
 
@@ -214,7 +201,7 @@ export default function Articulos({
 
   const deleteArticulo = async () => {
     try {
-      const response = await fetch(`/api/articulos/${id}`, {
+      const response = await fetch( ARTICULOS + id, {
         method: "DELETE",
       });
 
@@ -278,7 +265,6 @@ export default function Articulos({
         id={id}
         setId={setId}
         item={item}
-        componentes={componentes}
         setItem={setItem}
         handleBlur={handleBlur}
         initialItem={initialItem}
@@ -294,6 +280,7 @@ export default function Articulos({
         setItem={setItem}
         initialItem={initialItem}
       />
+
       <Notification
         setShowNotification={setShowNotification}
         showNotification={showNotification}
@@ -307,20 +294,20 @@ export default function Articulos({
 export const getServerSideProps = async () => {
   const api = process.env.API_PRODUCCION || process.env.API_LOCAL;
 
-  const [articulos, procesosBack, telasBack, aviosBack, diseñosBack] =
-    await Promise.all([
-      fetch(api + ARTICULOS).then((res) => res.json()),
+  const [articulosBack, procesosBack, telasBack, aviosBack, diseñosBack] =
+  await Promise.all([
+    fetch(api + ARTICULOS).then((res) => res.json()),
       fetch(api + PROCESOS).then((res) => res.json()),
       fetch(api + TELAS).then((res) => res.json()),
       fetch(api + AVIOS).then((res) => res.json()),
       fetch(api + DISEÑOS).then((res) => res.json()),
     ]);
 
-  const columnas = ["articulo", "precio", "aumento", "actualizado", "accíón"];
+  const columnas = ["articulo", "costo", "aumento", "actualizado", "accíón"];
 
   return {
     props: {
-      articulos,
+      articulosBack,
       procesosBack,
       telasBack,
       aviosBack,

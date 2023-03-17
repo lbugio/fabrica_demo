@@ -22,6 +22,10 @@ export const ModalArticulo = ({
     avios,
     diseños,
     costoDirecto,
+    costosAdministrativos,
+    precioMayor,
+    mayorConIva,
+    precioVenta,
   } = item;
 
   const componentes = [...procesos, ...telas, ...avios, ...diseños];
@@ -30,27 +34,23 @@ export const ModalArticulo = ({
 
   //funcion para calcular el precio unitario
   const totalPorItem = (precio, consumo, unidad) => {
+    let total = 0;
     switch (unidad) {
       case "kg.":
-        return (precio * consumo) / 1000;
+        total = (precio * consumo) / 1000;
+        break;
       case "m.":
-        return (precio * consumo) / 100;
+        total = (precio * consumo) / 100;
+        break;
       default:
-        return precio * consumo;
+        total = precio * consumo;
     }
-  };
-
-  const handlePrint = () => {
-    window.print();
+    return parseFloat(total.toFixed(2));
   };
 
   return (
     <Transition.Root show={ficha} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-10"
-        onClose={() => null}
-      >
+      <Dialog as="div" className="relative z-10" onClose={() => null}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -60,10 +60,7 @@ export const ModalArticulo = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div
-            className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity 
-          "
-          />
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -118,7 +115,7 @@ export const ModalArticulo = ({
                                 </p>
                                 <p className=" flex justify-end p-1">
                                   <span className="font-bold mr-2">
-                                    Descripcion:
+                                    Descripción:
                                   </span>
                                   {descripcion}
                                 </p>
@@ -126,8 +123,8 @@ export const ModalArticulo = ({
                             </div>
                           </div>
 
-                          <div className="p-9 pt-1">
-                            <div className="flex flex-col mx-0 mt-8">
+                          <div className="p-5 pt-1">
+                            <div className="flex flex-col mx-0 mt-3">
                               <table className="min-w-full divide-y divide-slate-500">
                                 <thead>
                                   <tr>
@@ -135,7 +132,7 @@ export const ModalArticulo = ({
                                       scope="col"
                                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-slate-700 sm:pl-6 md:pl-0"
                                     >
-                                      Descricpción
+                                      Descripción
                                     </th>
                                     <th
                                       scope="col"
@@ -174,7 +171,7 @@ export const ModalArticulo = ({
                                           className="border-b border-slate-200"
                                           key={index}
                                         >
-                                          <td className="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
+                                          <td className="py-1  pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                                             <div className="font-medium text-slate-700">
                                               {nombre}
                                             </div>
@@ -182,19 +179,17 @@ export const ModalArticulo = ({
                                           <td className="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
                                             {cantidad}{" "}
                                             <span className="text-xs italic">
-                                              {" "}
                                               {unidadConsumo}
                                             </span>
                                           </td>
                                           <td className="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
-                                            $ {precio}{" "}
+                                            $ {precio}
                                             <span className="text-xs italic">
-                                              {" "}
-                                              {unidad}
+                                               {unidad? '/'+unidad: ""}
                                             </span>
                                           </td>
                                           <td className="py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
-                                            ${" "}
+                                            $
                                             {totalPorItem(
                                               precio,
                                               cantidad,
@@ -225,6 +220,54 @@ export const ModalArticulo = ({
                                       {"$ " + costoDirecto}
                                     </td>
                                   </tr>
+                                  <tr>
+                                    <th
+                                      scope="row"
+                                      colSpan="3"
+                                      className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
+                                    >
+                                      + Administrativo
+                                    </th>
+                                    <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                                      {"$ " + costosAdministrativos}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th
+                                      scope="row"
+                                      colSpan="3"
+                                      className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
+                                    >
+                                      Mayor sin Iva <span className="text-sm italic font-light">costo x 2</span>
+                                    </th>
+                                    <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                                      {"$ " + precioMayor}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th
+                                      scope="row"
+                                      colSpan="3"
+                                      className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
+                                    >
+                                      Mayor con Iva <span className="text-sm italic font-light">costo x 2 x 1,21</span>
+                                    </th>
+                                    <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                                      {"$ " + mayorConIva}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th
+                                      scope="row"
+                                      colSpan="3"
+                                      className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
+                                    >
+                                      Precio de Venta <span className="text-sm italic font-light">costo x 3</span>
+                                    </th>
+                                    <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                                      {"$ " + precioVenta}
+                                    </td>
+                                  </tr>
                                 </tfoot>
                               </table>
                             </div>
@@ -237,17 +280,15 @@ export const ModalArticulo = ({
                         trigger={() => (
                           <button
                             type="button"
-                            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                            className="mt-3 inline-flex w-full justify-center  px-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                             onClick={() => {
                               setFicha(false);
                               setId(null);
                               setItem(initialItem);
                             }}
                           >
-                            {" "}
-                            Imprimir
                             <PrinterIcon
-                              className="h-5 w-5 ml-1"
+                              className="h-5 w-5"
                               aria-hidden="true"
                             />
                           </button>

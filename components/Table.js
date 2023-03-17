@@ -1,3 +1,9 @@
+import { useRef, useState } from "react";
+
+import { Tooltip } from "components/Tooltip";
+import { PrinterIcon } from "@heroicons/react/24/solid";
+import ReactToPrint from "react-to-print";
+
 import {
   TrashIcon,
   PencilSquareIcon,
@@ -13,11 +19,51 @@ export const Table = ({
   openDelete,
   setId,
   openCreateEdit,
-  setSearch,
-  search,
   isLoadingData,
-  openFicha
+  openFicha,
 }) => {
+  console.log("🚀 ~ file: Table.js:25 ~ data:", data);
+  const [search, setSearch] = useState("");
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
+
+  const filteredData = data.filter((row) =>
+    Object.values(row).some(
+      (value) =>
+        typeof value === "string" &&
+        value.toLowerCase().includes(search.toLowerCase())
+    )
+  );
+
+  const sortedData = filteredData.sort((a, b) => {
+    if (!sortColumn) return 0;
+    const aValue = a[sortColumn];
+    const bValue = b[sortColumn];
+
+    if (sortDirection === "asc") {
+      if (aValue < bValue) return -1;
+      if (aValue > bValue) return 1;
+      return 0;
+    } else {
+      if (aValue > bValue) return -1;
+      if (aValue < bValue) return 1;
+      return 0;
+    }
+  });
+
+  const handleSort = (column) => {
+    if (column === sortColumn) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+      console.log(
+        "🚀 ~ file: Table.js:57 ~ handleSort ~ sortDirection:",
+        sortDirection
+      );
+    } else {
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
+
   const dateOptions = {
     year: "numeric",
     month: "long",
@@ -26,6 +72,7 @@ export const Table = ({
     minute: "2-digit",
   };
 
+  const printRef = useRef();
 
   const porcentajeAumento = (precio, ultimoPrecio) => {
     const resultado = (precio / ultimoPrecio - 1) * 100;
@@ -33,7 +80,7 @@ export const Table = ({
   };
 
   return (
-    <div className="overflow-x-auto relative shadow-md sm:rounded-lg w-full   ">
+    <div className="overflow-x-auto relative shadow-md sm:rounded-lg w-full">
       <div className="flex justify-between items-center py-4 px-4 bg-white dark:bg-gray-800">
         <div className="uppercase font-bold text-xl">{tableName}</div>
         <button
@@ -75,7 +122,10 @@ export const Table = ({
             <p className="animate-pulse italic">Cargando Datos...</p>
           </div>
         ) : (
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <table
+            className="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+            ref={printRef}
+          >
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="p-4">
@@ -91,14 +141,19 @@ export const Table = ({
                   </div>
                 </th>
                 {columnas.map((item) => (
-                  <th scope="col" className="py-3 px-6" key={item}>
+                  <th
+                    scope="col"
+                    className="py-3 px-6"
+                    key={item}
+                    onClick={() => handleSort(item)}
+                  >
                     {item}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {data.map((item) => (
+              {sortedData.map((item) => (
                 <tr
                   key={item._id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -126,7 +181,7 @@ export const Table = ({
                       <div className="text-base font-semibold">
                         {item.nombre || item.numero}
                       </div>
-                    </div>  
+                    </div>
                   </th>
                   <td className="py-4 px-6">
                     {"$" + item.precio} {item.unidad ? "/" + item.unidad : ""}
@@ -202,7 +257,7 @@ export const Table = ({
           <p className="animate-pulse italic">No hay datos cargados</p>
         </div>
       )}
-      <div className="flex px-4 pt-4 pb-4 lg:px-6 text-slate-800 hover:brightness-200">
+      <div className="flex justify-between px-4 pt-4 pb-4 lg:px-6 text-slate-800 hover:brightness-200">
         <Link
           href="/"
           type="button"
@@ -211,6 +266,20 @@ export const Table = ({
           <ChevronLeftIcon className="h-6 w-6" aria-hidden="true" />
           Volver
         </Link>
+        <Tooltip text="Imprimir!">
+          <ReactToPrint
+            trigger={() => (
+              <button
+                type="button"
+                className="mt-3 inline-flex w-full justify-center rounded  px-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                onClick={() => {}}
+              >
+                <PrinterIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
+            )}
+            content={() => printRef.current}
+          />
+        </Tooltip>
       </div>
     </div>
   );

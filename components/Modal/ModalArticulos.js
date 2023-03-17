@@ -1,7 +1,9 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { ListBox } from "components/Form/ListBox";
+import Image from "next/image";
+import { Tooltip } from "components/Tooltip";
 
 export const ModalArticulos = ({
   createEdit,
@@ -22,6 +24,12 @@ export const ModalArticulos = ({
 }) => {
   const { procesos, telas, avios, diseños } = item;
 
+  const lineas = [
+    { id: 1, nombre: "Bebe" },
+    { id: 2, nombre: "Niño" },
+    { id: 3, nombre: "Adulto" },
+  ];
+
   const nameInput = useRef(null);
 
   const nuevoComponente = {
@@ -31,6 +39,7 @@ export const ModalArticulos = ({
   };
 
   const addProceso = () => {
+    console.log("🚀 ~ file: ModalArticulos.js:46 ~ addProceso ~ item:", item)
     setItem({
       ...item,
       procesos: [...item.procesos, nuevoComponente],
@@ -290,17 +299,32 @@ export const ModalArticulos = ({
                                       >
                                         Línea
                                       </label>
-                                      {/*                                       <ListBox options={["niño", "bebe"]}/>
-                                       */}{" "}
-                                      <input
-                                        type="text"
-                                        name="linea"
+                                      <select
                                         id="linea"
-                                        placeholder="Línea"
+                                        name="linea"
+                                        autoComplete="linea"
+                                        className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         onChange={handleChange}
                                         value={item.linea}
-                                        className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                      />
+                                      >
+                                        <option
+                                          value=""
+                                          disabled
+                                          className="sm:text-sm italic"
+                                        >
+                                          Linea
+                                        </option>
+
+                                        {lineas.map((item) => (
+                                          <option
+                                            className=""
+                                            key={item.id}
+                                            value={item.nombre}
+                                          >
+                                            {item.nombre}
+                                          </option>
+                                        ))}
+                                      </select>
                                       <p className="text-red-500 text-s italic animate-pulse">
                                         {errors.linea ? errors.linea : null}
                                       </p>
@@ -329,29 +353,65 @@ export const ModalArticulos = ({
                                       </p>
                                     </div>
                                   </div>
-                                  <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
-                                    <p className="inline uppercase text-gray-700">
-                                      Procesos
-                                    </p>
-                                    <a onClick={() => addProceso()}>
-                                      <PlusIcon
-                                        className="h-6 w-6 inline ml-2"
-                                        aria-hidden="true"
-                                      />
-                                    </a>
+                                  <div className="flex justify-around">
+                                    <div className="col-span-3 sm:col-span-3 lg:col-span-3 mt-6">
+                                      <button onClick={() => addProceso()}>
+                                          <Image
+                                            src="/articulos.svg"
+                                            alt="articulos"
+                                            width={50}
+                                            height={50}
+                                          />
+                                      </button>
+                                    </div>
+                                    <div className="col-span-3 sm:col-span-3 lg:col-span-3 mt-6">
+                                      <button onClick={() => addTela()}>
+                                        <Tooltip text="Telas">
+                                          <Image
+                                            src="/telas.svg"
+                                            alt="telas"
+                                            width={50}
+                                            height={50}
+                                          />
+                                        </Tooltip>
+                                      </button>
+                                    </div>
+                                    <div className="col-span-3 sm:col-span-3 lg:col-span-3 mt-6">
+                                      <button onClick={() => addAvio()}>
+                                        <Tooltip text="Avios">
+                                          <Image
+                                            src="/avios.svg"
+                                            alt="telas"
+                                            width={50}
+                                            height={50}
+                                          />
+                                        </Tooltip>
+                                      </button>
+                                    </div>
+                                    <div className="col-span-3 sm:col-span-3 lg:col-span-3 mt-6">
+                                      <button onClick={() => addDiseño()}>
+                                        <Tooltip text="Diseño">
+                                          <Image
+                                            src="/articulos.svg"
+                                            alt="diseños"
+                                            width={50}
+                                            height={50}
+                                          />
+                                        </Tooltip>
+                                      </button>
+                                    </div>
                                   </div>
                                   {procesos.map((proceso, index) => (
                                     <div
-                                      className="grid grid-cols-6 gap-6 mt-3"
+                                      className="grid grid-cols-6 gap-1 mt-3"
                                       key={index}
                                     >
-                                      <div className="col-span-6 sm:col-span-3 lg:col-span-3">
-                                        <label
-                                          htmlFor="descripcion"
-                                          className="block text-sm font-medium text-gray-700"
-                                        >
-                                          Nombre
-                                        </label>
+                                      <div className="col-span-2 sm:col-span-1 lg:col-span-1">
+                                        <p className="mt-3 sm:text-sm">
+                                          Proceso {index + 1}
+                                        </p>
+                                      </div>
+                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                                         <ListBox
                                           options={procesosBack}
                                           selectedOption={proceso}
@@ -360,23 +420,12 @@ export const ModalArticulos = ({
                                           }
                                         />
                                         <p className="text-red-500 text-s italic animate-pulse">
-                                          {errors.procesos ? errors.procesos : null}
+                                          {errors.procesos
+                                            ? errors.procesos
+                                            : null}
                                         </p>
                                       </div>
-                                      <div className="col-span-6 sm:col-span-2 lg:col-span-2">
-                                        <label
-                                          htmlFor="descripcion"
-                                          className="flex justify-between text-sm font-medium text-gray-700"
-                                        >
-                                          Cantidad
-                                          <button
-                                            type="button"
-                                            onClick={() => removeProceso(index)}
-                                          >
-                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                          </button>
-                                        </label>
-
+                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                                         <input
                                           type="text"
                                           name="cantidad"
@@ -388,38 +437,32 @@ export const ModalArticulos = ({
                                           value={proceso.cantidad}
                                           className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         />
-
                                         <p className="text-red-500 text-s italic animate-pulse">
                                           {errors.cantidad
                                             ? errors.cantidad
                                             : null}
                                         </p>
                                       </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => removeProceso(index)}
+                                      >
+                                        <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                      </button>
                                     </div>
                                   ))}
-                                  <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
-                                    <p className="inline uppercase text-gray-700">
-                                      Telas
-                                    </p>
-                                    <a onClick={() => addTela()}>
-                                      <PlusIcon
-                                        className="h-6 w-6 inline ml-2"
-                                        aria-hidden="true"
-                                      />
-                                    </a>
-                                  </div>
+
                                   {telas.map((tela, index) => (
                                     <div
-                                      className="grid grid-cols-6 gap-6 mt-3"
+                                      className="grid grid-cols-6 gap-1 mt-3"
                                       key={index}
                                     >
-                                      <div className="col-span-6 sm:col-span-3 lg:col-span-3">
-                                        <label
-                                          htmlFor="descripcion"
-                                          className="block text-sm font-medium text-gray-700"
-                                        >
-                                          Nombre
-                                        </label>
+                                      <div className="col-span-2 sm:col-span-1 lg:col-span-1">
+                                        <p className="mt-3 sm:text-sm">
+                                          Tela {index + 1}
+                                        </p>
+                                      </div>
+                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                                         <ListBox
                                           options={telasBack}
                                           selectedOption={tela}
@@ -431,20 +474,7 @@ export const ModalArticulos = ({
                                           {errors.nombre ? errors.nombre : null}
                                         </p>
                                       </div>
-                                      <div className="col-span-6 sm:col-span-2 lg:col-span-2">
-                                        <label
-                                          htmlFor="descripcion"
-                                          className="flex justify-between text-sm font-medium text-gray-700"
-                                        >
-                                          Cantidad
-                                          <button
-                                            type="button"
-                                            onClick={() => removeTela(index)}
-                                          >
-                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                          </button>
-                                        </label>
-
+                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                                         <input
                                           type="text"
                                           name="cantidad"
@@ -463,31 +493,25 @@ export const ModalArticulos = ({
                                             : null}
                                         </p>
                                       </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => removeTela(index)}
+                                      >
+                                        <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                      </button>
                                     </div>
                                   ))}
-                                  <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
-                                    <p className="inline uppercase text-gray-700">
-                                      Avios
-                                    </p>
-                                    <a onClick={() => addAvio()}>
-                                      <PlusIcon
-                                        className="h-6 w-6 inline ml-2"
-                                        aria-hidden="true"
-                                      />
-                                    </a>
-                                  </div>
                                   {avios.map((avio, index) => (
                                     <div
-                                      className="grid grid-cols-6 gap-6 mt-3"
+                                      className="grid grid-cols-6 gap-1 mt-3"
                                       key={index}
                                     >
-                                      <div className="col-span-6 sm:col-span-3 lg:col-span-3">
-                                        <label
-                                          htmlFor="descripcion"
-                                          className="block text-sm font-medium text-gray-700"
-                                        >
-                                          Nombre
-                                        </label>
+                                       <div className="col-span-2 sm:col-span-1 lg:col-span-1">
+                                        <p className="mt-3 sm:text-sm">
+                                          Avio {index + 1}
+                                        </p>
+                                      </div>
+                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                                         <ListBox
                                           options={aviosBack}
                                           selectedOption={avio}
@@ -499,19 +523,7 @@ export const ModalArticulos = ({
                                           {errors.nombre ? errors.nombre : null}
                                         </p>
                                       </div>
-                                      <div className="col-span-6 sm:col-span-2 lg:col-span-2">
-                                        <label
-                                          htmlFor="descripcion"
-                                          className="flex justify-between text-sm font-medium text-gray-700"
-                                        >
-                                          Cantidad
-                                          <button
-                                            type="button"
-                                            onClick={() => removeAvio(index)}
-                                          >
-                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                          </button>
-                                        </label>
+                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                                         <input
                                           type="text"
                                           name="cantidad"
@@ -530,31 +542,25 @@ export const ModalArticulos = ({
                                             : null}
                                         </p>
                                       </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => removeAvio(index)}
+                                      >
+                                        <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                      </button>
                                     </div>
                                   ))}
-                                  <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
-                                    <p className="inline uppercase text-gray-700">
-                                      Diseño
-                                    </p>
-                                    <a onClick={() => addDiseño()}>
-                                      <PlusIcon
-                                        className="h-6 w-6 inline ml-2"
-                                        aria-hidden="true"
-                                      />
-                                    </a>
-                                  </div>
                                   {diseños.map((diseño, index) => (
                                     <div
-                                      className="grid grid-cols-6 gap-6 mt-3"
+                                      className="grid grid-cols-6 gap-1 mt-3"
                                       key={index}
                                     >
-                                      <div className="col-span-6 sm:col-span-3 lg:col-span-3">
-                                        <label
-                                          htmlFor="descripcion"
-                                          className="block text-sm font-medium text-gray-700"
-                                        >
-                                          Nombre
-                                        </label>
+                                      <div className="col-span-2 sm:col-span-1 lg:col-span-1">
+                                        <p className="mt-3 sm:text-sm">
+                                          Diseño {index + 1}
+                                        </p>
+                                      </div>
+                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                                         <ListBox
                                           options={diseñosBack}
                                           selectedOption={diseño}
@@ -566,20 +572,7 @@ export const ModalArticulos = ({
                                           {errors.nombre ? errors.nombre : null}
                                         </p>
                                       </div>
-                                      <div className="col-span-6 sm:col-span-2 lg:col-span-2">
-                                        <label
-                                          htmlFor="descripcion"
-                                          className="flex justify-between text-sm font-medium text-gray-700"
-                                        >
-                                          Cantidad
-                                          <button
-                                            type="button"
-                                            onClick={() => removeDiseño(index)}
-                                          >
-                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                          </button>
-                                        </label>
-
+                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                                         <input
                                           type="text"
                                           name="cantidad"
@@ -598,6 +591,12 @@ export const ModalArticulos = ({
                                             : null}
                                         </p>
                                       </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => removeDiseño(index)}
+                                      >
+                                        <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                      </button>
                                     </div>
                                   ))}
                                   {/* <div className="border border-gray-300 rounded p-2 col-span-6">

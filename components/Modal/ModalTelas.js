@@ -21,7 +21,7 @@ export const ModalTelas = ({
     { id: 1, nombre: "kg." },
     { id: 2, nombre: "grms." },
     { id: 3, nombre: "u." },
-    { id: 3, nombre: "m." }
+    { id: 4, nombre: "m." },
   ];
 
   return (
@@ -124,7 +124,7 @@ export const ModalTelas = ({
                                         <span className="inline-flex items-center border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm">
                                           /
                                         </span>
-                                         <div className="col-span-6 sm:col-span-3">
+                                        <div className="col-span-6 sm:col-span-3">
                                           <select
                                             id="unidad"
                                             name="unidad"
@@ -133,9 +133,12 @@ export const ModalTelas = ({
                                             onChange={handleChange}
                                             value={newTela.unidad}
                                           >
+                                            <option value="" disabled>
+                                              Unidad
+                                            </option>
                                             {unidades.map((item) => (
                                               <option
-                                              className=""
+                                                className=""
                                                 key={item.id}
                                                 value={item.nombre}
                                               >
@@ -143,8 +146,7 @@ export const ModalTelas = ({
                                               </option>
                                             ))}
                                           </select>
-                                        </div> 
-                                      
+                                        </div>
                                       </div>
                                       <p className="text-red-500 text-s italic">
                                         {errors.precio ? errors.precio : null}

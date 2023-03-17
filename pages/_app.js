@@ -27,12 +27,12 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      {isLoading? <PageLoader/>:
-      <Layout>
+{/*       {isLoading? <PageLoader/>:
+ */}      <Layout>
         <Component {...pageProps} />
       </Layout>
-      }
-    </>
+{/*       }
+ */}    </>
   );
 }
 

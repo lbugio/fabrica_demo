@@ -1,8 +1,8 @@
 @api = http://localhost:3000/api
 @apideploy = https://fabrica2022.vercel.app/api
-@id = 6367d0a64cea182f1ac39081
+@id = 6411f6902a271fda1fd3012d
 
-@colection = articulos
+@colection = avios
 
 
 GET {{api}}/{{colection}}
@@ -17,9 +17,9 @@ POST {{api}}/{{colection}}
 Content-Type: application/json
 
 {
-    "numero": "1",
-    "tipo": "mdd",
-    "descripcion": "ssss",
+    "nombre": "1",
+    "precio": 2,
+    "unidad": "ssss",
     "linea": "m",
     "componentes": [
       "Jersey"
@@ -31,14 +31,15 @@ PUT {{api}}/{{colection}}/{{id}}
 Content-Type: application/json
 
   {
-    "numero": "09000ddd",
-    "tipo": "mdd",
-    "descripcion": "ssss",
+    "nombre": "1",
+    "precio": 2,
+    "unidad": "ssss",
     "linea": "m",
     "componentes": [
       "Jersey"
     ]
   }
+
 
 
 ### DELETE

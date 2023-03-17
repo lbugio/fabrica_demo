@@ -15,6 +15,11 @@ const AvioSchema = new Schema(
       trim: true,
       maxlength: [40, "Precio no puede cotener mas de 49 caracteres."],
     },
+    unidad: {
+      type: String,
+      required: [true, "La unidad es requerida"],
+      trim: true,
+    },
     ultimoPrecio: {
       type: Number,
       trim: true,

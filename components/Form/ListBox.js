@@ -29,7 +29,7 @@ export function ListBox({ options, selectedOption, onChange}) {
         leaveFrom="transform scale-100 opacity-100"
         leaveTo="transform scale-95 opacity-0"
       >
-         <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto border-gray-300 rounded-md  py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+         <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto border-gray-300 rounded-md  py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm bg-slate-500">
           {options.map((option) => (
             <Listbox.Option
               key={option._id}
@@ -40,7 +40,7 @@ export function ListBox({ options, selectedOption, onChange}) {
               }
               value={option}
             >
-              {option.nombre} <span className="">{'$'+option.precio}</span>
+              {option.nombre}
             </Listbox.Option>
           ))}
         </Listbox.Options>  

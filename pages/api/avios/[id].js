@@ -3,12 +3,13 @@ import Avio from "models/Avio";
 
 dbConnect();
 
-export default async function telasHandler(req, res) {
+export default async function aviosHandler(req, res) {
   const {
     method,
     query: { id },
     body,
   } = req;
+    console.log("🚀 ~ file: [id].js:12 ~ aviosHandler ~ body:", body)
 
   switch (method) {
     case "GET":

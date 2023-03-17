@@ -23,20 +23,15 @@ export default async function articulosHandler(req, res) {
         const articulo = await Articulo.findById(id).populate([
           { path: "procesos.id", select: "precio nombre" },
           { path: "telas.id", select: "precio unidad nombre" },
-          { path: "avios.id", select: "precio nombre" },
+          { path: "avios.id", select: "precio nombre unidad" },
           { path: "diseños.id", select: "precio nombre" },
         ]);
-        console.log("🚀 ~ file: [id].js:29 ~ articulosHandler ~ articulo:", articulo)
 
         const precioConsumoProcesos = articulo.procesos
           ? Number(
               articulo.procesos
-                .map(
-                  ({ id, cantidad }) =>
-                    cantidad * (id ? id.precio : 0)
-                )
+                .map(({ id, cantidad }) => cantidad * (id ? id.precio : 0))
                 .reduce((prev, curr) => prev + curr, 0)
-                .toFixed(2)
             )
           : 0;
 
@@ -58,9 +53,16 @@ export default async function articulosHandler(req, res) {
 
         const precioConsumoAvios = Number(
           articulo.avios
-            .map(
-              ({ id, cantidad }) => cantidad * (id ? id.precio : 0)
-            )
+            .map(({ id, cantidad }) => {
+              switch (id.unidad) {
+                case "kg.":
+                  return (cantidad * (id ? id.precio : 0)) / 1000;
+                case "m.":
+                  return (cantidad * id.precio) / 100;
+                default:
+                  return cantidad * id.precio;
+              }
+            })
             .reduce((prev, curr) => prev + curr, 0)
             .toFixed(2)
         );
@@ -68,10 +70,7 @@ export default async function articulosHandler(req, res) {
         const precioConsumoDiseño = articulo.diseños
           ? Number(
               articulo.diseños
-                .map(
-                  ({ id, cantidad }) =>
-                    cantidad * (id ? id.precio : 0)
-                )
+                .map(({ id, cantidad }) => cantidad * (id ? id.precio : 0))
                 .reduce((prev, curr) => prev + curr, 0)
                 .toFixed(2)
             )
@@ -83,6 +82,13 @@ export default async function articulosHandler(req, res) {
           precioConsumoDiseño +
           precioConsumoProcesos;
 
+        const unidadConsumoLookup = {
+          "kg.": "grms.",
+          "m.": "cms.",
+          "u.": "u.",
+
+        };
+
         const formattedArticulo = {
           ...articulo.toObject(),
           procesos: articulo.procesos.map(
@@ -92,7 +98,6 @@ export default async function articulosHandler(req, res) {
               cantidad: cantidad,
               precio: precio,
               unidad,
-              unidadConsumo: "",
             })
           ),
           telas: articulo.telas.map(({ id, cantidad }) => ({
@@ -101,15 +106,15 @@ export default async function articulosHandler(req, res) {
             cantidad,
             precio: id.precio,
             unidad: id.unidad,
-            unidadConsumo: "grms.",
+            unidadConsumo: unidadConsumoLookup[id.unidad] || "",
           })),
           avios: articulo.avios.map(({ id, cantidad }) => ({
             id: id._id,
             nombre: id.nombre,
             cantidad: cantidad,
             precio: id.precio,
-            unidad: "u.",
-            unidadConsumo: "u.",
+            unidad: id.unidad,
+            unidadConsumo: unidadConsumoLookup[id.unidad] || "",
           })),
           diseños: articulo.diseños.map(({ id, cantidad }) => ({
             id: id._id,
@@ -117,20 +122,22 @@ export default async function articulosHandler(req, res) {
             cantidad: cantidad,
             precio: id.precio,
             unidad: "u.",
-            unidadConsumo: "u.",
           })),
           precioConsumoTelas,
           precioConsumoAvios,
           precioConsumoDiseño,
           precioConsumoProcesos,
-          costoDirecto,
+          costoDirecto: costoDirecto.toFixed(2),
+          costosAdministrativos: (costoDirecto * 1.3).toFixed(2),
+          precioMayor: (costoDirecto * 2).toFixed(2),
+          mayorConIva: (costoDirecto * 2*1.21).toFixed(2),
+          precioVenta: (costoDirecto * 3).toFixed(2),
+
+
+
         };
 
-        console.log(
-          "🚀 ~ file: [id].js:86 ~ articulosHandler ~ formattedArticulo:",
-          formattedArticulo
-        );
-
+        console.log("🚀 ~ file: [id].js:136 ~ articulosHandler ~ formattedArticulo:", formattedArticulo)
         // Devuelve el artículo si existe
         if (!formattedArticulo)
           return res.status(NOT_FOUND).json({ msg: "El articulo no existe" });
@@ -146,10 +153,6 @@ export default async function articulosHandler(req, res) {
           new: true,
           runValidators: true,
         });
-        console.log(
-          "🚀 ~ file: [id].js:143 ~ articulosHandler ~ articulo:",
-          articulo
-        );
         if (!articulo)
           return res.status(NOT_FOUND).json({ msg: "El articulo no existe" });
         return res

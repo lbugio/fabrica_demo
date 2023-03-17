@@ -20,7 +20,6 @@ export default async function handler(req, res) {
       try {
         const newAvio = new Avio(body);
         const savedAvio = await newAvio.save();
-        console.log("🚀 ~ file: index.js:24 ~ handler ~ savedAvio", savedAvio)
         return res.status(201).json(savedAvio);
       } catch (error) {
         return res.status(400).json({ msg: error.message });

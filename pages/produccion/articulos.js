@@ -320,7 +320,7 @@ export const getServerSideProps = async () => {
   const aviosBack = await resaviosBack.json();
 
   const resdiseñosBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/diseños`
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/disenos`
   );
   const diseñosBack = await resdiseñosBack.json();
 

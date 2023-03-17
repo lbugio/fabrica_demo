@@ -299,21 +299,29 @@ export default function Articulos({
 }
 
 export const getServerSideProps = async () => {
-  const api = process.env.API_PRODUCCION || process.env.API_LOCAL;
-
-  const resarticulosBack = await fetch(api + ARTICULOS);
+  const resarticulosBack = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`
+  );
   const articulosBack = await resarticulosBack.json();
 
-  const resprocesosBack = await fetch(api + PROCESOS);
+  const resprocesosBack = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/procesos`
+  );
   const procesosBack = await resprocesosBack.json();
 
-  const restelasBack = await fetch(api + TELAS);
+  const restelasBack = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/telas`
+  );
   const telasBack = await restelasBack.json();
 
-  const resaviosBack = await fetch(api + AVIOS);
+  const resaviosBack = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/avios`
+  );
   const aviosBack = await resaviosBack.json();
 
-  const resdiseñosBack = await fetch(api + DISEÑOS);
+  const resdiseñosBack = await fetch(
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/diseños`
+  );
   const diseñosBack = await resdiseñosBack.json();
 
   const columnas = ["articulo", "costo", "aumento", "actualizado", "accíón"];

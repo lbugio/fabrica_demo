@@ -70,7 +70,7 @@ export default function Articulos({
   useEffect(() => {
     const getArticulo = async () => {
       setIsLoadingData(true);
-      const res = await fetch("/api/articulos" + id);
+      const res = await fetch("/api/articulos/" + id);
       setIsLoadingData(false);
       const articuloBack = await res.json();
       setItem(articuloBack);

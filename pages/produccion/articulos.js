@@ -301,19 +301,19 @@ export default function Articulos({
 export const getServerSideProps = async () => {
   const api = process.env.API_PRODUCCION || process.env.API_LOCAL;
 
-  const resarticulosBack = await fetch(fetch(api + ARTICULOS));
+  const resarticulosBack = await fetch(api + ARTICULOS);
   const articulosBack = await resarticulosBack.json();
 
-  const resprocesosBack = await fetch(fetch(api + PROCESOS));
+  const resprocesosBack = await fetch(api + PROCESOS);
   const procesosBack = await resprocesosBack.json();
 
-  const restelasBack = await fetch(fetch(api + TELAS));
+  const restelasBack = await fetch(api + TELAS);
   const telasBack = await restelasBack.json();
 
-  const resaviosBack = await fetch(fetch(api + AVIOS));
+  const resaviosBack = await fetch(api + AVIOS);
   const aviosBack = await resaviosBack.json();
 
-  const resdiseñosBack = await fetch(fetch(api + DISEÑOS));
+  const resdiseñosBack = await fetch(api + DISEÑOS);
   const diseñosBack = await resdiseñosBack.json();
 
   const columnas = ["articulo", "costo", "aumento", "actualizado", "accíón"];

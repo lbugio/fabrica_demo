@@ -96,9 +96,7 @@ export default function Articulos({
   };
 
   const handleBlur = async ({ target: { name, value } }) => {
-
     const newErrors = {};
-
 
     if (name === "numero" && value) {
       // Check if the entered "numero" value already exists in the database
@@ -118,8 +116,17 @@ export default function Articulos({
   };
 
   const validate = () => {
-    const { numero, tipo, descripcion, linea, procesos, telas, avios, diseños } = item;
-    
+    const {
+      numero,
+      tipo,
+      descripcion,
+      linea,
+      procesos,
+      telas,
+      avios,
+      diseños,
+    } = item;
+
     const errors = {};
 
     if (!numero) errors.numero = "Ingrese el número.";
@@ -201,7 +208,7 @@ export default function Articulos({
 
   const deleteArticulo = async () => {
     try {
-      const response = await fetch( ARTICULOS + id, {
+      const response = await fetch(ARTICULOS + id, {
         method: "DELETE",
       });
 
@@ -294,14 +301,20 @@ export default function Articulos({
 export const getServerSideProps = async () => {
   const api = process.env.API_PRODUCCION || process.env.API_LOCAL;
 
-  const [articulosBack, procesosBack, telasBack, aviosBack, diseñosBack] =
-  await Promise.all([
-    fetch(api + ARTICULOS).then((res) => res.json()),
-      fetch(api + PROCESOS).then((res) => res.json()),
-      fetch(api + TELAS).then((res) => res.json()),
-      fetch(api + AVIOS).then((res) => res.json()),
-      fetch(api + DISEÑOS).then((res) => res.json()),
-    ]);
+  const resarticulosBack = await fetch(fetch(api + ARTICULOS));
+  const articulosBack = await resarticulosBack.json();
+
+  const resprocesosBack = await fetch(fetch(api + PROCESOS));
+  const procesosBack = await resprocesosBack.json();
+
+  const restelasBack = await fetch(fetch(api + TELAS));
+  const telasBack = await restelasBack.json();
+
+  const resaviosBack = await fetch(fetch(api + AVIOS));
+  const aviosBack = await resaviosBack.json();
+
+  const resdiseñosBack = await fetch(fetch(api + DISEÑOS));
+  const diseñosBack = await resdiseñosBack.json();
 
   const columnas = ["articulo", "costo", "aumento", "actualizado", "accíón"];
 

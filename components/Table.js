@@ -22,7 +22,6 @@ export const Table = ({
   isLoadingData,
   openFicha,
 }) => {
-  console.log("🚀 ~ file: Table.js:25 ~ data:", data);
   const [search, setSearch] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");

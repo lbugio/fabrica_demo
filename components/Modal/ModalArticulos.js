@@ -39,7 +39,6 @@ export const ModalArticulos = ({
   };
 
   const addProceso = () => {
-    console.log("🚀 ~ file: ModalArticulos.js:46 ~ addProceso ~ item:", item)
     setItem({
       ...item,
       procesos: [...item.procesos, nuevoComponente],
@@ -354,51 +353,65 @@ export const ModalArticulos = ({
                                     </div>
                                   </div>
                                   <div className="flex justify-around">
-                                    <div className="col-span-3 sm:col-span-3 lg:col-span-3 mt-6">
-                                      <button onClick={() => addProceso()}>
+                                    <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
+                                      <Tooltip text="Proceso">
+                                        <a
+                                          onClick={addProceso}
+                                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
+                                        >
                                           <Image
                                             src="/articulos.svg"
                                             alt="articulos"
                                             width={50}
                                             height={50}
                                           />
-                                      </button>
+                                        </a>
+                                      </Tooltip>
                                     </div>
                                     <div className="col-span-3 sm:col-span-3 lg:col-span-3 mt-6">
-                                      <button onClick={() => addTela()}>
-                                        <Tooltip text="Telas">
+                                      <Tooltip text="Telas">
+                                        <a
+                                          onClick={addTela}
+                                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
+                                        >
                                           <Image
                                             src="/telas.svg"
                                             alt="telas"
                                             width={50}
                                             height={50}
                                           />
-                                        </Tooltip>
-                                      </button>
+                                        </a>
+                                      </Tooltip>
                                     </div>
                                     <div className="col-span-3 sm:col-span-3 lg:col-span-3 mt-6">
-                                      <button onClick={() => addAvio()}>
-                                        <Tooltip text="Avios">
+                                      <Tooltip text="Avio">
+                                        <a
+                                          onClick={addAvio}
+                                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
+                                        >
                                           <Image
                                             src="/avios.svg"
-                                            alt="telas"
+                                            alt="avios"
                                             width={50}
                                             height={50}
                                           />
-                                        </Tooltip>
-                                      </button>
+                                        </a>
+                                      </Tooltip>
                                     </div>
-                                    <div className="col-span-3 sm:col-span-3 lg:col-span-3 mt-6">
-                                      <button onClick={() => addDiseño()}>
-                                        <Tooltip text="Diseño">
+                                    <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
+                                      <Tooltip text="Diseños">
+                                        <a
+                                          onClick={addDiseño}
+                                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
+                                        >
                                           <Image
                                             src="/articulos.svg"
-                                            alt="diseños"
+                                            alt="articulos"
                                             width={50}
                                             height={50}
                                           />
-                                        </Tooltip>
-                                      </button>
+                                        </a>
+                                      </Tooltip>
                                     </div>
                                   </div>
                                   {procesos.map((proceso, index) => (
@@ -506,7 +519,7 @@ export const ModalArticulos = ({
                                       className="grid grid-cols-6 gap-1 mt-3"
                                       key={index}
                                     >
-                                       <div className="col-span-2 sm:col-span-1 lg:col-span-1">
+                                      <div className="col-span-2 sm:col-span-1 lg:col-span-1">
                                         <p className="mt-3 sm:text-sm">
                                           Avio {index + 1}
                                         </p>

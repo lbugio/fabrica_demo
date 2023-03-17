@@ -27,7 +27,7 @@ const ArticuloSchema = new Schema(
       trim: true,
       maxlength: [40, "Linea no puede cotener mas de 49 caracteres."],
     },
-    procesos: [
+    procesos: [ 
       {
         id: { type: Schema.Types.ObjectId, ref: "Proceso" },
         nombre: { type: String },

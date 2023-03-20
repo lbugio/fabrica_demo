@@ -51,7 +51,7 @@ const items = [
   },
 ].map((item) => ({ ...item, priority: item.priority ?? false }));
 
-function generateCardList() {
+const generateCardList = () => {
   return items.map(({ id, name, href, img, description, priority }) => (
     <Card
       key={id}
@@ -62,7 +62,7 @@ function generateCardList() {
       priority={priority}
     />
   ));
-}
+};
 
 export default function HomePage() {
   return <div className="grid grid-cols-3 gap-4">{generateCardList()}</div>;

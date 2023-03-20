@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { Table } from "components/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalAvios } from "components/Modal/ModalAvios";
+import API_ENDPOINTS from "constants/enpoints";
+
+const { AVIOS } = API_ENDPOINTS;
 
 export default function Avios({ avios, columnas, laoderImage }) {
   const avio = { nombre: "", unidad: "", precio: "", ultimoPrecio: "" };
@@ -24,7 +27,7 @@ export default function Avios({ avios, columnas, laoderImage }) {
 
   useEffect(() => {
     const getAvios = async () => {
-      const res2 = await fetch("/api/avios");
+      const res2 = await fetch(AVIOS);
       const dato2 = await res2.json();
       setData(dato2);
     };
@@ -33,7 +36,7 @@ export default function Avios({ avios, columnas, laoderImage }) {
 
   useEffect(() => {
     const getAvios = async () => {
-      const res = await fetch("/api/avios/" + id);
+      const res = await fetch(AVIOS + id);
       const avio = await res.json();
       setUltimoPrecio(avio.precio);
       setNewAvio({
@@ -89,7 +92,7 @@ export default function Avios({ avios, columnas, laoderImage }) {
 
   const createAvio = async () => {
     try {
-      await fetch("/api/avios", {
+      await fetch(AVIOS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,9 +106,8 @@ export default function Avios({ avios, columnas, laoderImage }) {
   };
 
   const updateAvio = async () => {
-
     try {
-      await fetch(`/api/avios/${id}`, {
+      await fetch(AVIOS + id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -127,7 +129,7 @@ export default function Avios({ avios, columnas, laoderImage }) {
 
   const deleteAvio = async () => {
     try {
-      await fetch(`/api/avios/${id}`, {
+      await fetch(AVIOS + id, {
         method: "DELETE",
       });
     } catch (error) {
@@ -179,7 +181,7 @@ export default function Avios({ avios, columnas, laoderImage }) {
 
 export const getServerSideProps = async () => {
   const res = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/avios`
+    process.env.API_PRODUCCION || process.env.API_LOCAL + AVIOS
   );
   const avios = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "acción"];

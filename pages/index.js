@@ -22,7 +22,7 @@ const items = [
     name: "Talleres",
     description: "Datos acerca de los talleres.",
     href: "/produccion/talleres",
-    img: "/talleres.svg",
+    img: "/talleres.png",
     priority: true,
   },
   {
@@ -38,7 +38,7 @@ const items = [
     name: "Diseños",
     description: "Datos acerca de los articulos.",
     href: "/produccion/disenos",
-    img: "/articulos.svg",
+    img: "/diseño.png",
     priority: true,
   },
   {
@@ -46,7 +46,7 @@ const items = [
     name: "Procesos",
     description: "Datos acerca de los procesos.",
     href: "/produccion/procesos",
-    img: "/articulos.svg",
+    img: "/talleres.svg",
     priority: true,
   },
 ].map((item) => ({ ...item, priority: item.priority ?? false }));;

@@ -4,7 +4,8 @@ const API_ENDPOINTS = {
     PROCESOS: "/api/procesos/",
     TELAS: "/api/telas/",
     AVIOS: "/api/avios/",
-    DISEÑOS: "/api/disenos/"
+    DISEÑOS: "/api/disenos/",
+    TALLERES: "/api/talleres"
   };
   
   export default API_ENDPOINTS;

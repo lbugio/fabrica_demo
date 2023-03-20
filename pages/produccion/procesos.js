@@ -2,8 +2,12 @@ import { useState, useEffect } from "react";
 import { Table } from "components/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalProcesos } from "components/Modal/ModalProcesos";
+import API_ENDPOINTS from "constants/enpoints";
+
+const { PROCESOS } = API_ENDPOINTS;
+
 export default function Procesos({ procesos, columnas, loaderImage }) {
-  const proceso = { nombre: "", unidad:"", precio: "", ultimoPrecio: ""};
+  const proceso = { nombre: "", unidad: "", precio: "", ultimoPrecio: "" };
 
   const [createEdit, setCreateEdit] = useState(false);
 
@@ -22,13 +26,11 @@ export default function Procesos({ procesos, columnas, loaderImage }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
-
   useEffect(() => {
     const getProcesos = async () => {
-      setisLoadingData(true)
-      const res2 = await fetch("/api/procesos/");
-      setisLoadingData(false)
+      setisLoadingData(true);
+      const res2 = await fetch(PROCESOS);
+      setisLoadingData(false);
       const dato2 = await res2.json();
       setData(dato2);
     };
@@ -37,9 +39,9 @@ export default function Procesos({ procesos, columnas, loaderImage }) {
 
   useEffect(() => {
     const getProcesos = async () => {
-      setisLoadingFieldData(true)
-      const res = await fetch("/api/procesos/" + id);
-      setisLoadingFieldData(false)
+      setisLoadingFieldData(true);
+      const res = await fetch(PROCESOS + id);
+      setisLoadingFieldData(false);
       const proceso = await res.json();
       setUltimoPrecio(proceso.precio);
       setNewProceso({
@@ -81,7 +83,7 @@ export default function Procesos({ procesos, columnas, loaderImage }) {
 
     if (Object.keys(errors).length) return setErrors(errors);
 
-    setIsSaving(true)
+    setIsSaving(true);
     if (id) {
       await updateProceso();
       setNewProceso(proceso);
@@ -91,12 +93,12 @@ export default function Procesos({ procesos, columnas, loaderImage }) {
       await createProceso();
       closeCreateEdit();
     }
-    setIsSaving(false)
+    setIsSaving(false);
   };
 
   const createProceso = async () => {
     try {
-      await fetch(`/api/procesos`, {
+      await fetch(PROCESOS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,9 +112,8 @@ export default function Procesos({ procesos, columnas, loaderImage }) {
   };
 
   const updateProceso = async () => {
-
     try {
-      await fetch(`/api/procesos/${id}`, {
+      await fetch(PROCESOS + id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -126,7 +127,7 @@ export default function Procesos({ procesos, columnas, loaderImage }) {
   };
 
   const handleDelete = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     deleteProceso();
     closeDelete();
     setNewProceso(proceso);
@@ -135,13 +136,13 @@ export default function Procesos({ procesos, columnas, loaderImage }) {
 
   const deleteProceso = async () => {
     try {
-      await fetch(`/api/procesos/${id}`, {
+      await fetch(PROCESOS + id, {
         method: "DELETE",
       });
     } catch (error) {
       console.error(error);
     }
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   return (
@@ -188,16 +189,18 @@ export default function Procesos({ procesos, columnas, loaderImage }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/procesos`);
+  const res = await fetch(
+    process.env.API_PRODUCCION || process.env.API_LOCAL + PROCESOS
+  );
   const procesos = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
-  const loaderImage ="/procesos.svg";
+  const loaderImage = "/procesos.svg";
 
   return {
     props: {
       procesos,
       columnas,
-      loaderImage
+      loaderImage,
     },
   };
 };

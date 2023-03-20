@@ -2,6 +2,10 @@ import { useState, useEffect, useReducer } from "react";
 import { Table } from "components/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalDiseños } from "components/Modal/ModalDiseños";
+import API_ENDPOINTS from "constants/enpoints";
+
+const { DISEÑOS } = API_ENDPOINTS;
+
 export default function Diseños({ diseños, columnas, loaderImage }) {
   const diseño = { nombre: "", unidad: "", precio: "", ultimoPrecio: "" };
 
@@ -60,7 +64,7 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
   useEffect(() => {
     const getDiseños = async () => {
       setisLoadingData(true);
-      const res2 = await fetch("/api/disenos/");
+      const res2 = await fetch(DISEÑOS);
       setisLoadingData(false);
       const dato2 = await res2.json();
       setData(dato2);
@@ -71,7 +75,7 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
   useEffect(() => {
     const getDiseños = async () => {
       setisLoadingFieldData(true);
-      const res = await fetch("/api/disenos/" + id);
+      const res = await fetch(DISEÑOS + id);
       setisLoadingFieldData(false);
       const { nombre, precio } = await res.json();
       setUltimoPrecio(precio);
@@ -132,7 +136,7 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
 
   const createDiseño = async () => {
     try {
-      await fetch(`/api/disenos`, {
+      await fetch(DISEÑOS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -147,7 +151,7 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
 
   const updateDiseño = async () => {
     try {
-      await fetch(`/api/disenos/${id}`, {
+      await fetch(DISEÑOS + id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -170,7 +174,7 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
 
   const deleteDiseño = async () => {
     try {
-      await fetch(`/api/disenos/${id}`, {
+      await fetch(DISEÑOS + id, {
         method: "DELETE",
       });
     } catch (error) {
@@ -227,7 +231,7 @@ export default function Diseños({ diseños, columnas, loaderImage }) {
 
 export const getServerSideProps = async () => {
   const res = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/disenos`
+    process.env.API_PRODUCCION || process.env.API_LOCAL + DISEÑOS
   );
   const diseños = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];

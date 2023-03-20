@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { Table } from "components/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalTelas } from "components/Modal/ModalTelas";
-export default function Telas({ telas, columnas, loaderImage }) {
+import API_ENDPOINTS from "constants/enpoints";
 
-  const tela = { nombre: "", unidad:"", precio: "", ultimoPrecio: ""};
+const { TELAS } = API_ENDPOINTS;
+
+export default function Telas({ telas, columnas, loaderImage }) {
+  const tela = { nombre: "", unidad: "", precio: "", ultimoPrecio: "" };
 
   const [createEdit, setCreateEdit] = useState(false);
 
@@ -23,24 +26,22 @@ export default function Telas({ telas, columnas, loaderImage }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
-
- useEffect(() => {
+  useEffect(() => {
     const getTelas = async () => {
-      setisLoadingData(true)
-      const res2 = await fetch("/api/telas/");
-      setisLoadingData(false)
+      setisLoadingData(true);
+      const res2 = await fetch(TELAS);
+      setisLoadingData(false);
       const dato2 = await res2.json();
       setData(dato2);
     };
     getTelas();
-  }, [newTela]); 
+  }, [newTela]);
 
   useEffect(() => {
     const getTelas = async () => {
-      setisLoadingFieldData(true)
-      const res = await fetch("/api/telas/" + id);
-      setisLoadingFieldData(false)
+      setisLoadingFieldData(true);
+      const res = await fetch(TELAS + id);
+      setisLoadingFieldData(false);
       const tela = await res.json();
       setUltimoPrecio(tela.precio);
       setNewTela({
@@ -82,7 +83,7 @@ export default function Telas({ telas, columnas, loaderImage }) {
 
     if (Object.keys(errors).length) return setErrors(errors);
 
-    setIsSaving(true)
+    setIsSaving(true);
     if (id) {
       await updateTela();
       setNewTela(tela);
@@ -92,12 +93,12 @@ export default function Telas({ telas, columnas, loaderImage }) {
       await createTela();
       closeCreateEdit();
     }
-    setIsSaving(false)
+    setIsSaving(false);
   };
 
   const createTela = async () => {
     try {
-      await fetch(`/api/telas`, {
+      await fetch(TELAS, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,9 +112,8 @@ export default function Telas({ telas, columnas, loaderImage }) {
   };
 
   const updateTela = async () => {
-
     try {
-      await fetch(`/api/telas/${id}`, {
+      await fetch(TELAS + id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -127,7 +127,7 @@ export default function Telas({ telas, columnas, loaderImage }) {
   };
 
   const handleDelete = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     deleteTela();
     closeDelete();
     setNewTela(tela);
@@ -136,13 +136,13 @@ export default function Telas({ telas, columnas, loaderImage }) {
 
   const deleteTela = async () => {
     try {
-      await fetch(`/api/telas/${id}`, {
+      await fetch(TELAS + id, {
         method: "DELETE",
       });
     } catch (error) {
       console.error(error);
     }
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   return (
@@ -189,16 +189,18 @@ export default function Telas({ telas, columnas, loaderImage }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/telas`);
+  const res = await fetch(
+    process.env.API_PRODUCCION || process.env.API_LOCAL + TELAS
+  );
   const telas = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
-  const loaderImage ="/telas.svg";
+  const loaderImage = "/telas.svg";
 
   return {
     props: {
       telas,
       columnas,
-      loaderImage
+      loaderImage,
     },
   };
 };

@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { Table } from "components/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalTalleres } from "components/Modal/ModalTalleres";
-import API_ENDPOINTS from "constants/enpoints";
-
-const { TALLERES } = API_ENDPOINTS;
 
 export default function Talleres({ talleres, columnas, laoderImage }) {
   const taller = { nombre: "", precio: "", ultimoPrecio: 0 };
@@ -27,6 +24,7 @@ export default function Talleres({ talleres, columnas, laoderImage }) {
 
   useEffect(() => {
     const getTalleres = async () => {
+      
       const res2 = await fetch("http://localhost:3000/api/talleres/");
       const dato2 = await res2.json();
 
@@ -38,7 +36,7 @@ export default function Talleres({ talleres, columnas, laoderImage }) {
   useEffect(() => {
     const getTalleres = async () => {
       setIsLoadingData(true);
-      const res = await fetch(TALLERES + id);
+      const res = await fetch("/api/talleres/" + id);
       setIsLoadingData(false);
       const taller = await res.json();
       setUltimoPrecio(taller.precio);
@@ -95,7 +93,7 @@ export default function Talleres({ talleres, columnas, laoderImage }) {
 
   const createTela = async () => {
     try {
-      await fetch(TALLERES, {
+      await fetch("/api/talleres", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,7 +108,7 @@ export default function Talleres({ talleres, columnas, laoderImage }) {
 
   const updateTela = async () => {
     try {
-      await fetch(TALLERES + id, {
+      await fetch(`/api/talleres/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -133,7 +131,7 @@ export default function Talleres({ talleres, columnas, laoderImage }) {
 
   const deleteTela = async () => {
     try {
-      await fetch(TALLERES + id, {
+      await fetch(`/api/talleres/${id}`, {
         method: "DELETE",
       });
     } catch (error) {
@@ -178,16 +176,13 @@ export default function Talleres({ talleres, columnas, laoderImage }) {
         setId={setId}
         isLoading={isLoading}
         setNewTaller={setNewTaller}
-        taller={taller}
-      />
+        taller={taller}      />
     </>
   );
 }
 
 export const getServerSideProps = async () => {
-  const res = await fetch(
-    process.env.API_PRODUCCION || process.env.API_LOCAL + TALLERES
-  );
+  const res = await fetch(`${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/talleres`);
   const talleres = await res.json();
   const columnas = ["nombre", "precio", "aumento", "actualizado", "Acción"];
   const laoderImage = "/talleres.svg";

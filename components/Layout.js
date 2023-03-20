@@ -8,6 +8,6 @@ export const Layout = ({ children }) => (
     </Head>
     <Navbar />
 
-    <main className="container flex flex-row justify-between mt-10">{children}</main>
+    <main className="container mt-10">{children}</main>
   </>
 );  

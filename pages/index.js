@@ -49,7 +49,7 @@ const items = [
     img: "/talleres.svg",
     priority: true,
   },
-].map((item) => ({ ...item, priority: item.priority ?? false }));;
+].map((item) => ({ ...item, priority: item.priority ?? false }));
 
 function generateCardList() {
   return items.map(({ id, name, href, img, description, priority }) => (
@@ -65,5 +65,5 @@ function generateCardList() {
 }
 
 export default function HomePage() {
-  return <>{generateCardList()}</>;
+  return <div className="grid grid-cols-3 gap-4">{generateCardList()}</div>;
 }

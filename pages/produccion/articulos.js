@@ -34,7 +34,7 @@ export default function Articulos({
 
   const [confirm, setConfirm] = useState(false);
 
-  const [data, setData] = useState(articulosBack);
+  const [data, setData] = useState([articulosBack]);
 
   const [id, setId] = useState(null);
 

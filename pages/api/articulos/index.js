@@ -80,10 +80,6 @@ export default async function handler(req, res) {
           };
         });
 
-        console.log(
-          "🚀 ~ file: index.js:69 ~ handler ~ articulosConPrecios:",
-          articulosConPrecios
-        );
         return res.status(200).json(articulosConPrecios);
       } catch (error) {
         return res.status(400).json({ msg: error.message });

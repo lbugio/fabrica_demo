@@ -152,9 +152,9 @@ export const Table = ({
               </tr>
             </thead>
             <tbody>
-              {sortedData.map((item) => (
+              {sortedData.map((item, index) => (
                 <tr
-                  key={item._id}
+                  key={index}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
                   <td className="p-4 w-4">
@@ -172,7 +172,7 @@ export const Table = ({
                       </label>
                     </div>
                   </td>
-                  <th
+                  <td
                     scope="row"
                     className="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white"
                   >
@@ -181,7 +181,7 @@ export const Table = ({
                         {item.nombre || item.numero}
                       </div>
                     </div>
-                  </th>
+                  </td>
                   <td className="py-4 px-6">
                     {"$" + item.precio} {item.unidad ? "/" + item.unidad : ""}
                   </td>

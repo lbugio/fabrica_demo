@@ -60,7 +60,7 @@ export default function Articulos({
 
   useEffect(() => {
     const getArticulos = async () => {
-      const res2 = await fetch("/api/articulos");
+      const res2 = await fetch(ARTICULOS);
       const dato2 = await res2.json();
       setData(dato2);
     };
@@ -70,7 +70,7 @@ export default function Articulos({
   useEffect(() => {
     const getArticulo = async () => {
       setIsLoadingData(true);
-      const res = await fetch(ARTICULOS + id);
+      const res = await fetch(ARTICULOS + "/" + id);
       setIsLoadingData(false);
       const articuloBack = await res.json();
       setItem(articuloBack);
@@ -179,7 +179,7 @@ export default function Articulos({
 
   const updateArticulo = async () => {
     try {
-      const response = await fetch(ARTICULOS + id, {
+      const response = await fetch(ARTICULOS + "/" + id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -208,7 +208,7 @@ export default function Articulos({
 
   const deleteArticulo = async () => {
     try {
-      const response = await fetch(ARTICULOS + id, {
+      const response = await fetch(ARTICULOS + "/" + id, {
         method: "DELETE",
       });
 
@@ -300,7 +300,7 @@ export default function Articulos({
 
 export const getServerSideProps = async () => {
   const resarticulosBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`
+    process.env.API_PRODUCCION || process.env.API_LOCAL + ARTICULOS
   );
   const articulosBack = await resarticulosBack.json();
 

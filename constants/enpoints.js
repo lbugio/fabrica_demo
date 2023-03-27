@@ -1,6 +1,6 @@
 // Define constants for ENDPOINT 
 const API_ENDPOINTS = {
-    ARTICULOS: "/api/articulos/",
+    ARTICULOS: "/api/articulos",
     PROCESOS: "/api/procesos/",
     TELAS: "/api/telas/",
     AVIOS: "/api/avios/",

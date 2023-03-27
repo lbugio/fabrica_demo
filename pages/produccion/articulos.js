@@ -298,9 +298,11 @@ export default function Articulos({
   );
 }
 
-export const getStaticProps = async () => {
 
-  const apiUrl = process.env.API_PRODUCCION || process.env.API_LOCAL;
+
+export async function getStaticProps() {
+  try {
+    const apiUrl = process.env.API_PRODUCCION || process.env.API_LOCAL;
 
 
 
@@ -331,14 +333,25 @@ export const getStaticProps = async () => {
 
   const columnas = ["articulo", "costo", "aumento", "actualizado", "accíón"];
 
-  return {
-    props: {
-      articulosBack,
-      procesosBack,
-      telasBack,
-      aviosBack,
-      diseñosBack,
-      columnas,
-    },
-  };
-};
+    return {
+      props: {
+        articulosBack,
+        procesosBack,
+        telasBack,
+        aviosBack,
+        diseñosBack,
+        columnas,
+      },
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {}
+    }
+  }
+}
+
+
+
+
+

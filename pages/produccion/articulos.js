@@ -298,29 +298,34 @@ export default function Articulos({
   );
 }
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
+
+  const apiUrl = process.env.API_PRODUCCION || process.env.API_LOCAL;
+
+
+
   const resarticulosBack = await fetch(
-    process.env.API_PRODUCCION || process.env.API_LOCAL + ARTICULOS
+    apiUrl + ARTICULOS
   );
   const articulosBack = await resarticulosBack.json();
 
   const resprocesosBack = await fetch(
-    process.env.API_PRODUCCION || process.env.API_LOCAL + PROCESOS
-  );
+    apiUrl + PROCESOS
+  );  
   const procesosBack = await resprocesosBack.json();
 
   const restelasBack = await fetch(
-    process.env.API_PRODUCCION || process.env.API_LOCAL + TELAS
+    apiUrl + TELAS
   );
   const telasBack = await restelasBack.json();
 
   const resaviosBack = await fetch(
-    process.env.API_PRODUCCION || process.env.API_LOCAL + AVIOS
+    apiUrl + AVIOS
   );
   const aviosBack = await resaviosBack.json();
 
   const resdiseñosBack = await fetch(
-    process.env.API_PRODUCCION || process.env.API_LOCAL + DISEÑOS
+    apiUrl + DISEÑOS
   );
   const diseñosBack = await resdiseñosBack.json();
 

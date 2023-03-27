@@ -60,7 +60,7 @@ export default function Articulos({
 
   useEffect(() => {
     const getArticulos = async () => {
-      const res2 = await fetch(ARTICULOS);
+      const res2 = await fetch("/api/articulos");
       const dato2 = await res2.json();
       setData(dato2);
     };
@@ -70,7 +70,7 @@ export default function Articulos({
   useEffect(() => {
     const getArticulo = async () => {
       setIsLoadingData(true);
-      const res = await fetch(ARTICULOS + "/" + id);
+      const res = await fetch(ARTICULOS + id);
       setIsLoadingData(false);
       const articuloBack = await res.json();
       setItem(articuloBack);
@@ -179,7 +179,7 @@ export default function Articulos({
 
   const updateArticulo = async () => {
     try {
-      const response = await fetch(ARTICULOS + "/" + id, {
+      const response = await fetch(ARTICULOS + id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -208,7 +208,7 @@ export default function Articulos({
 
   const deleteArticulo = async () => {
     try {
-      const response = await fetch(ARTICULOS + "/" + id, {
+      const response = await fetch(ARTICULOS + id, {
         method: "DELETE",
       });
 
@@ -298,42 +298,42 @@ export default function Articulos({
   );
 }
 
-export const getServerSideProps = async () => {
-  const resarticulosBack = await fetch(
-    (process.env.API_PRODUCCION || process.env.API_LOCAL) + ARTICULOS
-  );
-  const articulosBack = await resarticulosBack.json();
+  export const getServerSideProps = async () => {
+    const resarticulosBack = await fetch(
+      `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`
+    );
+    const articulosBack = await resarticulosBack.json();
 
-  const resprocesosBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/procesos`
-  );
-  const procesosBack = await resprocesosBack.json();
+    const resprocesosBack = await fetch(
+      `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/procesos`
+    );
+    const procesosBack = await resprocesosBack.json();
 
-  const restelasBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/telas`
-  );
-  const telasBack = await restelasBack.json();
+    const restelasBack = await fetch(
+      `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/telas`
+    );
+    const telasBack = await restelasBack.json();
 
-  const resaviosBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/avios`
-  );
-  const aviosBack = await resaviosBack.json();
+    const resaviosBack = await fetch(
+      `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/avios`
+    );
+    const aviosBack = await resaviosBack.json();
 
-  const resdiseñosBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/disenos`
-  );
-  const diseñosBack = await resdiseñosBack.json();
+    const resdiseñosBack = await fetch(
+      `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/disenos`
+    );
+    const diseñosBack = await resdiseñosBack.json();
 
-  const columnas = ["articulo", "costo", "aumento", "actualizado", "accíón"];
+    const columnas = ["articulo", "costo", "aumento", "actualizado", "accíón"];
 
-  return {
-    props: {
-      articulosBack,
-      procesosBack,
-      telasBack,
-      aviosBack,
-      diseñosBack,
-      columnas,
-    },
+    return {
+      props: {
+        articulosBack,
+        procesosBack,
+        telasBack,
+        aviosBack,
+        diseñosBack,
+        columnas,
+      },
+    };
   };
-};

@@ -300,7 +300,7 @@ export default function Articulos({
 
 export const getServerSideProps = async () => {
   const resarticulosBack = await fetch(
-    process.env.API_PRODUCCION || process.env.API_LOCAL + ARTICULOS
+    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`
   );
   const articulosBack = await resarticulosBack.json();
 

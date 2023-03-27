@@ -70,7 +70,7 @@ export default function Articulos({
   useEffect(() => {
     const getArticulo = async () => {
       setIsLoadingData(true);
-      const res = await fetch("/api/articulos/" + id);
+      const res = await fetch(ARTICULOS + id);
       setIsLoadingData(false);
       const articuloBack = await res.json();
       setItem(articuloBack);
@@ -300,27 +300,27 @@ export default function Articulos({
 
 export const getServerSideProps = async () => {
   const resarticulosBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`
+    process.env.API_PRODUCCION || process.env.API_LOCAL + ARTICULOS
   );
   const articulosBack = await resarticulosBack.json();
 
   const resprocesosBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/procesos`
+    process.env.API_PRODUCCION || process.env.API_LOCAL + PROCESOS
   );
   const procesosBack = await resprocesosBack.json();
 
   const restelasBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/telas`
+    process.env.API_PRODUCCION || process.env.API_LOCAL + TELAS
   );
   const telasBack = await restelasBack.json();
 
   const resaviosBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/avios`
+    process.env.API_PRODUCCION || process.env.API_LOCAL + AVIOS
   );
   const aviosBack = await resaviosBack.json();
 
   const resdiseñosBack = await fetch(
-    `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/disenos`
+    process.env.API_PRODUCCION || process.env.API_LOCAL + DISEÑOS
   );
   const diseñosBack = await resdiseñosBack.json();
 

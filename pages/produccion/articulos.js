@@ -298,60 +298,44 @@ export default function Articulos({
   );
 }
 
+export const getStaticProps = async () => {
 
-
-export async function getStaticProps() {
-  try {
-    const apiUrl = process.env.API_PRODUCCION || process.env.API_LOCAL;
-
-
-
+  
   const resarticulosBack = await fetch(
-    apiUrl + ARTICULOS
+    process.env.API_PRODUCCION || process.env.API_LOCAL + ARTICULOS
   );
   const articulosBack = await resarticulosBack.json();
 
   const resprocesosBack = await fetch(
-    apiUrl + PROCESOS
-  );  
+    process.env.API_PRODUCCION || process.env.API_LOCAL + PROCESOS
+  );
   const procesosBack = await resprocesosBack.json();
 
   const restelasBack = await fetch(
-    apiUrl + TELAS
+    process.env.API_PRODUCCION || process.env.API_LOCAL + TELAS
   );
   const telasBack = await restelasBack.json();
 
   const resaviosBack = await fetch(
-    apiUrl + AVIOS
+    process.env.API_PRODUCCION || process.env.API_LOCAL + AVIOS
   );
   const aviosBack = await resaviosBack.json();
 
   const resdiseñosBack = await fetch(
-    apiUrl + DISEÑOS
+    process.env.API_PRODUCCION || process.env.API_LOCAL + DISEÑOS
   );
   const diseñosBack = await resdiseñosBack.json();
 
   const columnas = ["articulo", "costo", "aumento", "actualizado", "accíón"];
 
-    return {
-      props: {
-        articulosBack,
-        procesosBack,
-        telasBack,
-        aviosBack,
-        diseñosBack,
-        columnas,
-      },
-    }
-  } catch (error) {
-    console.error(error);
-    return {
-      props: {}
-    }
-  }
-}
-
-
-
-
-
+  return {
+    props: {
+      articulosBack,
+      procesosBack,
+      telasBack,
+      aviosBack,
+      diseñosBack,
+      columnas,
+    },
+  };
+};

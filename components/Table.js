@@ -201,10 +201,17 @@ export const Table = ({
                       </div>
                     </td>
                     <td className="py-4 px-6">
-                      {"$ " +
-                        (precio
-                          ? precio + (unidad ? "/" + unidad : "")
-                          : costoDirecto)}
+                      {"$ "}
+                        {precio ? (
+                          <>
+                            {precio}
+                            {unidad && (
+                              <span className="italic">/{unidad}</span>
+                            )}
+                          </>
+                        ) : (
+                          costoDirecto
+                        )}
                     </td>
 
                     {tableName === "Articulos" ? (
@@ -217,7 +224,7 @@ export const Table = ({
                         <td className="py-4 px-6">{"$ " + mayorConIva}</td>
                         <td className="py-4 px-6">{"$ " + precioVenta}</td>
                       </>
-                    ): null}
+                    ) : null}
 
                     <td className="py-4 px-6">
                       {porcentajeAumento(precio, ultimoPrecio)}

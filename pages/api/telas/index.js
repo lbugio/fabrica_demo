@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const telas = await Tela.find();
+        const telas = await Tela.find().sort({nombre:1});
         return res.status(200).json(telas); 
       } catch (error) {
         return res.status(400).json({ msg: error.message });

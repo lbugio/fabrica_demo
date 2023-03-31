@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const diseños = await Diseño.find();
+        const diseños = await Diseño.find().sort({nombre:1});
         return res.status(STATUS_OK).json(diseños);
       } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({ msg: error.message });

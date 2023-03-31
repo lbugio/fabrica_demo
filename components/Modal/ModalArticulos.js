@@ -33,7 +33,7 @@ export const ModalArticulos = ({
   const nameInput = useRef(null);
 
   const nuevoComponente = {
-    nombre: "",
+    _id: "",
     cantidad: "",
   };
 
@@ -73,6 +73,13 @@ export const ModalArticulos = ({
     const procesos = [...item.procesos];
     procesos.splice(i, 1);
     setItem({ ...item, procesos });
+
+    setErrors((prevState) => {
+      const newErrors = { ...prevState };
+      delete newErrors[`procesos.${i}._id`];
+      delete newErrors[`procesos.${i}.cantidad`];
+      return newErrors;
+    });
   };
 
   const telasOptions = useMemo(
@@ -111,6 +118,13 @@ export const ModalArticulos = ({
     const telas = [...item.telas];
     telas.splice(i, 1);
     setItem({ ...item, telas });
+
+    setErrors((prevState) => {
+      const newErrors = { ...prevState };
+      delete newErrors[`telas.${i}._id`];
+      delete newErrors[`telas.${i}.cantidad`];
+      return newErrors;
+    });
   };
 
   const aviosOptions = useMemo(
@@ -149,6 +163,13 @@ export const ModalArticulos = ({
     const avios = [...item.avios];
     avios.splice(i, 1);
     setItem({ ...item, avios });
+
+    setErrors((prevState) => {
+      const newErrors = { ...prevState };
+      delete newErrors[`avios.${i}._id`];
+      delete newErrors[`avios.${i}.cantidad`];
+      return newErrors;
+    });
   };
 
   const diseñosOptions = useMemo(
@@ -187,6 +208,13 @@ export const ModalArticulos = ({
     const diseños = [...item.diseños];
     diseños.splice(i, 1);
     setItem({ ...item, diseños });
+
+    setErrors((prevState) => {
+      const newErrors = { ...prevState };
+      delete newErrors[`diseños.${i}._id`];
+      delete newErrors[`diseños.${i}.cantidad`];
+      return newErrors;
+    });
   };
 
   const inputButtons = [
@@ -434,44 +462,60 @@ export const ModalArticulos = ({
                                         className="grid grid-cols-2 gap-4 mt-3"
                                         key={index}
                                       >
-                                        <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
+                                        <div className="flex col-span-1 sm:col-span-1 lg:col-span-1 justify-around items-center">
                                           <span className="italic sm:text-sm">
                                             Proceso {index + 1}
                                           </span>
-                                          <select
-                                            id="_id"
-                                            name="_id"
-                                            className="mt-1 block rounded-md w-3/4 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                            onChange={(e) =>
-                                              handleChangeProcesos(index, e)
-                                            }
-                                            value={_id || ""}
-                                          >
-                                            {procesosOptions}
-                                          </select>
-                                          {errors.procesos && (
-                                            <p className="text-red-500 text-s italic animate-pulse">
-                                              {errors.procesos}
-                                            </p>
-                                          )}
+                                          <div>
+                                            <select
+                                              id="_id"
+                                              name="_id"
+                                              className="mt-1 block rounded-md w-max border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                              onChange={(e) =>
+                                                handleChangeProcesos(index, e)
+                                              }
+                                              value={_id || ""}
+                                            >
+                                              {procesosOptions}
+                                            </select>
+                                            {errors[
+                                              `procesos.${index}._id`
+                                            ] && (
+                                              <p className="text-red-500 text-sm italic animate-pulse mt-2">
+                                                {
+                                                  errors[
+                                                    `procesos.${index}._id`
+                                                  ]
+                                                }
+                                              </p>
+                                            )}
+                                          </div>
                                         </div>
                                         <div className="flex col-span-1 sm:col-span-1 lg:col-span-1">
-                                          <input
-                                            type="text"
-                                            name="cantidad"
-                                            id="cantidad"
-                                            placeholder="Cantidad"
-                                            onChange={(e) =>
-                                              handleChangeProcesos(index, e)
-                                            }
-                                            value={cantidad}
-                                            className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                          />
-                                          {errors.cantidad && (
-                                            <p className="text-red-500 text-s italic animate-pulse">
-                                              {errors.cantidad}
-                                            </p>
-                                          )}
+                                          <div>
+                                            <input
+                                              type="text"
+                                              name="cantidad"
+                                              id="cantidad"
+                                              placeholder="Cantidad"
+                                              onChange={(e) =>
+                                                handleChangeProcesos(index, e)
+                                              }
+                                              value={cantidad}
+                                              className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            />
+                                            {errors[
+                                              `procesos.${index}.cantidad`
+                                            ] && (
+                                              <p className="text-red-500 text-sm italic animate-pulse mt-2">
+                                                {
+                                                  errors[
+                                                    `procesos.${index}.cantidad`
+                                                  ]
+                                                }
+                                              </p>
+                                            )}
+                                          </div>
                                           <button
                                             type="button"
                                             onClick={() => removeProceso(index)}
@@ -493,40 +537,50 @@ export const ModalArticulos = ({
                                           <p className="italic sm:text-sm">
                                             Tela {index + 1}
                                           </p>
-                                          <select
-                                            id="_id"
-                                            name="_id"
-                                            className="mt-1 block rounded-md w-3/4 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                            onChange={(e) =>
-                                              handleChangeTelas(index, e)
-                                            }
-                                            value={_id || ""}
-                                          >
-                                            {telasOptions}
-                                          </select>
-                                          {errors.telas && (
-                                            <p className="text-red-500 text-s italic animate-pulse">
-                                              {errors.telas}
-                                            </p>
-                                          )}
+                                          <div>
+                                            <select
+                                              id="_id"
+                                              name="_id"
+                                              className="mt-1 block rounded-md w-max border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                              onChange={(e) =>
+                                                handleChangeTelas(index, e)
+                                              }
+                                              value={_id || ""}
+                                            >
+                                              {telasOptions}
+                                            </select>
+                                            {errors[`telas.${index}._id`] && (
+                                              <p className="text-red-500 text-sm italic animate-pulse mt-2">
+                                                {errors[`telas.${index}._id`]}
+                                              </p>
+                                            )}
+                                          </div>
                                         </div>
-                                        <div className="flex items-end col-span-1 sm:col-span-1 lg:col-span-1">
-                                          <input
-                                            type="text"
-                                            name="cantidad"
-                                            id="cantidad"
-                                            placeholder="Cantidad"
-                                            onChange={(e) =>
-                                              handleChangeTelas(index, e)
-                                            }
-                                            value={cantidad}
-                                            className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                          />
-                                          {errors.cantidad && (
-                                            <p className="text-red-500 text-s italic animate-pulse">
-                                              {errors.cantidad}
-                                            </p>
-                                          )}
+                                        <div className="flex justify-around col-span-1 sm:col-span-1 lg:col-span-1">
+                                          <div>
+                                            <input
+                                              type="text"
+                                              name="cantidad"
+                                              id="cantidad"
+                                              placeholder="Cantidad"
+                                              onChange={(e) =>
+                                                handleChangeTelas(index, e)
+                                              }
+                                              value={cantidad}
+                                              className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            />
+                                            {errors[
+                                              `telas.${index}.cantidad`
+                                            ] && (
+                                              <p className="text-red-500 text-sm italic animate-pulse mt-2">
+                                                {
+                                                  errors[
+                                                    `telas.${index}.cantidad`
+                                                  ]
+                                                }
+                                              </p>
+                                            )}
+                                          </div>
                                           <button
                                             type="button"
                                             onClick={() => removeTela(index)}
@@ -537,21 +591,22 @@ export const ModalArticulos = ({
                                       </div>
                                     );
                                   })}
-                                  {avios.map(
-                                    ({ _id, cantidad }, index) => {
-                                      return (
-                                        <div
-                                          className="grid grid-cols-2 gap-4 mt-3"
-                                          key={index}
-                                        >
-                                          <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
-                                            <p className="italic sm:text-sm">
-                                              Avio {index + 1}
-                                            </p>
+
+                                  {avios.map(({ _id, cantidad }, index) => {
+                                    return (
+                                      <div
+                                        className="grid grid-cols-2 gap-4 mt-3"
+                                        key={index}
+                                      >
+                                        <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
+                                          <p className="italic sm:text-sm">
+                                            Avio {index + 1}
+                                          </p>
+                                          <div>
                                             <select
                                               id="_id"
                                               name="_id"
-                                              className="mt-1 block rounded-md w-3/4 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                              className="mt-1 block rounded-md  border-gray-300 w-max shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                               onChange={(e) =>
                                                 handleChangeAvios(index, e)
                                               }
@@ -559,13 +614,15 @@ export const ModalArticulos = ({
                                             >
                                               {aviosOptions}
                                             </select>
-                                            {errors.telas && (
-                                              <p className="text-red-500 text-s italic animate-pulse">
-                                                {errors.telas}
+                                            {errors[`avios.${index}._id`] && (
+                                              <p className="text-red-500 text-sm italic animate-pulse mt-2">
+                                                {errors[`avios.${index}._id`]}
                                               </p>
                                             )}
                                           </div>
-                                          <div className="flex items-end col-span-1 sm:col-span-1 lg:col-span-1">
+                                        </div>
+                                        <div className="flex items-end col-span-1 sm:col-span-1 lg:col-span-1">
+                                          <div>
                                             <input
                                               type="text"
                                               name="cantidad"
@@ -577,38 +634,44 @@ export const ModalArticulos = ({
                                               value={cantidad}
                                               className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                             />
-                                            {errors.cantidad && (
-                                              <p className="text-red-500 text-s italic animate-pulse">
-                                                {errors.cantidad}
+                                            {errors[
+                                              `avios.${index}.cantidad`
+                                            ] && (
+                                              <p className="text-red-500 text-sm italic animate-pulse mt-2">
+                                                {
+                                                  errors[
+                                                    `avios.${index}.cantidad`
+                                                  ]
+                                                }
                                               </p>
                                             )}
-                                            <button
-                                              type="button"
-                                              onClick={() => removeAvio(index)}
-                                            >
-                                              <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                            </button>
                                           </div>
+                                          <button
+                                            type="button"
+                                            onClick={() => removeAvio(index)}
+                                          >
+                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                          </button>
                                         </div>
-                                      );
-                                    }
-                                  )}
+                                      </div>
+                                    );
+                                  })}
 
-                                  {diseños.map(
-                                    ({ _id, cantidad }, index) => {
-                                      return (
-                                        <div
-                                          className="grid grid-cols-2 gap-4 mt-3"
-                                          key={index}
-                                        >
-                                          <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
-                                            <p className="italic sm:text-sm">
-                                              Diseño {index + 1}
-                                            </p>
+                                  {diseños.map(({ _id, cantidad }, index) => {
+                                    return (
+                                      <div
+                                        className="grid grid-cols-2 gap-4 mt-3"
+                                        key={index}
+                                      >
+                                        <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
+                                          <p className="italic sm:text-sm">
+                                            Diseño {index + 1}
+                                          </p>
+                                          <div>
                                             <select
                                               id="_id"
                                               name="_id"
-                                              className="mt-1 block rounded-md w-3/4 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                              className="mt-1 block rounded-md w-max border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                               onChange={(e) =>
                                                 handleChangeDiseños(index, e)
                                               }
@@ -616,13 +679,15 @@ export const ModalArticulos = ({
                                             >
                                               {diseñosOptions}
                                             </select>
-                                            {errors.telas && (
+                                            {errors[`diseños.${index}._id`] && (
                                               <p className="text-red-500 text-s italic animate-pulse">
-                                                {errors.telas}
+                                                {errors[`diseños.${index}._id`]}
                                               </p>
                                             )}
                                           </div>
-                                          <div className="flex items-end col-span-1 sm:col-span-1 lg:col-span-1">
+                                        </div>
+                                        <div className="flex items-end col-span-1 sm:col-span-1 lg:col-span-1">
+                                          <div>
                                             <input
                                               type="text"
                                               name="cantidad"
@@ -634,24 +699,28 @@ export const ModalArticulos = ({
                                               value={cantidad}
                                               className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                             />
-                                            {errors.cantidad && (
+                                            {errors[
+                                              `diseños.${index}.cantidad`
+                                            ] && (
                                               <p className="text-red-500 text-s italic animate-pulse">
-                                                {errors.cantidad}
+                                                {
+                                                  errors[
+                                                    `diseños.${index}.cantidad`
+                                                  ]
+                                                }
                                               </p>
                                             )}
-                                            <button
-                                              type="button"
-                                              onClick={() =>
-                                                removeDiseño(index)
-                                              }
-                                            >
-                                              <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                            </button>
                                           </div>
+                                          <button
+                                            type="button"
+                                            onClick={() => removeDiseño(index)}
+                                          >
+                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                          </button>
                                         </div>
-                                      );
-                                    }
-                                  )}
+                                      </div>
+                                    );
+                                  })}
                                   {/* <div className="border border-gray-300 rounded p-2 col-span-6">
                                     <label className="block text-sm font-medium text-gray-700">
                                       Foto del artículo

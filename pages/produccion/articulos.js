@@ -73,7 +73,6 @@ export default function Articulos({
       const res = await fetch(ARTICULOS + id);
       setIsLoadingData(false);
       const articuloBack = await res.json();
-      console.log("🚀 ~ file: articulos.js:76 ~ getArticulo ~ articuloBack:", articuloBack)
       setItem(articuloBack);
     };
     if (id) getArticulo();
@@ -134,6 +133,20 @@ export default function Articulos({
     if (!tipo) errors.tipo = "Ingrese el tipo.";
     if (!descripcion) errors.descripcion = "Ingrese la descripción.";
     if (!linea) errors.linea = "Ingrese la línea.";
+
+    [procesos,telas, avios, diseños].forEach((items, i) => {
+      items.forEach(({ _id, cantidad }, index) => {
+        const fieldName = `${["procesos","telas", "avios", "diseños"][i]}.${index}`;
+  
+        if (!_id) {
+          errors[`${fieldName}._id`] = "Ingrese un " + ["proceso", "tela", "avio", "diseño"][i] + ".";
+        }
+  
+        if (isNaN(cantidad) || cantidad <= 0) {
+          errors[`${fieldName}.cantidad`] = "La cantidad debe ser un número mayor a 0.";
+        }
+      });
+    });
 
     return errors;
   };

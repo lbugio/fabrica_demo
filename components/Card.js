@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export const Card = ({ name, href, img, description, priority }) => {
+export const Card = ({ name, href, img,priority }) => {
   return (
     <>
       <Link href={href}>

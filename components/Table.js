@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 
 import { Tooltip } from "components/Tooltip";
 import { PrinterIcon } from "@heroicons/react/24/solid";
@@ -26,13 +26,13 @@ export const Table = ({
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
 
-  const filteredData = data.filter((row) =>
-    Object.values(row).some(
+  const filteredData = data.filter((row) => {
+    return Object.values(row).some(
       (value) =>
         typeof value === "string" &&
         value.toLowerCase().includes(search.toLowerCase())
-    )
-  );
+    );
+  });
 
   const sortedData = filteredData.sort((a, b) => {
     if (!sortColumn) return 0;
@@ -142,7 +142,7 @@ export const Table = ({
                 {columnas.map((item) => (
                   <th
                     scope="col"
-                    className="py-3 px-6"
+                    className="p-3 truncate text-xs"
                     key={item}
                     onClick={() => handleSort(item)}
                   >
@@ -152,102 +152,129 @@ export const Table = ({
               </tr>
             </thead>
             <tbody>
-              {sortedData.map((item, index) => (
-                <tr
-                  key={index}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <td className="p-4 w-4">
-                    <div className="flex items-center">
-                      <input
-                        id="checkbox-table-search-1"
-                        type="checkbox"
-                        className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                      />
-                      <label
-                        htmlFor="checkbox-table-search-1"
-                        className="sr-only"
-                      >
-                        checkbox
-                      </label>
-                    </div>
-                  </td>
-                  <td
-                    scope="row"
-                    className="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white"
+              {sortedData.map(
+                (
+                  {
+                    _id,
+                    nombre,
+                    numero,
+                    precio,
+                    unidad,
+                    ultimoPrecio,
+                    updatedAt,
+                    costoDirecto,
+                    costoAdministrativo,
+                    costoTotal,
+                    precioMayor,
+                    mayorConIva,
+                    precioVenta,
+                  },
+                  index
+                ) => (
+                  <tr
+                    key={index}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
-                    <div className="pl-3">
-                      <div className="text-base font-semibold">
-                        {item.nombre || item.numero}
+                    <td className="p-4 w-4">
+                      <div className="flex items-center">
+                        <input
+                          id="checkbox-table-search-1"
+                          type="checkbox"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                          htmlFor="checkbox-table-search-1"
+                          className="sr-only"
+                        >
+                          checkbox
+                        </label>
                       </div>
-                    </div>
-                  </td>
-                  <td className="py-4 px-6">
-                    {"$" + item.precio} {item.unidad ? "/" + item.unidad : ""}
-                  </td>
+                    </td>
+                    <td
+                      scope="row"
+                      className="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      <div className="pl-3">
+                        <div className="text-base font-semibold">
+                          {nombre || numero}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-4 px-6">
+                      {"$ " +
+                        (precio
+                          ? precio + (unidad ? "/" + unidad : "")
+                          : costoDirecto)}
+                    </td>
 
-                  <td className="py-4 px-6">
-                    {porcentajeAumento(item.precio, item.ultimoPrecio)}
-                  </td>
-                  <td className="py-4 px-6">
-                    {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
-                     */}{" "}
-                    {`${new Date(item.updatedAt).toLocaleDateString(
-                      "es-ES",
-                      dateOptions
-                    )} hs.`}
-                  </td>
-                  <td className="py-4 px-4 flex justify-between">
-                    {tableName == "Articulos" ? (
-                      <a
-                        href="#"
+                    {tableName === "Articulos" ? (
+                      <>
+                        <td className="py-4 px-6">
+                          {"$ " + costoAdministrativo}
+                        </td>
+                        <td className="py-4 px-6">{"$ " + costoTotal}</td>
+                        <td className="py-4 px-6">{"$ " + precioMayor}</td>
+                        <td className="py-4 px-6">{"$ " + mayorConIva}</td>
+                        <td className="py-4 px-6">{"$ " + precioVenta}</td>
+                      </>
+                    ): null}
+
+                    <td className="py-4 px-6">
+                      {porcentajeAumento(precio, ultimoPrecio)}
+                    </td>
+                    <td className="py-4 px-6">
+                      {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
+                       */}{" "}
+                      {`${new Date(updatedAt).toLocaleDateString(
+                        "es-ES",
+                        dateOptions
+                      )} hs.`}
+                    </td>
+                    <td className="py-4 px-4 flex justify-between">
+                      {tableName == "Articulos" ? (
+                        <button
+                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                          onClick={() => {
+                            openFicha();
+                            setId(_id);
+                          }}
+                        >
+                          <DocumentIcon
+                            className="h-6 w-6 text-blue-800 hover:brightness-200"
+                            aria-hidden="true"
+                          />
+                        </button>
+                      ) : null}
+                      <button
                         type="button"
                         data-modal-toggle="editUserModal"
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                         onClick={() => {
-                          openFicha();
-                          setId(item._id);
+                          openCreateEdit();
+                          setId(_id);
                         }}
                       >
-                        <DocumentIcon
-                          className="h-6 w-6 text-blue-800 hover:brightness-200"
+                        <PencilSquareIcon
+                          className="h-6 w-6 text-green-800 hover:brightness-200"
                           aria-hidden="true"
                         />
-                      </a>
-                    ) : null}
-                    <a
-                      href="#"
-                      type="button"
-                      data-modal-toggle="editUserModal"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      onClick={() => {
-                        openCreateEdit();
-                        setId(item._id);
-                      }}
-                    >
-                      <PencilSquareIcon
-                        className="h-6 w-6 text-green-800 hover:brightness-200"
-                        aria-hidden="true"
-                      />
-                    </a>
-                    <a
-                      href="#"
-                      type="button"
-                      data-modal-toggle="editUserModal"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      onClick={() => {
-                        openDelete();
-                        setId(item._id);
-                      }}
-                    >
-                      <TrashIcon
-                        className="h-6 w-6 text-red-800 hover:brightness-200"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  </td>
-                </tr>
-              ))}
+                      </button>
+                      <button
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        onClick={() => {
+                          openDelete();
+                          setId(_id);
+                        }}
+                      >
+                        <TrashIcon
+                          className="h-6 w-6 text-red-800 hover:brightness-200"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         )

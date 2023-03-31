@@ -12,31 +12,34 @@ export default async function handler(req, res) {
         const articulos = await Articulo.find()
           .sort({ numero: 1 })
           .populate([
-            { path: "procesos.id", select: "precio nombre" },
-            { path: "telas.id", select: "precio unidad nombre" },
-            { path: "avios.id", select: "precio nombre unidad" },
-            { path: "diseños.id", select: "precio nombre" },
+            { path: "procesos._id", select: "precio nombre" },
+            { path: "telas._id", select: "precio nombre unidad" },
+            { path: "avios._id", select: "precio nombre unidad" },
+            { path: "diseños._id", select: "precio nombre" },
           ]);
 
         const articulosConPrecios = articulos.map((articulo) => {
           const precioConsumoProcesos = articulo.procesos
             ? Number(
                 articulo.procesos
-                  .map(({ id, cantidad }) => cantidad * (id ? id.precio : 0))
+                  .map(
+                    ({ _id: { precio }, cantidad }) =>
+                      cantidad * (precio ? precio : 0)
+                  )
                   .reduce((prev, curr) => prev + curr, 0)
               )
             : 0;
 
           const precioConsumoTelas = Number(
             articulo.telas
-              .map(({ id, cantidad }) => {
-                switch (id.unidad) {
+              .map(({ _id: { precio, unidad }, cantidad }) => {
+                switch (unidad) {
                   case "kg.":
-                    return (cantidad * (id ? id.precio : 0)) / 1000;
+                    return (cantidad * (precio ? precio : 0)) / 1000;
                   case "m.":
-                    return (cantidad * id.precio) / 100;
+                    return (cantidad * precio) / 100;
                   default:
-                    return cantidad * id.precio;
+                    return cantidad * precio;
                 }
               })
               .reduce((prev, curr) => prev + curr, 0)
@@ -45,14 +48,14 @@ export default async function handler(req, res) {
 
           const precioConsumoAvios = Number(
             articulo.avios
-              .map(({ id, cantidad }) => {
-                switch (id.unidad) {
+              .map(({ _id: { precio, unidad }, cantidad }) => {
+                switch (unidad) {
                   case "kg.":
-                    return (cantidad * (id ? id.precio : 0)) / 1000;
+                    return (cantidad * (precio ? precio : 0)) / 1000;
                   case "m.":
-                    return (cantidad * id.precio) / 100;
+                    return (cantidad * precio) / 100;
                   default:
-                    return cantidad * id.precio;
+                    return cantidad * precio;
                 }
               })
               .reduce((prev, curr) => prev + curr, 0)
@@ -62,21 +65,29 @@ export default async function handler(req, res) {
           const precioConsumoDiseño = articulo.diseños
             ? Number(
                 articulo.diseños
-                  .map(({ id, cantidad }) => cantidad * (id ? id.precio : 0))
+                  .map(
+                    ({ _id: { precio }, cantidad }) =>
+                      cantidad * (precio ? precio : 0)
+                  )
                   .reduce((prev, curr) => prev + curr, 0)
                   .toFixed(2)
               )
             : 0;
 
-          const precio =
+          const costoDirecto =
+            precioConsumoProcesos +
             precioConsumoTelas +
             precioConsumoAvios +
-            precioConsumoDiseño +
-            precioConsumoProcesos;
+            precioConsumoDiseño;
 
           return {
             ...articulo.toObject(),
-            precio: precio.toFixed(2),
+            costoDirecto: costoDirecto.toFixed(2),
+            costoAdministrativo: (costoDirecto * 0.3).toFixed(2),
+            costoTotal: (costoDirecto * 1.3).toFixed(2),
+            precioMayor: (costoDirecto * 2 * 1.3).toFixed(2),
+            mayorConIva: (costoDirecto * 2 * 1.21 * 1.3).toFixed(2),
+            precioVenta: (costoDirecto * 3 * 1.3).toFixed(2),
           };
         });
 

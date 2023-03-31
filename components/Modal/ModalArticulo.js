@@ -22,13 +22,14 @@ export const ModalArticulo = ({
     avios,
     diseños,
     costoDirecto,
-    costosAdministrativos,
+    costoAdministrativo,
+    costoTotal,
     precioMayor,
     mayorConIva,
     precioVenta,
   } = item;
 
-  const componentes = [...procesos, ...telas, ...avios, ...diseños];
+  const componentes = [...procesos,  ...telas, ...avios, ...diseños ];
 
   const printRef = useRef();
 
@@ -60,7 +61,7 @@ export const ModalArticulo = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"/>
         </Transition.Child>
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -93,13 +94,13 @@ export const ModalArticulo = ({
                           setItem(initialItem);
                         }}
                       >
-                        <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                        <XMarkIcon className="h-6 w-6" aria-hidden="true"/>
                       </button>
                     </div>
                     <div className="max-w-5xl mx-auto bg-white" ref={printRef}>
                       <article className="overflow-hidden">
                         <div className="bg-[white] rounded-b-md">
-                          <div className="p-9 pb-2">
+                          <div className="p-4 pb-2">
                             <div className="flex justify-end w-full">
                               <div className="text-sm font-light text-slate-500">
                                 <p className=" flex justify-end text-xl font-normal">
@@ -206,7 +207,15 @@ export const ModalArticulo = ({
                                     <tr>
                                       <th
                                         scope="row"
-                                        colSpan="3"
+                                        colSpan="2"
+                                        rowSpan="3"
+                                        className="hidden pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0 border-r-2 border-b-2"
+                                      >
+                                        Costos
+                                      </th>
+                                      <th
+                                        scope="row"
+                                        colSpan="1"
                                         className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                       >
                                         Costo directo
@@ -221,29 +230,51 @@ export const ModalArticulo = ({
                                         $ {costoDirecto}
                                       </td>
                                     </tr>
-
                                     <tr>
                                       <th
                                         scope="row"
-                                        colSpan="3"
-                                        className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
+                                        colSpan="1"
+                                        className="hidden pt-4 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                       >
-                                        + Administrativo
+                                        Costo Administrativo
+                                        <p className="text-xs text-gray-500 italic">
+                                          30% del costo directo{" "}
+                                        </p>
                                       </th>
                                       <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                                        {"$ " + costosAdministrativos}
+                                        {"$ " + costoAdministrativo}
                                       </td>
                                     </tr>
                                     <tr>
                                       <th
                                         scope="row"
-                                        colSpan="3"
+                                        colSpan="1"
+                                        className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0 border-b-2"
+                                      >
+                                        Costo Total
+                                      </th>
+                                      <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0 border-b-2">
+                                        {"$ " + costoTotal}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <th
+                                        scope="row"
+                                        colSpan="2"
+                                        rowSpan="3"
+                                        className="hidden pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0 border-r-2"
+                                      >
+                                        Precios
+                                      </th>
+                                      <th
+                                        scope="row"
+                                        colSpan="1"
                                         className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                       >
                                         Mayor sin Iva{" "}
-                                        <span className="text-sm italic font-light">
-                                          costo x 2
-                                        </span>
+                                        <p className="text-xs text-gray-500 italic">
+                                          costo total x 2
+                                        </p>
                                       </th>
                                       <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
                                         {"$ " + precioMayor}
@@ -252,13 +283,13 @@ export const ModalArticulo = ({
                                     <tr>
                                       <th
                                         scope="row"
-                                        colSpan="3"
+                                        colSpan="1"
                                         className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                       >
                                         Mayor con Iva
-                                        <span className="text-sm italic font-light">
-                                          costo x 2 x 1,21
-                                        </span>
+                                        <p className="text-xs text-gray-500 italic">
+                                          costo total x 2 x 1,21
+                                        </p>
                                       </th>
                                       <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
                                         {"$ " + mayorConIva}
@@ -267,13 +298,13 @@ export const ModalArticulo = ({
                                     <tr>
                                       <th
                                         scope="row"
-                                        colSpan="3"
+                                        colSpan="1"
                                         className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                       >
-                                        Precio de Venta{" "}
-                                        <span className="text-sm italic font-light">
-                                          costo x 3
-                                        </span>
+                                        Precio de Venta
+                                        <p className="text-xs text-gray-500 italic">
+                                          costo total x 3
+                                        </p>
                                       </th>
                                       <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
                                         {"$ " + precioVenta}

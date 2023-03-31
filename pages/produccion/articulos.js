@@ -25,9 +25,9 @@ export default function Articulos({
     descripcion: "",
     linea: "",
     procesos: [],
-    telas: [],
-    avios: [],
-    diseños: [],
+      telas: [],
+      avios: [],
+      diseños: [],
   };
 
   const [createEdit, setCreateEdit] = useState(false);
@@ -73,6 +73,7 @@ export default function Articulos({
       const res = await fetch(ARTICULOS + id);
       setIsLoadingData(false);
       const articuloBack = await res.json();
+      console.log("🚀 ~ file: articulos.js:76 ~ getArticulo ~ articuloBack:", articuloBack)
       setItem(articuloBack);
     };
     if (id) getArticulo();
@@ -299,6 +300,8 @@ export default function Articulos({
 }
 
   export const getServerSideProps = async () => {
+
+    
     const resarticulosBack = await fetch(
       `${process.env.API_PRODUCCION || process.env.API_LOCAL}/api/articulos`
     );
@@ -324,7 +327,7 @@ export default function Articulos({
     );
     const diseñosBack = await resdiseñosBack.json();
 
-    const columnas = ["articulo", "costo", "aumento", "actualizado", "accíón"];
+    const columnas = ["articulo", "Costo Directo", "Costo Administrativo","Costo Total" , "Precio x Mayor", "Mayor con IVA","Preio de Venta",  "aumento", "actualizado", "accíón"];
 
     return {
       props: {

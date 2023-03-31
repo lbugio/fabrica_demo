@@ -29,32 +29,28 @@ const ArticuloSchema = new Schema(
     },
     procesos: [ 
       {
-        id: { type: Schema.Types.ObjectId, ref: "Proceso" },
-        nombre: { type: String },
+        _id: { type: Schema.Types.ObjectId, ref: "Proceso" },
         cantidad: { type: Number },
       },
     ],
-    telas: [
+     telas: [
       {
-        id: { type: Schema.Types.ObjectId, ref: "Tela" },
-        nombre: { type: String },
+        _id: { type: Schema.Types.ObjectId, ref: "Tela" },
         cantidad: { type: Number },
       },
     ],
     avios: [
       {
-        id: { type: Schema.Types.ObjectId, ref: "Avio" },
-        nombre: { type: String },
+        _id: { type: Schema.Types.ObjectId, ref: "Avio" },
         cantidad: { type: Number },
       },
     ],
     diseños: [
       {
-        id: { type: Schema.Types.ObjectId, ref: "Diseño" },
-        nombre: { type: String },
+        _id: { type: Schema.Types.ObjectId, ref: "Diseño" },
         cantidad: { type: Number },
       },
-    ],
+    ],  
   },
   {
     timestamps: true,

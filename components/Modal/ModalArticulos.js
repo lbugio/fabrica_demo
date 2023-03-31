@@ -1,9 +1,15 @@
+import { useMemo } from "react";
 import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { PlusIcon, XCircleIcon } from "@heroicons/react/24/solid";
-import { ListBox } from "components/Form/ListBox";
+import { XCircleIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { Tooltip } from "components/Tooltip";
+
+const lineas = [
+  { id: 1, nombre: "Bebe" },
+  { id: 2, nombre: "Niño" },
+  { id: 3, nombre: "Adulto" },
+];
 
 export const ModalArticulos = ({
   createEdit,
@@ -22,21 +28,30 @@ export const ModalArticulos = ({
   diseñosBack,
   initialItem,
 }) => {
-  const { procesos, telas, avios, diseños } = item;
-
-  const lineas = [
-    { id: 1, nombre: "Bebe" },
-    { id: 2, nombre: "Niño" },
-    { id: 3, nombre: "Adulto" },
-  ];
-
+  const { numero, tipo, linea, descripcion, procesos, telas, avios, diseños } =
+    item;
   const nameInput = useRef(null);
 
   const nuevoComponente = {
     nombre: "",
     cantidad: "",
-    id: "",
   };
+
+  const procesosOptions = useMemo(
+    () => (
+      <>
+        <option value="" disabled className="italic">
+          Eliga un proceso
+        </option>
+        {procesosBack.map(({ _id, nombre }) => (
+          <option className="italic" key={_id} value={_id}>
+            {nombre}
+          </option>
+        ))}
+      </>
+    ),
+    [procesosBack]
+  );
 
   const addProceso = () => {
     setItem({
@@ -45,16 +60,7 @@ export const ModalArticulos = ({
     });
   };
 
-  const handleChangeProcesoListbox = (i, e) => {
-    setItem((prevState) => {
-      const procesos = [...prevState.procesos];
-      procesos[i]["nombre"] = e.nombre;
-      procesos[i]["id"] = e._id;
-      return { ...prevState, procesos };
-    });
-  };
-
-  const handleChangeProcesoInput = (i, e) => {
+  const handleChangeProcesos = (i, e) => {
     const { name, value } = e.target;
     setItem((prevState) => {
       const procesos = [...prevState.procesos];
@@ -69,6 +75,22 @@ export const ModalArticulos = ({
     setItem({ ...item, procesos });
   };
 
+  const telasOptions = useMemo(
+    () => (
+      <>
+        <option value="" disabled className="italic">
+          Eliga una tela
+        </option>
+        {telasBack.map(({ _id, nombre }) => (
+          <option className="italic" key={_id} value={_id}>
+            {nombre}
+          </option>
+        ))}
+      </>
+    ),
+    [telasBack]
+  );
+
   const addTela = () => {
     setItem({
       ...item,
@@ -76,16 +98,7 @@ export const ModalArticulos = ({
     });
   };
 
-  const handleChangeTelaListbox = (i, e) => {
-    setItem((prevState) => {
-      const telas = [...prevState.telas];
-      telas[i]["nombre"] = e.nombre;
-      telas[i]["id"] = e._id;
-      return { ...prevState, telas };
-    });
-  };
-
-  const handleChangeTelaInput = (i, e) => {
+  const handleChangeTelas = (i, e) => {
     const { name, value } = e.target;
     setItem((prevState) => {
       const telas = [...prevState.telas];
@@ -100,6 +113,22 @@ export const ModalArticulos = ({
     setItem({ ...item, telas });
   };
 
+  const aviosOptions = useMemo(
+    () => (
+      <>
+        <option value="" disabled className="italic">
+          Eliga un avio
+        </option>
+        {aviosBack.map(({ _id, nombre }) => (
+          <option className="italic" key={_id} value={_id}>
+            {nombre}
+          </option>
+        ))}
+      </>
+    ),
+    [aviosBack]
+  );
+
   const addAvio = () => {
     setItem({
       ...item,
@@ -107,16 +136,7 @@ export const ModalArticulos = ({
     });
   };
 
-  const handleChangeAvioListbox = (i, e) => {
-    setItem((prevState) => {
-      const avios = [...prevState.avios];
-      avios[i]["nombre"] = e.nombre;
-      avios[i]["id"] = e._id;
-      return { ...prevState, avios };
-    });
-  };
-
-  const handleChangeAvioInput = (i, e) => {
+  const handleChangeAvios = (i, e) => {
     const { name, value } = e.target;
     setItem((prevState) => {
       const avios = [...prevState.avios];
@@ -131,6 +151,22 @@ export const ModalArticulos = ({
     setItem({ ...item, avios });
   };
 
+  const diseñosOptions = useMemo(
+    () => (
+      <>
+        <option value="" disabled className="italic">
+          Eliga un diseño
+        </option>
+        {diseñosBack.map(({ _id, nombre }) => (
+          <option className="italic" key={_id} value={_id}>
+            {nombre}
+          </option>
+        ))}
+      </>
+    ),
+    [diseñosBack]
+  );
+
   const addDiseño = () => {
     setItem({
       ...item,
@@ -138,16 +174,7 @@ export const ModalArticulos = ({
     });
   };
 
-  const handleChangeDiseñoListbox = (i, e) => {
-    setItem((prevState) => {
-      const diseños = [...prevState.diseños];
-      diseños[i]["nombre"] = e.nombre;
-      diseños[i]["id"] = e._id;
-      return { ...prevState, diseños };
-    });
-  };
-
-  const handleChangeDiseñoInput = (i, e) => {
+  const handleChangeDiseños = (i, e) => {
     const { name, value } = e.target;
     setItem((prevState) => {
       const diseños = [...prevState.diseños];
@@ -161,6 +188,33 @@ export const ModalArticulos = ({
     diseños.splice(i, 1);
     setItem({ ...item, diseños });
   };
+
+  const inputButtons = [
+    {
+      imageSrc: "/articulos.svg",
+      altText: "Proceso",
+      clickHandler: addProceso,
+      tooltipText: "Proceso",
+    },
+    {
+      imageSrc: "/telas.svg",
+      altText: "Telas",
+      clickHandler: addTela,
+      tooltipText: "Telas",
+    },
+    {
+      imageSrc: "/avios.svg",
+      altText: "Avio",
+      clickHandler: addAvio,
+      tooltipText: "Avio",
+    },
+    {
+      imageSrc: "/diseño.png",
+      altText: "Diseños",
+      clickHandler: addDiseño,
+      tooltipText: "Diseños",
+    },
+  ];
 
   //Imagen
   /*const imageMimeType = /image\/(png|jpg|jpeg|svg)/i;
@@ -207,7 +261,7 @@ export const ModalArticulos = ({
         as="div"
         className="relative z-10"
         initialFocus={nameInput}
-        onClose={setCreateEdit}
+        onClose={() => null}
       >
         <Transition.Child
           as={Fragment}
@@ -239,7 +293,6 @@ export const ModalArticulos = ({
                         <div className="md:grid md:grid-cols-2 md:gap-6">
                           <div className="mt-5 md:col-span-2 md:mt-0">
                             <form
-                              action="#"
                               method="POST"
                               encType="multipart/form-data"
                               onSubmit={handleSubmit}
@@ -262,7 +315,7 @@ export const ModalArticulos = ({
                                         placeholder="Número"
                                         onChange={handleChange}
                                         onBlur={handleBlur}
-                                        value={item.numero}
+                                        value={numero}
                                         ref={nameInput}
                                       />
                                       <p className="text-red-500 text-s italic animate-pulse">
@@ -283,7 +336,7 @@ export const ModalArticulos = ({
                                         id="tipo"
                                         placeholder="Tipo"
                                         onChange={handleChange}
-                                        value={item.tipo}
+                                        value={tipo}
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                       />
                                       <p className="text-red-500 text-s italic animate-pulse">
@@ -304,7 +357,7 @@ export const ModalArticulos = ({
                                         autoComplete="linea"
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         onChange={handleChange}
-                                        value={item.linea}
+                                        value={linea}
                                       >
                                         <option
                                           value=""
@@ -342,7 +395,7 @@ export const ModalArticulos = ({
                                         id="descripcion"
                                         placeholder="Descripción"
                                         onChange={handleChange}
-                                        value={item.descripcion}
+                                        value={descripcion}
                                         className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                       />
                                       <p className="text-red-500 text-s italic animate-pulse">
@@ -352,266 +405,253 @@ export const ModalArticulos = ({
                                       </p>
                                     </div>
                                   </div>
-                                  <div className="flex justify-around">
-                                    <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
-                                      <Tooltip text="Proceso">
-                                        <a
-                                          onClick={addProceso}
-                                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
-                                        >
-                                          <Image
-                                            src="/articulos.svg"
-                                            alt="articulos"
-                                            width={50}
-                                            height={50}
-                                          />
-                                        </a>
-                                      </Tooltip>
-                                    </div>
-                                    <div className="col-span-3 sm:col-span-3 lg:col-span-3 mt-6">
-                                      <Tooltip text="Telas">
-                                        <a
-                                          onClick={addTela}
-                                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
-                                        >
-                                          <Image
-                                            src="/telas.svg"
-                                            alt="telas"
-                                            width={50}
-                                            height={50}
-                                          />
-                                        </a>
-                                      </Tooltip>
-                                    </div>
-                                    <div className="col-span-3 sm:col-span-3 lg:col-span-3 mt-6">
-                                      <Tooltip text="Avio">
-                                        <a
-                                          onClick={addAvio}
-                                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
-                                        >
-                                          <Image
-                                            src="/avios.svg"
-                                            alt="avios"
-                                            width={50}
-                                            height={50}
-                                          />
-                                        </a>
-                                      </Tooltip>
-                                    </div>
-                                    <div className="col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
-                                      <Tooltip text="Diseños">
-                                        <a
-                                          onClick={addDiseño}
-                                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
-                                        >
-                                          <Image
-                                            src="/articulos.svg"
-                                            alt="articulos"
-                                            width={50}
-                                            height={50}
-                                          />
-                                        </a>
-                                      </Tooltip>
-                                    </div>
+                                  <div className="flex justify-around col-span-6 sm:col-span-6 lg:col-span-6 mt-6">
+                                    {inputButtons.map((button, index) => (
+                                      <div
+                                        className="col-span-6 sm:col-span-3 lg:col-span-3 mt-6"
+                                        key={index}
+                                      >
+                                        <Tooltip text={button.tooltipText}>
+                                          <a
+                                            onClick={button.clickHandler}
+                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
+                                          >
+                                            <Image
+                                              src={button.imageSrc}
+                                              alt={button.altText}
+                                              width={50}
+                                              height={50}
+                                            />
+                                          </a>
+                                        </Tooltip>
+                                      </div>
+                                    ))}
                                   </div>
-                                  {procesos.map((proceso, index) => (
-                                    <div
-                                      className="grid grid-cols-6 gap-1 mt-3"
-                                      key={index}
-                                    >
-                                      <div className="col-span-2 sm:col-span-1 lg:col-span-1">
-                                        <p className="mt-3 sm:text-sm">
-                                          Proceso {index + 1}
-                                        </p>
-                                      </div>
-                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                                        <ListBox
-                                          options={procesosBack}
-                                          selectedOption={proceso}
-                                          onChange={(e) =>
-                                            handleChangeProcesoListbox(index, e)
-                                          }
-                                        />
-                                        <p className="text-red-500 text-s italic animate-pulse">
-                                          {errors.procesos
-                                            ? errors.procesos
-                                            : null}
-                                        </p>
-                                      </div>
-                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                                        <input
-                                          type="text"
-                                          name="cantidad"
-                                          id="cantidad"
-                                          placeholder="Cantidad"
-                                          onChange={(e) =>
-                                            handleChangeProcesoInput(index, e)
-                                          }
-                                          value={proceso.cantidad}
-                                          className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        />
-                                        <p className="text-red-500 text-s italic animate-pulse">
-                                          {errors.cantidad
-                                            ? errors.cantidad
-                                            : null}
-                                        </p>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        onClick={() => removeProceso(index)}
-                                      >
-                                        <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                      </button>
-                                    </div>
-                                  ))}
 
-                                  {telas.map((tela, index) => (
-                                    <div
-                                      className="grid grid-cols-6 gap-1 mt-3"
-                                      key={index}
-                                    >
-                                      <div className="col-span-2 sm:col-span-1 lg:col-span-1">
-                                        <p className="mt-3 sm:text-sm">
-                                          Tela {index + 1}
-                                        </p>
-                                      </div>
-                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                                        <ListBox
-                                          options={telasBack}
-                                          selectedOption={tela}
-                                          onChange={(e) =>
-                                            handleChangeTelaListbox(index, e)
-                                          }
-                                        />
-                                        <p className="text-red-500 text-s italic animate-pulse">
-                                          {errors.nombre ? errors.nombre : null}
-                                        </p>
-                                      </div>
-                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                                        <input
-                                          type="text"
-                                          name="cantidad"
-                                          id="cantidad"
-                                          placeholder="Cantidad"
-                                          onChange={(e) =>
-                                            handleChangeTelaInput(index, e)
-                                          }
-                                          value={tela.cantidad}
-                                          className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        />
-
-                                        <p className="text-red-500 text-s italic animate-pulse">
-                                          {errors.cantidad
-                                            ? errors.cantidad
-                                            : null}
-                                        </p>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        onClick={() => removeTela(index)}
+                                  {procesos.map(({ cantidad, _id }, index) => {
+                                    return (
+                                      <div
+                                        className="grid grid-cols-2 gap-4 mt-3"
+                                        key={index}
                                       >
-                                        <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                      </button>
-                                    </div>
-                                  ))}
-                                  {avios.map((avio, index) => (
-                                    <div
-                                      className="grid grid-cols-6 gap-1 mt-3"
-                                      key={index}
-                                    >
-                                      <div className="col-span-2 sm:col-span-1 lg:col-span-1">
-                                        <p className="mt-3 sm:text-sm">
-                                          Avio {index + 1}
-                                        </p>
+                                        <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
+                                          <span className="italic sm:text-sm">
+                                            Proceso {index + 1}
+                                          </span>
+                                          <select
+                                            id="_id"
+                                            name="_id"
+                                            className="mt-1 block rounded-md w-3/4 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            onChange={(e) =>
+                                              handleChangeProcesos(index, e)
+                                            }
+                                            value={_id || ""}
+                                          >
+                                            {procesosOptions}
+                                          </select>
+                                          {errors.procesos && (
+                                            <p className="text-red-500 text-s italic animate-pulse">
+                                              {errors.procesos}
+                                            </p>
+                                          )}
+                                        </div>
+                                        <div className="flex col-span-1 sm:col-span-1 lg:col-span-1">
+                                          <input
+                                            type="text"
+                                            name="cantidad"
+                                            id="cantidad"
+                                            placeholder="Cantidad"
+                                            onChange={(e) =>
+                                              handleChangeProcesos(index, e)
+                                            }
+                                            value={cantidad}
+                                            className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                          />
+                                          {errors.cantidad && (
+                                            <p className="text-red-500 text-s italic animate-pulse">
+                                              {errors.cantidad}
+                                            </p>
+                                          )}
+                                          <button
+                                            type="button"
+                                            onClick={() => removeProceso(index)}
+                                          >
+                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                          </button>
+                                        </div>
                                       </div>
-                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                                        <ListBox
-                                          options={aviosBack}
-                                          selectedOption={avio}
-                                          onChange={(e) =>
-                                            handleChangeAvioListbox(index, e)
-                                          }
-                                        />
-                                        <p className="text-red-500 text-s italic animate-pulse">
-                                          {errors.nombre ? errors.nombre : null}
-                                        </p>
-                                      </div>
-                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                                        <input
-                                          type="text"
-                                          name="cantidad"
-                                          id="cantidad"
-                                          placeholder="Cantidad"
-                                          onChange={(e) =>
-                                            handleChangeAvioInput(index, e)
-                                          }
-                                          value={avio.cantidad}
-                                          className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        />
+                                    );
+                                  })}
 
-                                        <p className="text-red-500 text-s italic animate-pulse">
-                                          {errors.cantidad
-                                            ? errors.cantidad
-                                            : null}
-                                        </p>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        onClick={() => removeAvio(index)}
+                                  {telas.map(({ _id, cantidad }, index) => {
+                                    return (
+                                      <div
+                                        className="grid grid-cols-2 gap-4 mt-3"
+                                        key={index}
                                       >
-                                        <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                      </button>
-                                    </div>
-                                  ))}
-                                  {diseños.map((diseño, index) => (
-                                    <div
-                                      className="grid grid-cols-6 gap-1 mt-3"
-                                      key={index}
-                                    >
-                                      <div className="col-span-2 sm:col-span-1 lg:col-span-1">
-                                        <p className="mt-3 sm:text-sm">
-                                          Diseño {index + 1}
-                                        </p>
+                                        <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
+                                          <p className="italic sm:text-sm">
+                                            Tela {index + 1}
+                                          </p>
+                                          <select
+                                            id="_id"
+                                            name="_id"
+                                            className="mt-1 block rounded-md w-3/4 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            onChange={(e) =>
+                                              handleChangeTelas(index, e)
+                                            }
+                                            value={_id || ""}
+                                          >
+                                            {telasOptions}
+                                          </select>
+                                          {errors.telas && (
+                                            <p className="text-red-500 text-s italic animate-pulse">
+                                              {errors.telas}
+                                            </p>
+                                          )}
+                                        </div>
+                                        <div className="flex items-end col-span-1 sm:col-span-1 lg:col-span-1">
+                                          <input
+                                            type="text"
+                                            name="cantidad"
+                                            id="cantidad"
+                                            placeholder="Cantidad"
+                                            onChange={(e) =>
+                                              handleChangeTelas(index, e)
+                                            }
+                                            value={cantidad}
+                                            className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                          />
+                                          {errors.cantidad && (
+                                            <p className="text-red-500 text-s italic animate-pulse">
+                                              {errors.cantidad}
+                                            </p>
+                                          )}
+                                          <button
+                                            type="button"
+                                            onClick={() => removeTela(index)}
+                                          >
+                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                          </button>
+                                        </div>
                                       </div>
-                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                                        <ListBox
-                                          options={diseñosBack}
-                                          selectedOption={diseño}
-                                          onChange={(e) =>
-                                            handleChangeDiseñoListbox(index, e)
-                                          }
-                                        />
-                                        <p className="text-red-500 text-s italic animate-pulse">
-                                          {errors.nombre ? errors.nombre : null}
-                                        </p>
-                                      </div>
-                                      <div className="col-span-2 sm:col-span-2 lg:col-span-2">
-                                        <input
-                                          type="text"
-                                          name="cantidad"
-                                          id="cantidad"
-                                          placeholder="Cantidad"
-                                          onChange={(e) =>
-                                            handleChangeDiseñoInput(index, e)
-                                          }
-                                          value={diseño.cantidad}
-                                          className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        />
+                                    );
+                                  })}
+                                  {avios.map(
+                                    ({ _id, cantidad }, index) => {
+                                      return (
+                                        <div
+                                          className="grid grid-cols-2 gap-4 mt-3"
+                                          key={index}
+                                        >
+                                          <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
+                                            <p className="italic sm:text-sm">
+                                              Avio {index + 1}
+                                            </p>
+                                            <select
+                                              id="_id"
+                                              name="_id"
+                                              className="mt-1 block rounded-md w-3/4 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                              onChange={(e) =>
+                                                handleChangeAvios(index, e)
+                                              }
+                                              value={_id || ""}
+                                            >
+                                              {aviosOptions}
+                                            </select>
+                                            {errors.telas && (
+                                              <p className="text-red-500 text-s italic animate-pulse">
+                                                {errors.telas}
+                                              </p>
+                                            )}
+                                          </div>
+                                          <div className="flex items-end col-span-1 sm:col-span-1 lg:col-span-1">
+                                            <input
+                                              type="text"
+                                              name="cantidad"
+                                              id="cantidad"
+                                              placeholder="Cantidad"
+                                              onChange={(e) =>
+                                                handleChangeAvios(index, e)
+                                              }
+                                              value={cantidad}
+                                              className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            />
+                                            {errors.cantidad && (
+                                              <p className="text-red-500 text-s italic animate-pulse">
+                                                {errors.cantidad}
+                                              </p>
+                                            )}
+                                            <button
+                                              type="button"
+                                              onClick={() => removeAvio(index)}
+                                            >
+                                              <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                            </button>
+                                          </div>
+                                        </div>
+                                      );
+                                    }
+                                  )}
 
-                                        <p className="text-red-500 text-s italic animate-pulse">
-                                          {errors.cantidad
-                                            ? errors.cantidad
-                                            : null}
-                                        </p>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        onClick={() => removeDiseño(index)}
-                                      >
-                                        <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                      </button>
-                                    </div>
-                                  ))}
+                                  {diseños.map(
+                                    ({ _id, cantidad }, index) => {
+                                      return (
+                                        <div
+                                          className="grid grid-cols-2 gap-4 mt-3"
+                                          key={index}
+                                        >
+                                          <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
+                                            <p className="italic sm:text-sm">
+                                              Diseño {index + 1}
+                                            </p>
+                                            <select
+                                              id="_id"
+                                              name="_id"
+                                              className="mt-1 block rounded-md w-3/4 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                              onChange={(e) =>
+                                                handleChangeDiseños(index, e)
+                                              }
+                                              value={_id || ""}
+                                            >
+                                              {diseñosOptions}
+                                            </select>
+                                            {errors.telas && (
+                                              <p className="text-red-500 text-s italic animate-pulse">
+                                                {errors.telas}
+                                              </p>
+                                            )}
+                                          </div>
+                                          <div className="flex items-end col-span-1 sm:col-span-1 lg:col-span-1">
+                                            <input
+                                              type="text"
+                                              name="cantidad"
+                                              id="cantidad"
+                                              placeholder="Cantidad"
+                                              onChange={(e) =>
+                                                handleChangeDiseños(index, e)
+                                              }
+                                              value={cantidad}
+                                              className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            />
+                                            {errors.cantidad && (
+                                              <p className="text-red-500 text-s italic animate-pulse">
+                                                {errors.cantidad}
+                                              </p>
+                                            )}
+                                            <button
+                                              type="button"
+                                              onClick={() =>
+                                                removeDiseño(index)
+                                              }
+                                            >
+                                              <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                            </button>
+                                          </div>
+                                        </div>
+                                      );
+                                    }
+                                  )}
                                   {/* <div className="border border-gray-300 rounded p-2 col-span-6">
                                     <label className="block text-sm font-medium text-gray-700">
                                       Foto del artículo

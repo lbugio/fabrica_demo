@@ -19,8 +19,7 @@ export const ModalDelete = ({
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={setConfirm}
-      >
+        onClose={() => null}      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

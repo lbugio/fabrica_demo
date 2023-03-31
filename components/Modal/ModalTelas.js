@@ -13,7 +13,7 @@ export const ModalTelas = ({
   setId,
   isSaving,
   isLoadingFieldData,
-  tela,
+  tela
 }) => {
   const nameInput = useRef(null);
 

@@ -172,24 +172,24 @@ export const ModalArticulo = ({
                                           className="border-b border-slate-200"
                                           key={index}
                                         >
-                                          <td className="py-1  pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
+                                          <td className="py-1 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                                             <div className="font-medium text-slate-700">
                                               {nombre}
                                             </div>
                                           </td>
-                                          <td className="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
+                                          <td className="hidden px-3 text-sm text-right text-slate-500 sm:table-cell">
                                             {cantidad}{" "}
                                             <span className="text-xs italic">
                                               {unidadConsumo}
                                             </span>
                                           </td>
-                                          <td className="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
+                                          <td className="hidden px-3 text-sm text-right text-slate-500 sm:table-cell">
                                             $ {precio}
                                             <span className="text-xs italic">
                                               {unidad ? "/" + unidad : ""}
                                             </span>
                                           </td>
-                                          <td className="py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
+                                          <td className="py-2 pl-3 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
                                             $
                                             {totalPorItem(
                                               precio,

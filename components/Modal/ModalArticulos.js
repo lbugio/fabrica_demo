@@ -44,7 +44,11 @@ export const ModalArticulos = ({
           Eliga un proceso
         </option>
         {procesosBack.map(({ _id, nombre }) => (
-          <option className="italic" key={_id} value={_id}>
+          <option
+            className="italic"
+            key={_id}
+            value={_id}
+          >
             {nombre}
           </option>
         ))}
@@ -470,7 +474,9 @@ export const ModalArticulos = ({
                                             <select
                                               id="_id"
                                               name="_id"
-                                              className="mt-1 block rounded-md w-max border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                              /*  calassName="form-select mt-1 block w-max py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" */
+
+                                              className="form-select mt-1 block rounded-md w-max border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                               onChange={(e) =>
                                                 handleChangeProcesos(index, e)
                                               }

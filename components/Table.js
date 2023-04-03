@@ -28,6 +28,7 @@ export const Table = ({
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
 
+  //searchData
   const filteredData = data.filter((row) => {
     return Object.values(row).some(
       (value) =>
@@ -36,6 +37,7 @@ export const Table = ({
     );
   });
 
+  //ordenar data
   const sortedData = filteredData.sort((a, b) => {
     if (!sortColumn) return 0;
     const aValue = a[sortColumn];
@@ -52,6 +54,7 @@ export const Table = ({
     }
   });
 
+  //display de columnas
   const handleSort = useCallback(
     (event) => {
       const column = event.target.dataset.column;
@@ -82,15 +85,16 @@ export const Table = ({
   );
 
   //paginador
-  const PAGE_SIZE = 5
+  const PAGE_SIZE = 5;
 
-  const [currentPage, setCurrentPage] = useState(1)
-  
-  const paginatedData = filteredData.slice(
-    (currentPage -1)* PAGE_SIZE,
-    currentPage * PAGE_SIZE 
-  )
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const paginatedData = sortedData.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
+  //formato fechas
   const dateOptions = {
     year: "numeric",
     month: "short",
@@ -99,8 +103,10 @@ export const Table = ({
     minute: "2-digit",
   };
 
+  //impresion tabla
   const printRef = useRef();
 
+  //porcentaje aumento
   const porcentajeAumento = (precio, ultimoPrecio) => {
     const resultado = (precio / ultimoPrecio - 1) * 100;
     return isFinite(resultado) ? resultado.toFixed() + "%" : "0%";
@@ -170,137 +176,144 @@ export const Table = ({
                 {columnasMapped}
               </tr>
             </thead>
+
             <tbody>
-              {paginatedData.map(
-                (
-                  {
-                    _id,
-                    nombre,
-                    numero,
-                    precio,
-                    unidad,
-                    ultimoPrecio,
-                    updatedAt,
-                    costoDirecto,
-                    costoAdministrativo,
-                    costoTotal,
-                    precioMayor,
-                    mayorConIva,
-                    precioVenta,
-                  },
-                  index
-                ) => (
-                  <tr
-                    key={index}
-                    className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 px-1"
-                  >
-                    <td className="p-4 w-4">
-                      <div className="flex items-center">
-                        <input
-                          id="checkbox-table-search-1"
-                          type="checkbox"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label
-                          htmlFor="checkbox-table-search-1"
-                          className="sr-only"
-                        >
-                          checkbox
-                        </label>
-                      </div>
-                    </td>
-                    <td
-                      scope="row"
-                      className="flex items-center py-2 text-gray-900 whitespace-nowrap dark:text-white"
+              {paginatedData.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="text-center py-4 text-lg">
+                    Data no encontrada
+                  </td>
+                </tr>
+              ) : (
+                paginatedData.map(
+                  (
+                    {
+                      _id,
+                      nombre,
+                      numero,
+                      precio,
+                      unidad,
+                      ultimoPrecio,
+                      updatedAt,
+                      costoDirecto,
+                      costoAdministrativo,
+                      costoTotal,
+                      precioMayor,
+                      mayorConIva,
+                      precioVenta,
+                    },
+                    index
+                  ) => (
+                    <tr
+                      key={index}
+                      className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-indigo-300 dark:hover:bg-gray-600 px-1"
                     >
-                      <div className="pl-3">
-                        <div className="text-base font-semibold">
-                          {nombre || numero}
+                      <td className="p-4 w-4">
+                        <div className="flex items-center">
+                          <input
+                            id="checkbox-table-search-1"
+                            type="checkbox"
+                            className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          />
+                          <label
+                            htmlFor="checkbox-table-search-1"
+                            className="sr-only"
+                          >
+                            checkbox
+                          </label>
                         </div>
-                      </div>
-                    </td>
-                    <td className="py-2">
-                      <span className="inline-block">
-                        ${" "}
-                        {precio ? (
-                          <>
-                            {precio}
-                            {unidad && (
-                              <span className="italic">/{unidad}</span>
-                            )}
-                          </>
-                        ) : (
-                          costoDirecto
-                        )}
-                      </span>
-                    </td>
+                      </td>
+                      <td
+                        scope="row"
+                        className="flex items-center py-2 text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        <div className="pl-3">
+                          <div className="text-base font-semibold">
+                            {nombre || numero}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-2">
+                        <span className="inline-block">
+                          ${" "}
+                          {precio ? (
+                            <>
+                              {precio}
+                              {unidad && (
+                                <span className="italic">/{unidad}</span>
+                              )}
+                            </>
+                          ) : (
+                            costoDirecto
+                          )}
+                        </span>
+                      </td>
 
-                    {tableName === "Articulos" ? (
-                      <>
-                        <td className="py-2">
-                          {"$ " + costoAdministrativo}
-                        </td>
-                        <td className="py-2">{"$ " + costoTotal}</td>
-                        <td className="py-2">{"$ " + precioMayor}</td>
-                        <td className="py-2">{"$ " + mayorConIva}</td>
-                        <td className="py-2">{"$ " + precioVenta}</td>
-                      </>
-                    ) : null}
+                      {tableName === "Articulos" ? (
+                        <>
+                          <td className="py-2">{"$ " + costoAdministrativo}</td>
+                          <td className="py-2">{"$ " + costoTotal}</td>
+                          <td className="py-2">{"$ " + precioMayor}</td>
+                          <td className="py-2">{"$ " + mayorConIva}</td>
+                          <td className="py-2">{"$ " + precioVenta}</td>
+                        </>
+                      ) : null}
 
-                    <td className="py-2">
-                      {porcentajeAumento(precio, ultimoPrecio)}
-                    </td>
-                    <td className="py-2 ">
-                      {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
-                       */}{" "}
-                      {`${new Date(updatedAt).toLocaleDateString(
-                        "es-ES",
-                        dateOptions
-                      )} hs.`}
-                    </td>
-                    <td className="py-2 px-4 flex justify-between">
-                      {tableName == "Articulos" ? (
+                      <td className="py-2">
+                        {porcentajeAumento(precio, ultimoPrecio)}
+                      </td>
+                      <td className="py-2 ">
+                        {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
+                         */}{" "}
+                        {`${new Date(updatedAt).toLocaleDateString(
+                          "es-ES",
+                          dateOptions
+                        )} hs.`}
+                      </td>
+                      <td className="py-2 px-4 flex justify-between">
+                        {tableName == "Articulos" ? (
+                          <button
+                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                            onClick={() => {
+                              openFicha();
+                              setId(_id);
+                            }}
+                          >
+                            <DocumentIcon
+                              className="h-6 w-6 text-blue-800 hover:brightness-200"
+                              aria-hidden="true"
+                            />
+                          </button>
+                        ) : null}
                         <button
+                          type="button"
+                          data-modal-toggle="editUserModal"
                           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                           onClick={() => {
-                            openFicha();
+                            openCreateEdit();
                             setId(_id);
                           }}
                         >
-                          <DocumentIcon
-                            className="h-6 w-6 text-blue-800 hover:brightness-200"
+                          <PencilSquareIcon
+                            className="h-6 w-6 text-green-800 hover:brightness-200"
                             aria-hidden="true"
                           />
                         </button>
-                      ) : null}
-                      <button
-                        type="button"
-                        data-modal-toggle="editUserModal"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                        onClick={() => {
-                          openCreateEdit();
-                          setId(_id);
-                        }}
-                      >
-                        <PencilSquareIcon
-                          className="h-6 w-6 text-green-800 hover:brightness-200"
-                          aria-hidden="true"
-                        />
-                      </button>
-                      <button
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                        onClick={() => {
-                          openDelete();
-                          setId(_id);
-                        }}
-                      >
-                        <TrashIcon
-                          className="h-6 w-6 text-red-800 hover:brightness-200"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </td>
-                  </tr>
+                        <button
+                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                          onClick={() => {
+                            openDelete();
+                            setId(_id);
+                          }}
+                        >
+                          <TrashIcon
+                            className="h-6 w-6 text-red-800 hover:brightness-200"
+                            aria-hidden="true"
+                          />
+                        </button>
+                      </td>
+                    </tr>
+                  )
                 )
               )}
             </tbody>
@@ -311,7 +324,13 @@ export const Table = ({
           <p className="animate-pulse italic">No hay datos cargados</p>
         </div>
       )}
-      <Paginator data={data} itemsPerPage={PAGE_SIZE} currentPage={currentPage} onPageChange={(page)=> setCurrentPage(page)} renderTable={Table} />
+      <Paginator
+        data={data}
+        itemsPerPage={PAGE_SIZE}
+        currentPage={currentPage}
+        onPageChange={(page) => setCurrentPage(page)}
+        renderTable={Table}
+      />
 
       <div className="flex justify-between px-4 pt-4 pb-4 lg:px-6 text-slate-800 hover:brightness-200">
         <Link
@@ -340,4 +359,3 @@ export const Table = ({
     </div>
   );
 };
-  

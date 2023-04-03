@@ -70,12 +70,6 @@ export const Table = ({
     (currentPage -1)* PAGE_SIZE,
     currentPage * PAGE_SIZE 
   )
-  console.log("🚀 ~ file: Table.js:73 ~ sortedData:", sortedData)
-  console.log("🚀 ~ file: Table.js:73 ~ paginatedData:", paginatedData)
-  console.log("🚀 ~ file: Table.js:332 ~ currentPage:", currentPage)
-
-
-
 
   const dateOptions = {
     year: "numeric",

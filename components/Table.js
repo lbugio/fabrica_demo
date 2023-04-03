@@ -68,7 +68,7 @@ export const Table = ({
       columnas.map((item) => (
         <th
           scope="col"
-          className="p-3 truncate text-xs"
+          className="p-2 text-xs text-center"
           key={`column-${item}`}
           onClick={handleSort}
           data-column={item}
@@ -144,7 +144,7 @@ export const Table = ({
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="p-4">
-                  <div className="flex items-center">
+                  <div className="flex">
                     <input
                       id="checkbox-all-search"
                       type="checkbox"
@@ -180,7 +180,7 @@ export const Table = ({
                 ) => (
                   <tr
                     key={index}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 px-1"
                   >
                     <td className="p-4 w-4">
                       <div className="flex items-center">
@@ -199,7 +199,7 @@ export const Table = ({
                     </td>
                     <td
                       scope="row"
-                      className="flex items-center py-2 px-6 text-gray-900 whitespace-nowrap dark:text-white"
+                      className="flex items-center py-2 text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       <div className="pl-3">
                         <div className="text-base font-semibold">
@@ -207,7 +207,7 @@ export const Table = ({
                         </div>
                       </div>
                     </td>
-                    <td className="py-2 px-2">
+                    <td className="py-2">
                       <span className="inline-block">
                         ${" "}
                         {precio ? (
@@ -225,20 +225,20 @@ export const Table = ({
 
                     {tableName === "Articulos" ? (
                       <>
-                        <td className="py-2 px-2">
+                        <td className="py-2">
                           {"$ " + costoAdministrativo}
                         </td>
-                        <td className="py-2 px-2">{"$ " + costoTotal}</td>
-                        <td className="py-2 px-2">{"$ " + precioMayor}</td>
-                        <td className="py-2 px-2">{"$ " + mayorConIva}</td>
-                        <td className="py-2 px-2">{"$ " + precioVenta}</td>
+                        <td className="py-2">{"$ " + costoTotal}</td>
+                        <td className="py-2">{"$ " + precioMayor}</td>
+                        <td className="py-2">{"$ " + mayorConIva}</td>
+                        <td className="py-2">{"$ " + precioVenta}</td>
                       </>
                     ) : null}
 
-                    <td className="py-2 px-2">
+                    <td className="py-2">
                       {porcentajeAumento(precio, ultimoPrecio)}
                     </td>
-                    <td className="py-2 px-2">
+                    <td className="py-2 ">
                       {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
                        */}{" "}
                       {`${new Date(updatedAt).toLocaleDateString(

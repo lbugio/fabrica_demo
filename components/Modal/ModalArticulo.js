@@ -204,7 +204,7 @@ export const ModalArticulo = ({
                                 </tbody>
                                 {costoDirecto > 0 && (
                                   <tfoot>
-                                    <tr>
+                                    <tr className="pt-4">
                                       <th
                                         scope="row"
                                         colSpan="2"
@@ -216,17 +216,17 @@ export const ModalArticulo = ({
                                       <th
                                         scope="row"
                                         colSpan="1"
-                                        className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
+                                        className="hidden pt-2 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                       >
                                         Costo directo
                                       </th>
                                       <th
                                         scope="row"
-                                        className="pt-4 pl-4 pr-3 text-sm font-normal text-left text-slate-700 sm:hidden"
+                                        className="pt-2 pl-4 pr-3 text-sm font-normal text-left text-slate-700 sm:hidden"
                                       >
                                         Total
                                       </th>
-                                      <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                                      <td className="pt-2 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
                                         $ {costoDirecto}
                                       </td>
                                     </tr>
@@ -234,14 +234,14 @@ export const ModalArticulo = ({
                                       <th
                                         scope="row"
                                         colSpan="1"
-                                        className="hidden pt-4 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
+                                        className="hidden pt-2 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                       >
                                         Costo Administrativo
                                         <p className="text-xs text-gray-500 italic">
                                           30% del costo directo{" "}
                                         </p>
                                       </th>
-                                      <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                                      <td className="pt-2 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
                                         {"$ " + costoAdministrativo}
                                       </td>
                                     </tr>
@@ -249,11 +249,11 @@ export const ModalArticulo = ({
                                       <th
                                         scope="row"
                                         colSpan="1"
-                                        className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0 border-b-2"
+                                        className="hidden pt-2 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0 border-b-2"
                                       >
                                         Costo Total
                                       </th>
-                                      <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0 border-b-2">
+                                      <td className="pt-2 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0 border-b-2">
                                         {"$ " + costoTotal}
                                       </td>
                                     </tr>
@@ -269,14 +269,14 @@ export const ModalArticulo = ({
                                       <th
                                         scope="row"
                                         colSpan="1"
-                                        className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
+                                        className="hidden pt-2 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                       >
                                         Mayor sin Iva{" "}
                                         <p className="text-xs text-gray-500 italic">
                                           costo total x 2
                                         </p>
                                       </th>
-                                      <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                                      <td className="pt-2 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
                                         {"$ " + precioMayor}
                                       </td>
                                     </tr>
@@ -284,14 +284,14 @@ export const ModalArticulo = ({
                                       <th
                                         scope="row"
                                         colSpan="1"
-                                        className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
+                                        className="hidden pt-2 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                       >
                                         Mayor con Iva
                                         <p className="text-xs text-gray-500 italic">
                                           costo total x 2 x 1,21
                                         </p>
                                       </th>
-                                      <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                                      <td className="pt-2 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
                                         {"$ " + mayorConIva}
                                       </td>
                                     </tr>
@@ -299,14 +299,14 @@ export const ModalArticulo = ({
                                       <th
                                         scope="row"
                                         colSpan="1"
-                                        className="hidden pt-4 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
+                                        className="hidden pt-2 pl-6 pr-3 text-sm font-semibold text-right text-slate-700 sm:table-cell md:pl-0"
                                       >
                                         Precio de Venta
                                         <p className="text-xs text-gray-500 italic">
                                           costo total x 3
                                         </p>
                                       </th>
-                                      <td className="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                                      <td className="pt-2 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
                                         {"$ " + precioVenta}
                                       </td>
                                     </tr>

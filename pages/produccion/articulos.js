@@ -367,6 +367,7 @@ export const getServerSideProps = async () => {
     "Accíón",
   ];
 
+
   return {
     props: {
       articulosBack,

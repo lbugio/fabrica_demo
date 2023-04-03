@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState, useMemo, useCallback } from "react";
 
 import { Tooltip } from "components/Tooltip";
 import { PrinterIcon } from "@heroicons/react/24/solid";
@@ -50,18 +50,34 @@ export const Table = ({
     }
   });
 
-  const handleSort = (column) => {
-    if (column === sortColumn) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-      console.log(
-        "🚀 ~ file: Table.js:57 ~ handleSort ~ sortDirection:",
-        sortDirection
-      );
-    } else {
-      setSortColumn(column);
-      setSortDirection("asc");
-    }
-  };
+  const handleSort = useCallback(
+    (event) => {
+      const column = event.target.dataset.column;
+      if (column === sortColumn) {
+        setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+      } else {
+        setSortColumn(column);
+        setSortDirection("asc");
+      }
+    },
+    [sortColumn, sortDirection]
+  );
+
+  const columnasMapped = useMemo(
+    () =>
+      columnas.map((item) => (
+        <th
+          scope="col"
+          className="p-3 truncate text-xs"
+          key={`column-${item}`}
+          onClick={handleSort}
+          data-column={item}
+        >
+          {item}
+        </th>
+      )),
+    [columnas, handleSort]
+  );
 
   const dateOptions = {
     year: "numeric",
@@ -139,16 +155,7 @@ export const Table = ({
                     </label>
                   </div>
                 </th>
-                {columnas.map((item) => (
-                  <th
-                    scope="col"
-                    className="p-3 truncate text-xs"
-                    key={item}
-                    onClick={() => handleSort(item)}
-                  >
-                    {item}
-                  </th>
-                ))}
+                {columnasMapped}
               </tr>
             </thead>
             <tbody>
@@ -200,8 +207,9 @@ export const Table = ({
                         </div>
                       </div>
                     </td>
-                    <td className="py-2 px-6">
-                      {"$ "}
+                    <td className="py-2 px-2">
+                      <span className="inline-block">
+                        ${" "}
                         {precio ? (
                           <>
                             {precio}
@@ -212,24 +220,25 @@ export const Table = ({
                         ) : (
                           costoDirecto
                         )}
+                      </span>
                     </td>
 
                     {tableName === "Articulos" ? (
                       <>
-                        <td className="py-2 px-6">
+                        <td className="py-2 px-2">
                           {"$ " + costoAdministrativo}
                         </td>
-                        <td className="py-2 px-6">{"$ " + costoTotal}</td>
-                        <td className="py-2 px-6">{"$ " + precioMayor}</td>
-                        <td className="py-2 px-6">{"$ " + mayorConIva}</td>
-                        <td className="py-2 px-6">{"$ " + precioVenta}</td>
+                        <td className="py-2 px-2">{"$ " + costoTotal}</td>
+                        <td className="py-2 px-2">{"$ " + precioMayor}</td>
+                        <td className="py-2 px-2">{"$ " + mayorConIva}</td>
+                        <td className="py-2 px-2">{"$ " + precioVenta}</td>
                       </>
                     ) : null}
 
-                    <td className="py-2 px-6">
+                    <td className="py-2 px-2">
                       {porcentajeAumento(precio, ultimoPrecio)}
                     </td>
-                    <td className="py-2 px-6">
+                    <td className="py-2 px-2">
                       {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
                        */}{" "}
                       {`${new Date(updatedAt).toLocaleDateString(

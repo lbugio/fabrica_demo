@@ -192,7 +192,7 @@ export const Table = ({
                     </td>
                     <td
                       scope="row"
-                      className="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white"
+                      className="flex items-center py-2 px-6 text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       <div className="pl-3">
                         <div className="text-base font-semibold">
@@ -200,7 +200,7 @@ export const Table = ({
                         </div>
                       </div>
                     </td>
-                    <td className="py-4 px-6">
+                    <td className="py-2 px-6">
                       {"$ "}
                         {precio ? (
                           <>
@@ -216,20 +216,20 @@ export const Table = ({
 
                     {tableName === "Articulos" ? (
                       <>
-                        <td className="py-4 px-6">
+                        <td className="py-2 px-6">
                           {"$ " + costoAdministrativo}
                         </td>
-                        <td className="py-4 px-6">{"$ " + costoTotal}</td>
-                        <td className="py-4 px-6">{"$ " + precioMayor}</td>
-                        <td className="py-4 px-6">{"$ " + mayorConIva}</td>
-                        <td className="py-4 px-6">{"$ " + precioVenta}</td>
+                        <td className="py-2 px-6">{"$ " + costoTotal}</td>
+                        <td className="py-2 px-6">{"$ " + precioMayor}</td>
+                        <td className="py-2 px-6">{"$ " + mayorConIva}</td>
+                        <td className="py-2 px-6">{"$ " + precioVenta}</td>
                       </>
                     ) : null}
 
-                    <td className="py-4 px-6">
+                    <td className="py-2 px-6">
                       {porcentajeAumento(precio, ultimoPrecio)}
                     </td>
-                    <td className="py-4 px-6">
+                    <td className="py-2 px-6">
                       {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
                        */}{" "}
                       {`${new Date(updatedAt).toLocaleDateString(
@@ -237,7 +237,7 @@ export const Table = ({
                         dateOptions
                       )} hs.`}
                     </td>
-                    <td className="py-4 px-4 flex justify-between">
+                    <td className="py-2 px-4 flex justify-between">
                       {tableName == "Articulos" ? (
                         <button
                           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"

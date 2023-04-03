@@ -320,7 +320,7 @@ export default function Articulos({
     : process.env.API_LOCAL;
 
     const resarticulosBack = await fetch(
-      uri + "/api/articulos"
+      uri + ARTICULOS
     );
 
     const articulosBack = await resarticulosBack.json();

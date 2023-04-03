@@ -1,6 +1,8 @@
 import { useRef, useState, useMemo, useCallback } from "react";
 
 import { Tooltip } from "components/Tooltip";
+import { Paginator } from "components/Paginator";
+
 import { PrinterIcon } from "@heroicons/react/24/solid";
 import ReactToPrint from "react-to-print";
 
@@ -78,6 +80,16 @@ export const Table = ({
       )),
     [columnas, handleSort]
   );
+
+  //paginador
+  const PAGE_SIZE = 5
+
+  const [currentPage, setCurrentPage] = useState(1)
+  
+  const paginatedData = filteredData.slice(
+    (currentPage -1)* PAGE_SIZE,
+    currentPage * PAGE_SIZE 
+  )
 
   const dateOptions = {
     year: "numeric",
@@ -159,7 +171,7 @@ export const Table = ({
               </tr>
             </thead>
             <tbody>
-              {sortedData.map(
+              {paginatedData.map(
                 (
                   {
                     _id,
@@ -299,6 +311,8 @@ export const Table = ({
           <p className="animate-pulse italic">No hay datos cargados</p>
         </div>
       )}
+      <Paginator data={data} itemsPerPage={PAGE_SIZE} currentPage={currentPage} onPageChange={(page)=> setCurrentPage(page)} renderTable={Table} />
+
       <div className="flex justify-between px-4 pt-4 pb-4 lg:px-6 text-slate-800 hover:brightness-200">
         <Link
           href="/"
@@ -326,3 +340,4 @@ export const Table = ({
     </div>
   );
 };
+  

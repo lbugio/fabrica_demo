@@ -317,14 +317,14 @@ export default function Articulos({
 }
 
 export const getServerSideProps = async () => {
-  const { ARTICULOS, PROCESOS, TELAS, AVIOS, DISEÑOS } = API_ENDPOINTS;
+
 
   const uri =
     process.env.NODE_ENV === "production"
       ? process.env.API_PRODUCCION
       : process.env.API_LOCAL;
 
-  const resarticulosBack = await fetch(uri + ARTICULOS);
+  const resarticulosBack = await fetch(`${uri}/api/articulos`);
   const articulosBack = await resarticulosBack.json();
 
   const resprocesosBack = await fetch(`${uri}/api/procesos`);

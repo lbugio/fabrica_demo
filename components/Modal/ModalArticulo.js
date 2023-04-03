@@ -169,7 +169,7 @@ export const ModalArticulo = ({
                                     ) => {
                                       return (
                                         <tr
-                                          className="border-b border-slate-200"
+                                          className="border-b-2 border-slate-200"
                                           key={index}
                                         >
                                           <td className="py-1 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">

@@ -81,7 +81,7 @@ export const Table = ({
 
   const dateOptions = {
     year: "numeric",
-    month: "long",
+    month: "short",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
@@ -180,7 +180,7 @@ export const Table = ({
                 ) => (
                   <tr
                     key={index}
-                    className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 px-1"
+                    className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 px-1"
                   >
                     <td className="p-4 w-4">
                       <div className="flex items-center">

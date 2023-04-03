@@ -19,7 +19,7 @@ const ArticuloSchema = new Schema(
       type: String,
       required: [true, "El campo descripción es requerido"],
       trim: true,
-      maxlength: [40, "La descripción no puede cotener mas de 49 caracteres."],
+      maxlength: [100, "La descripción no puede cotener mas de 100 caracteres."],
     },
     linea: {
       type: String,

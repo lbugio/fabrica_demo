@@ -1,6 +1,8 @@
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState } from "react";
 
 import { Tooltip } from "components/Tooltip";
+import { Paginator } from "components/Paginator";
+
 import { PrinterIcon } from "@heroicons/react/24/solid";
 import ReactToPrint from "react-to-print";
 
@@ -53,19 +55,31 @@ export const Table = ({
   const handleSort = (column) => {
     if (column === sortColumn) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-      console.log(
-        "🚀 ~ file: Table.js:57 ~ handleSort ~ sortDirection:",
-        sortDirection
-      );
     } else {
       setSortColumn(column);
       setSortDirection("asc");
     }
   };
 
+  //paginador
+  const PAGE_SIZE = 5
+
+  const [currentPage, setCurrentPage] = useState(1)
+  
+  const paginatedData = filteredData.slice(
+    (currentPage -1)* PAGE_SIZE,
+    currentPage * PAGE_SIZE 
+  )
+  console.log("🚀 ~ file: Table.js:73 ~ sortedData:", sortedData)
+  console.log("🚀 ~ file: Table.js:73 ~ paginatedData:", paginatedData)
+  console.log("🚀 ~ file: Table.js:332 ~ currentPage:", currentPage)
+
+
+
+
   const dateOptions = {
     year: "numeric",
-    month: "long",
+    month: "short",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
@@ -152,7 +166,7 @@ export const Table = ({
               </tr>
             </thead>
             <tbody>
-              {sortedData.map(
+              {paginatedData.map(
                 (
                   {
                     _id,
@@ -202,16 +216,14 @@ export const Table = ({
                     </td>
                     <td className="py-4 px-6">
                       {"$ "}
-                        {precio ? (
-                          <>
-                            {precio}
-                            {unidad && (
-                              <span className="italic">/{unidad}</span>
-                            )}
-                          </>
-                        ) : (
-                          costoDirecto
-                        )}
+                      {precio ? (
+                        <>
+                          {precio}
+                          {unidad && <span className="italic">/{unidad}</span>}
+                        </>
+                      ) : (
+                        costoDirecto
+                      )}
                     </td>
 
                     {tableName === "Articulos" ? (
@@ -290,6 +302,8 @@ export const Table = ({
           <p className="animate-pulse italic">No hay datos cargados</p>
         </div>
       )}
+      <Paginator data={data} itemsPerPage={PAGE_SIZE} currentPage={currentPage} onPageChange={(page)=> setCurrentPage(page)} renderTable={Table} />
+
       <div className="flex justify-between px-4 pt-4 pb-4 lg:px-6 text-slate-800 hover:brightness-200">
         <Link
           href="/"
@@ -317,3 +331,4 @@ export const Table = ({
     </div>
   );
 };
+  

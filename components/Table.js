@@ -85,13 +85,13 @@ export const Table = ({
   );
 
   //paginador
-  const PAGE_SIZE = 5;
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSizeValue, setPageSizeValue] = useState(5);
 
   const paginatedData = sortedData.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
+    (currentPage - 1) * pageSizeValue,
+    currentPage * pageSizeValue
   );
 
   //formato fechas
@@ -326,10 +326,10 @@ export const Table = ({
       )}
       <Paginator
         data={data}
-        itemsPerPage={PAGE_SIZE}
+        itemsPerPage={pageSizeValue}
         currentPage={currentPage}
         onPageChange={(page) => setCurrentPage(page)}
-        renderTable={Table}
+        setPageSizeValue={setPageSizeValue}
       />
 
       <div className="flex justify-between px-4 pt-4 pb-4 lg:px-6 text-slate-800 hover:brightness-200">

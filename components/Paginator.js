@@ -16,11 +16,17 @@ export const Paginator = ({
   itemsPerPage,
   currentPage,
   onPageChange,
+  setPageSizeValue,
 }) => {
   const pagesCount = Math.ceil(data.length / itemsPerPage);
   const pages = range(1, pagesCount);
   const isFirstPage = currentPage === 1;
   const isLastPage = currentPage === pages.length;
+
+  const handlePageSizeChange = (e) => {
+    setPageSizeValue(e.target.value);
+    onPageChange(1); // go to first page when changing page size
+  };
 
   return (
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
@@ -41,11 +47,43 @@ export const Paginator = ({
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Mostrando <span className="font-medium">1</span> a{" "}
-            <span className="font-medium">10</span> de{" "}
+            Mostrando{" "}
+            <span className="font-medium">
+              {(currentPage - 1) * itemsPerPage + 1}
+            </span>{" "}
+            -
+            <span className="font-medium">
+              {currentPage * itemsPerPage > data.length
+                ? data.length
+                : currentPage * itemsPerPage}
+            </span>{" "}
+            de
             <span className="font-medium">{data.length}</span> resultados
           </p>
         </div>
+
+        <div className="flex items-center">
+          <label
+            htmlFor="page-size"
+            className="text-sm font-medium text-gray-700"
+          >
+            Resultados por página:
+          </label>
+          <select
+            id="page-size"
+            name="page-size"
+            className="form-select mt-1 block rounded-md w-max border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            onChange={(e) => handlePageSizeChange(e)}
+            value={itemsPerPage}
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>{" "}
+          </select>
+        </div>
+
         <div>
           <nav
             className="isolate inline-flex -space-x-px rounded-md shadow-sm"

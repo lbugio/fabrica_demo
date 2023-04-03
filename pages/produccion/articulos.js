@@ -19,12 +19,29 @@ export default function Articulos({
   aviosBack,
   diseñosBack,
 }) {
+
+  const { planchadoId, embolsadoId, terminadoId } = procesosBack.reduce(
+    (acc, proceso) => {
+      if (proceso.nombre === "Planchado") {
+        return { ...acc, planchadoId: proceso._id };
+      }
+      if (proceso.nombre === "Embolsado") {
+        return { ...acc, embolsadoId: proceso._id };
+      }
+      if (proceso.nombre === "Terminado") {
+        return { ...acc, terminadoId: proceso._id };
+      }
+      return acc;
+    },
+    {}
+  );
+
   const initialItem = {
     numero: "",
     tipo: "",
     descripcion: "",
     linea: "",
-    procesos: [],
+    procesos: [{ _id: planchadoId, cantidad: "1" }, { _id: embolsadoId, cantidad: "1" },{ _id: terminadoId, cantidad: "1" } ],
     telas: [],
     avios: [],
     diseños: [],
@@ -317,8 +334,6 @@ export default function Articulos({
 }
 
 export const getServerSideProps = async () => {
-
-
   const uri =
     process.env.NODE_ENV === "production"
       ? process.env.API_PRODUCCION

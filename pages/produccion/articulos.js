@@ -45,7 +45,7 @@ export default function Articulos({
       if (avio.nombre === "Cartón Colgante") {
         return { ...acc, cartonId: avio._id };
       }
-      if (avio.nombre === "Bolsa PP 35X45") {
+      if (avio.nombre === "Bolsa PP 35x45") {
         return { ...acc, bolsaId: avio._id };
       }
       return acc;

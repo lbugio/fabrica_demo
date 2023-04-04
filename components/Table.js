@@ -152,8 +152,8 @@ export const Table = ({
           />
         </div>
       </div>
-      <Tabulador categories={lineas}/>
-      {data.length > 0 ? (
+{/*       <Tabulador categories={lineas}/>
+ */}      {data.length > 0 ? (
         isLoadingData ? (
           <div className="flex justify-center py-4 text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
             <p className="animate-pulse italic">Cargando Datos...</p>

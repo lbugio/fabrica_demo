@@ -2,6 +2,7 @@ import { useRef, useState, useMemo, useCallback } from "react";
 
 import { Tooltip } from "components/Tooltip";
 import { Paginator } from "components/Paginator";
+import { Tabulador } from "./Tab";
 
 import { PrinterIcon } from "@heroicons/react/24/solid";
 import ReactToPrint from "react-to-print";
@@ -18,12 +19,14 @@ export const Table = ({
   data,
   tableName,
   columnas,
+  lineas,
   openDelete,
   setId,
   openCreateEdit,
   isLoadingData,
   openFicha,
 }) => {
+  console.log("🚀 ~ file: Table.js:29 ~ data:", data)
   const [search, setSearch] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
@@ -149,6 +152,7 @@ export const Table = ({
           />
         </div>
       </div>
+      <Tabulador categories={lineas}/>
       {data.length > 0 ? (
         isLoadingData ? (
           <div className="flex justify-center py-4 text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
@@ -206,7 +210,7 @@ export const Table = ({
                   ) => (
                     <tr
                       key={index}
-                      className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-indigo-300 dark:hover:bg-gray-600 px-1"
+                      className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-indigo-300 hover:text-black hover:font-medium dark:hover:bg-gray-600 px-1"
                     >
                       <td className="p-4 w-4">
                         <div className="flex items-center">

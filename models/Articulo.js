@@ -3,7 +3,7 @@ import { Schema, model, models } from "mongoose";
 const ArticuloSchema = new Schema(
   {
     numero: {
-      type: String,
+      type: Number,
       required: [true, "El campo numero es requerido"],
       unique: [true, "Este valor ya existe"],
       trim: true,

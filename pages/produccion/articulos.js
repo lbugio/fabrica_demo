@@ -13,6 +13,7 @@ const { ARTICULOS, PROCESOS, TELAS, AVIOS, DISEÑOS } = API_ENDPOINTS;
 export default function Articulos({
   articulosBack,
   columnas,
+  lineas,
   laoderImage,
   procesosBack,
   telasBack,
@@ -367,6 +368,13 @@ export const getServerSideProps = async () => {
     "Accíón",
   ];
 
+  const lineas = [
+    "Bebe",
+    "Niño",
+    "Adulto"
+  ];
+
+
 
   return {
     props: {
@@ -376,6 +384,7 @@ export const getServerSideProps = async () => {
       aviosBack,
       diseñosBack,
       columnas,
+      lineas
     },
   };
 };

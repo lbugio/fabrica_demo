@@ -2,13 +2,21 @@ import { useMemo } from "react";
 import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
 import { Tooltip } from "components/Tooltip";
+import { Autocomplete } from "components/Autocomplete";
+
+import Image from "next/image";
 
 const lineas = [
   { id: 1, nombre: "Bebe" },
   { id: 2, nombre: "Niño" },
   { id: 3, nombre: "Adulto" },
+];
+
+const tipos = [
+  { id: 1, linea: "Bebe", nombre: "Body sin mangas" },
+  { id: 2, linea: "Bebe", nombre: "Body manga corta" },
+  { id: 3, linea: "Bebe", nombre: "Body manga larga" },
 ];
 
 export const ModalArticulos = ({
@@ -28,6 +36,7 @@ export const ModalArticulos = ({
   diseñosBack,
   initialItem,
 }) => {
+  console.log("🚀 ~ file: ModalArticulos.js:39 ~ item:", item)
   const { numero, tipo, linea, descripcion, procesos, telas, avios, diseños } =
     item;
   const nameInput = useRef(null);
@@ -44,11 +53,7 @@ export const ModalArticulos = ({
           Eliga un proceso
         </option>
         {procesosBack.map(({ _id, nombre }) => (
-          <option
-            className="italic"
-            key={_id}
-            value={_id}
-          >
+          <option className="italic" key={_id} value={_id}>
             {nombre}
           </option>
         ))}
@@ -92,7 +97,7 @@ export const ModalArticulos = ({
         <option value="" disabled className="italic">
           Eliga una tela
         </option>
-        {telasBack.map(({ _id, nombre }) => (
+        {telasBack.map(({ _id, nombre, unidad }) => (
           <option className="italic" key={_id} value={_id}>
             {nombre}
           </option>
@@ -357,60 +362,46 @@ export const ModalArticulos = ({
 
                                     <div className="col-span-6 sm:col-span-2 lg:col-span-2">
                                       <label
-                                        htmlFor="tipo"
-                                        className="block text-sm font-medium text-gray-700"
-                                      >
-                                        Tipo
-                                      </label>
-                                      <input
-                                        type="text"
-                                        name="tipo"
-                                        id="tipo"
-                                        placeholder="Tipo"
-                                        onChange={handleChange}
-                                        value={tipo}
-                                        className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                      />
-                                      <p className="text-red-500 text-s italic animate-pulse">
-                                        {errors.tipo ? errors.tipo : null}
-                                      </p>
-                                    </div>
-
-                                    <div className="col-span-6 sm:col-span-2 lg:col-span-2">
-                                      <label
                                         htmlFor="linea"
                                         className="block text-sm font-medium text-gray-700"
                                       >
                                         Línea
                                       </label>
-                                      <select
+                                      <Autocomplete
                                         id="linea"
                                         name="linea"
-                                        autoComplete="linea"
-                                        className="placeholder:italic mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        onChange={handleChange}
+                                        options={lineas}
+                                        onChange={
+                                          handleChange
+                                        }
                                         value={linea}
-                                      >
-                                        <option
-                                          value=""
-                                          disabled
-                                          className="sm:text-sm italic"
-                                        >
-                                          Linea
-                                        </option>
+                                        placeholder="Linea"
 
-                                        {lineas.map((item) => (
-                                          <option
-                                            className=""
-                                            key={item.id}
-                                            value={item.nombre}
-                                          >
-                                            {item.nombre}
-                                          </option>
-                                        ))}
-                                      </select>
+                                      /> 
                                       <p className="text-red-500 text-s italic animate-pulse">
                                         {errors.linea ? errors.linea : null}
+                                      </p>
+                                    </div>
+
+                                    <div className="col-span-6 sm:col-span-2 lg:col-span-2">
+                                      <label
+                                        htmlFor="tipo"
+                                        className="block text-sm font-medium text-gray-700"
+                                      >
+                                        Tipo
+                                      </label>
+                                       <Autocomplete
+                                        id="tipo"
+                                        name="tipo"
+                                        options={tipos}
+                                        onChange={
+                                          handleChange
+                                        }
+                                        value={tipo}
+                                        placeholder="Tipo"
+                                      /> 
+                                      <p className="text-red-500 text-s italic animate-pulse">
+                                        {errors.tipo ? errors.tipo : null}
                                       </p>
                                     </div>
 
@@ -474,8 +465,6 @@ export const ModalArticulos = ({
                                             <select
                                               id="_id"
                                               name="_id"
-                                              /*  calassName="form-select mt-1 block w-max py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" */
-
                                               className="form-select mt-1 block rounded-md w-max border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                               onChange={(e) =>
                                                 handleChangeProcesos(index, e)
@@ -533,70 +522,73 @@ export const ModalArticulos = ({
                                     );
                                   })}
 
-                                  {telas.map(({ _id, cantidad }, index) => {
-                                    return (
-                                      <div
-                                        className="grid grid-cols-2 gap-4 mt-3"
-                                        key={index}
-                                      >
-                                        <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
-                                          <p className="italic sm:text-sm">
-                                            Tela {index + 1}
-                                          </p>
-                                          <div>
-                                            <select
-                                              id="_id"
-                                              name="_id"
-                                              className="mt-1 block rounded-md w-max border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                              onChange={(e) =>
-                                                handleChangeTelas(index, e)
-                                              }
-                                              value={_id || ""}
-                                            >
-                                              {telasOptions}
-                                            </select>
-                                            {errors[`telas.${index}._id`] && (
-                                              <p className="text-red-500 text-sm italic animate-pulse mt-2">
-                                                {errors[`telas.${index}._id`]}
-                                              </p>
-                                            )}
-                                          </div>
-                                        </div>
-                                        <div className="flex justify-around col-span-1 sm:col-span-1 lg:col-span-1">
-                                          <div>
-                                            <input
-                                              type="text"
-                                              name="cantidad"
-                                              id="cantidad"
-                                              placeholder="Cantidad"
-                                              onChange={(e) =>
-                                                handleChangeTelas(index, e)
-                                              }
-                                              value={cantidad}
-                                              className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                            />
-                                            {errors[
-                                              `telas.${index}.cantidad`
-                                            ] && (
-                                              <p className="text-red-500 text-sm italic animate-pulse mt-2">
-                                                {
-                                                  errors[
-                                                    `telas.${index}.cantidad`
-                                                  ]
+                                  {telas.map(
+                                    ({ _id, cantidad, unidad }, index) => {
+                                      return (
+                                        <div
+                                          className="grid grid-cols-2 gap-4 mt-3"
+                                          key={index}
+                                        >
+                                          <div className="col-span-1 sm:col-span-1 lg:col-span-1 flex justify-around items-center">
+                                            <p className="italic sm:text-sm">
+                                              Tela {index + 1}
+                                            </p>
+                                            <div>
+                                              <select
+                                                id="_id"
+                                                name="_id"
+                                                className="mt-1 block rounded-md w-max border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                onChange={(e) =>
+                                                  handleChangeTelas(index, e)
                                                 }
-                                              </p>
-                                            )}
+                                                value={_id || ""}
+                                              >
+                                                {telasOptions}
+                                              </select>
+                                              {errors[`telas.${index}._id`] && (
+                                                <p className="text-red-500 text-sm italic animate-pulse mt-2">
+                                                  {errors[`telas.${index}._id`]}
+                                                </p>
+                                              )}
+                                            </div>
                                           </div>
-                                          <button
-                                            type="button"
-                                            onClick={() => removeTela(index)}
-                                          >
-                                            <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
-                                          </button>
+                                          <div className="flex justify-around col-span-1 sm:col-span-1 lg:col-span-1">
+                                            <div>
+                                              <input
+                                                type="text"
+                                                name="cantidad"
+                                                id="cantidad"
+                                                placeholder="Cantidad"
+                                                onChange={(e) =>
+                                                  handleChangeTelas(index, e)
+                                                }
+                                                value={cantidad}
+                                                className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                              />
+                                              <p>{unidad}</p>
+                                              {errors[
+                                                `telas.${index}.cantidad`
+                                              ] && (
+                                                <p className="text-red-500 text-sm italic animate-pulse mt-2">
+                                                  {
+                                                    errors[
+                                                      `telas.${index}.cantidad`
+                                                    ]
+                                                  }
+                                                </p>
+                                              )}
+                                            </div>
+                                            <button
+                                              type="button"
+                                              onClick={() => removeTela(index)}
+                                            >
+                                              <XCircleIcon className="h-5 w-5 text-red-800 hover:brightness-200" />
+                                            </button>
+                                          </div>
                                         </div>
-                                      </div>
-                                    );
-                                  })}
+                                      );
+                                    }
+                                  )}
 
                                   {avios.map(({ _id, cantidad }, index) => {
                                     return (

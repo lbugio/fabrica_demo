@@ -20,7 +20,8 @@ export default async function handler(req, res) {
         console.log("🚀 ~ file: index.js:20 ~ handler ~ articulos:", articulos)
 
         const articulosConPrecios = articulos.map((articulo) => {
-          const precioConsumoProcesos = articulo.procesos
+
+           const precioConsumoProcesos = articulo.procesos
             ? Number(
                 articulo.procesos
                   .map(
@@ -29,9 +30,9 @@ export default async function handler(req, res) {
                   )
                   .reduce((prev, curr) => prev + curr, 0)
               )
-            : 0;
+            : 0; 
 
-          const precioConsumoTelas = Number(
+           const precioConsumoTelas = Number(
             articulo.telas
               .map(({ _id: { precio, unidad }, cantidad }) => {
                 switch (unidad) {
@@ -73,13 +74,13 @@ export default async function handler(req, res) {
                   .reduce((prev, curr) => prev + curr, 0)
                   .toFixed(2)
               )
-            : 0;
+            : 0; 
 
-          const costoDirecto =
-            precioConsumoProcesos +
+          const costoDirecto = 
+            precioConsumoProcesos 
             precioConsumoTelas +
             precioConsumoAvios +
-            precioConsumoDiseño;
+            precioConsumoDiseño; 
 
           return {
             ...articulo.toObject(),
@@ -92,7 +93,6 @@ export default async function handler(req, res) {
           };
         });
 
-        console.log("🚀 ~ file: index.js:96 ~ handler ~ articulosConPrecios:", articulosConPrecios)
         return res.status(200).json(articulosConPrecios);
       } catch (error) {
         return res.status(400).json({ msg: error.message });

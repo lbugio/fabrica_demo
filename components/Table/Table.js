@@ -25,7 +25,6 @@ export const Table = ({
   isLoadingData,
   openFicha,
 }) => {
-  console.log("🚀 ~ file: Table.js:29 ~ data:", data);
   const [search, setSearch] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
@@ -190,8 +189,8 @@ export const Table = ({
             <tbody>
               {paginatedData.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="text-center py-4 text-lg">
-                    Data no encontrada
+                  <td colSpan={columnasMapped.length + 1} className="text-center py-4 text-lg">
+                    Dato no encontrado
                   </td>
                 </tr>
               ) : (

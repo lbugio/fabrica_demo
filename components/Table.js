@@ -2,7 +2,7 @@ import { useRef, useState, useMemo, useCallback } from "react";
 
 import { Tooltip } from "components/Tooltip";
 import { Paginator } from "components/Paginator";
-import { Tabulador } from "./Tab";
+//import { Tabulador } from "./Tab";
 
 import { PrinterIcon } from "@heroicons/react/24/solid";
 import ReactToPrint from "react-to-print";

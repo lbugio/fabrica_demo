@@ -1,5 +1,5 @@
 import { useState, useEffect, useReducer } from "react";
-import { Table } from "components/Table";
+import { Table } from "components/Table/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalDiseños } from "components/Modal/ModalDiseños";
 export default function Diseños({ diseños, columnas, loaderImage }) {

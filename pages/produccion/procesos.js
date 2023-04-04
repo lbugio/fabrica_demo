@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table } from "components/Table";
+import { Table } from "components/Table/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalProcesos } from "components/Modal/ModalProcesos";
 export default function Procesos({ procesos, columnas, loaderImage }) {

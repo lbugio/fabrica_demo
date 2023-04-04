@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table } from "components/Table";
+import { Table } from "components/Table/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalAvios } from "components/Modal/ModalAvios";
 

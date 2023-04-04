@@ -10,13 +10,14 @@ export default async function handler(req, res) {
     case "GET":
       try {
         const articulos = await Articulo.find()
-          .sort({ numero: 1 })
+          .sort({numero:1})
           .populate([
             { path: "procesos._id", select: "precio nombre" },
             { path: "telas._id", select: "precio nombre unidad" },
             { path: "avios._id", select: "precio nombre unidad" },
             { path: "diseños._id", select: "precio nombre" },
           ]);
+        console.log("🚀 ~ file: index.js:20 ~ handler ~ articulos:", articulos)
 
         const articulosConPrecios = articulos.map((articulo) => {
           const precioConsumoProcesos = articulo.procesos

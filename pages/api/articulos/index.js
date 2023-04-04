@@ -88,10 +88,11 @@ export default async function handler(req, res) {
             costoTotal: (costoDirecto * 1.3).toFixed(2),
             precioMayor: (costoDirecto * 2 * 1.3).toFixed(2),
             mayorConIva: (costoDirecto * 2 * 1.21 * 1.3).toFixed(2),
-            precioVenta: (costoDirecto * 3 * 1.3).toFixed(2),
+            precioVenta: Number((costoDirecto * 3 * 1.3).toFixed(2)),
           };
         });
 
+        console.log("🚀 ~ file: index.js:96 ~ handler ~ articulosConPrecios:", articulosConPrecios)
         return res.status(200).json(articulosConPrecios);
       } catch (error) {
         return res.status(400).json({ msg: error.message });

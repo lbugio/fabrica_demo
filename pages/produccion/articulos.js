@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { Table } from "components/Table";
+import { Table } from "components/Table/Table";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalArticulos } from "components/Modal/ModalArticulos";
 import { ModalArticulo } from "components/Modal/ModalArticulo";
@@ -37,6 +37,22 @@ export default function Articulos({
     {}
   );
 
+  const { etiquetaId, cartonId, bolsaId } = aviosBack.reduce(
+    (acc, avio) => {
+      if (avio.nombre === "Etiqueta composición") {
+        return { ...acc, etiquetaId: avio._id };
+      }
+      if (avio.nombre === "Cartón Colgante") {
+        return { ...acc, cartonId: avio._id };
+      }
+      if (avio.nombre === "Bolsa PP 35X45") {
+        return { ...acc, bolsaId: avio._id };
+      }
+      return acc;
+    },
+    {}
+  );
+
   const initialItem = {
     numero: "",
     tipo: "",
@@ -44,7 +60,7 @@ export default function Articulos({
     linea: "",
     procesos: [{ _id: planchadoId, cantidad: "1" }, { _id: embolsadoId, cantidad: "1" },{ _id: terminadoId, cantidad: "1" } ],
     telas: [],
-    avios: [],
+    avios: [{ _id: etiquetaId, cantidad: "1" }, { _id: cartonId, cantidad: "1" },{ _id: bolsaId, cantidad: "1" } ],
     diseños: [],
   };
 

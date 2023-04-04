@@ -1,8 +1,7 @@
 import { useRef, useState, useMemo, useCallback } from "react";
 
 import { Tooltip } from "components/Tooltip";
-import { Paginator } from "components/Paginator";
-//import { Tabulador } from "./Tab";
+import { Paginator } from "components/Table/Paginator";
 
 import { PrinterIcon } from "@heroicons/react/24/solid";
 import ReactToPrint from "react-to-print";
@@ -45,17 +44,25 @@ export const Table = ({
     if (!sortColumn) return 0;
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
-
+  
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
+    }
+  
+    const aString = String(aValue).toLowerCase();
+    const bString = String(bValue).toLowerCase();
+  
     if (sortDirection === "asc") {
-      if (aValue < bValue) return -1;
-      if (aValue > bValue) return 1;
+      if (aString < bString) return -1;
+      if (aString > bString) return 1;
       return 0;
     } else {
-      if (aValue > bValue) return -1;
-      if (aValue < bValue) return 1;
+      if (aString > bString) return -1;
+      if (aString < bString) return 1;
       return 0;
     }
   });
+  
 
   //display de columnas
   const handleSort = useCallback(
@@ -152,8 +159,6 @@ export const Table = ({
           />
         </div>
       </div>
-      {/*       <Tabulador categories={lineas}/>
-       */}{" "}
       {data.length > 0 ? (
         isLoadingData ? (
           <div className="flex justify-center py-4 text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
@@ -164,7 +169,7 @@ export const Table = ({
             className="w-full text-sm text-left text-gray-500 dark:text-gray-400"
             ref={printRef}
           >
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-indigo-400 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="p-4">
                   <div className="flex">
@@ -211,7 +216,7 @@ export const Table = ({
                   ) => (
                     <tr
                       key={index}
-                      className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-indigo-300 hover:text-black hover:font-medium dark:hover:bg-gray-600 px-1 font-medium"
+                      className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-indigo-500 hover:text-black hover:font-semibold dark:hover:bg-gray-600 px-1 font-medium"
                     >
                       <td className="px-4 py-3">
                         <div className="flex items-center">

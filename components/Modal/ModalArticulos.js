@@ -97,7 +97,7 @@ export const ModalArticulos = ({
         <option value="" disabled className="italic">
           Eliga una tela
         </option>
-        {telasBack.map(({ _id, nombre, unidad }) => (
+        {telasBack.map(({ _id, nombre}) => (
           <option className="italic" key={_id} value={_id}>
             {nombre}
           </option>
@@ -565,7 +565,6 @@ export const ModalArticulos = ({
                                                 value={cantidad}
                                                 className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                               />
-                                              <p>{unidad}</p>
                                               {errors[
                                                 `telas.${index}.cantidad`
                                               ] && (

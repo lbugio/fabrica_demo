@@ -359,7 +359,7 @@ export const ModalArticulos = ({
                                       </p>
                                     </div>
 
-                                    <div className="col-span-6 sm:col-span-2 lg:col-span-2">
+                                   {/*  <div className="col-span-6 sm:col-span-2 lg:col-span-2">
                                       <label
                                         htmlFor="linea"
                                         className="block text-sm font-medium text-gray-700"
@@ -402,7 +402,7 @@ export const ModalArticulos = ({
                                       <p className="text-red-500 text-s italic animate-pulse">
                                         {errors.tipo ? errors.tipo : null}
                                       </p>
-                                    </div>
+                                    </div> */}
 
                                     <div className="col-span-6">
                                       <label

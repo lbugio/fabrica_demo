@@ -17,7 +17,6 @@ export default async function handler(req, res) {
             { path: "avios._id", select: "precio nombre unidad" },
             { path: "diseños._id", select: "precio nombre" },
           ]);
-        console.log("🚀 ~ file: index.js:20 ~ handler ~ articulos:", articulos)
 
         const articulosConPrecios = articulos.map((articulo) => {
 

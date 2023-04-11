@@ -36,7 +36,6 @@ export const ModalArticulos = ({
   diseñosBack,
   initialItem,
 }) => {
-  console.log("🚀 ~ file: ModalArticulos.js:39 ~ item:", item)
   const { numero, tipo, linea, descripcion, procesos, telas, avios, diseños } =
     item;
   const nameInput = useRef(null);

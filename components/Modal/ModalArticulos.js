@@ -96,7 +96,7 @@ export const ModalArticulos = ({
         <option value="" disabled className="italic">
           Eliga una tela
         </option>
-        {telasBack.map(({ _id, nombre}) => (
+        {telasBack.map(({ _id, nombre }) => (
           <option className="italic" key={_id} value={_id}>
             {nombre}
           </option>
@@ -359,7 +359,7 @@ export const ModalArticulos = ({
                                       </p>
                                     </div>
 
-                                   {/*  <div className="col-span-6 sm:col-span-2 lg:col-span-2">
+                                    <div className="col-span-6 sm:col-span-2 lg:col-span-2">
                                       <label
                                         htmlFor="linea"
                                         className="block text-sm font-medium text-gray-700"
@@ -370,13 +370,10 @@ export const ModalArticulos = ({
                                         id="linea"
                                         name="linea"
                                         options={lineas}
-                                        onChange={
-                                          handleChange
-                                        }
+                                        onChange={handleChange}
                                         value={linea}
                                         placeholder="Linea"
-
-                                      /> 
+                                      />
                                       <p className="text-red-500 text-s italic animate-pulse">
                                         {errors.linea ? errors.linea : null}
                                       </p>
@@ -389,20 +386,18 @@ export const ModalArticulos = ({
                                       >
                                         Tipo
                                       </label>
-                                       <Autocomplete
+                                      <Autocomplete
                                         id="tipo"
                                         name="tipo"
                                         options={tipos}
-                                        onChange={
-                                          handleChange
-                                        }
+                                        onChange={handleChange}
                                         value={tipo}
                                         placeholder="Tipo"
-                                      /> 
+                                      />
                                       <p className="text-red-500 text-s italic animate-pulse">
                                         {errors.tipo ? errors.tipo : null}
                                       </p>
-                                    </div> */}
+                                    </div>
 
                                     <div className="col-span-6">
                                       <label

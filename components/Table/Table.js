@@ -187,14 +187,14 @@ export const Table = ({
             </thead>
 
             <tbody>
-              {paginatedData.length === 0 ? (
+              {data.length === 0 ? (
                 <tr>
                   <td colSpan={columnasMapped.length + 1} className="text-center py-4 text-lg">
                     Dato no encontrado
                   </td>
                 </tr>
               ) : (
-                paginatedData.map(
+                data.map(
                   (
                     {
                       _id,

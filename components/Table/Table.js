@@ -18,7 +18,6 @@ export const Table = ({
   data,
   tableName,
   columnas,
-  lineas,
   openDelete,
   setId,
   openCreateEdit,
@@ -30,7 +29,7 @@ export const Table = ({
   const [sortDirection, setSortDirection] = useState("asc");
 
   //searchData
-  const filteredData = data.filter((row) => {
+   const filteredData = data.filter((row) => {
     return Object.values(row).some(
       (value) =>
         typeof value === "string" &&
@@ -75,7 +74,7 @@ export const Table = ({
       }
     },
     [sortColumn, sortDirection]
-  );
+  ); 
 
   const columnasMapped = useMemo(
     () =>
@@ -90,18 +89,18 @@ export const Table = ({
           {item}
         </th>
       )),
-    [columnas, handleSort]
+    [columnas,  handleSort ]
   );
 
   //paginador
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSizeValue, setPageSizeValue] = useState(5);
+  const [pageSizeValue, setPageSizeValue] = useState(10);
 
   const paginatedData = sortedData.slice(
     (currentPage - 1) * pageSizeValue,
     currentPage * pageSizeValue
-  );
+  ); 
 
   //formato fechas
   const dateOptions = {
@@ -187,14 +186,14 @@ export const Table = ({
             </thead>
 
             <tbody>
-              {data.length === 0 ? (
+              {paginatedData.length === 0 ? (
                 <tr>
                   <td colSpan={columnasMapped.length + 1} className="text-center py-4 text-lg">
                     Dato no encontrado
                   </td>
                 </tr>
               ) : (
-                data.map(
+                paginatedData.map(
                   (
                     {
                       _id,
@@ -329,13 +328,13 @@ export const Table = ({
           <p className="animate-pulse italic">No hay datos cargados</p>
         </div>
       )}
-      <Paginator
+       <Paginator
         data={data}
         itemsPerPage={pageSizeValue}
         currentPage={currentPage}
         onPageChange={(page) => setCurrentPage(page)}
         setPageSizeValue={setPageSizeValue}
-      />
+      /> 
       <div className="flex justify-between px-4 pt-4 pb-4 lg:px-6 text-slate-800 hover:brightness-200">
         <Link
           href="/"

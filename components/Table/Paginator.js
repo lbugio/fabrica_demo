@@ -25,7 +25,7 @@ export const Paginator = ({
 
   const handlePageSizeChange = (e) => {
     setPageSizeValue(e.target.value);
-    onPageChange(1); // go to first page when changing page size
+    onPageChange(1); 
   };
 
   return (

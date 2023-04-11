@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
         const articulosConPrecios = articulos.map((articulo) => {
 
-           const precioConsumoProcesos = articulo.procesos
+            const precioConsumoProcesos = articulo.procesos
             ? Number(
                 articulo.procesos
                   .map(
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
                   )
                   .reduce((prev, curr) => prev + curr, 0)
               )
-            : 0; 
+            : 0;  
 
            const precioConsumoTelas = Number(
             articulo.telas
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
             : 0; 
 
           const costoDirecto = 
-            precioConsumoProcesos 
+            precioConsumoProcesos +
             precioConsumoTelas +
             precioConsumoAvios +
             precioConsumoDiseño; 

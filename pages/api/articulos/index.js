@@ -10,28 +10,27 @@ export default async function handler(req, res) {
     case "GET":
       try {
         const articulos = await Articulo.find()
-          .sort({numero:1})
+          .sort({ numero: 1 })
           .populate([
-            { path: "procesos._id", select: "precio nombre" },
+            { path: "procesos._id", select: "precio" },
             { path: "telas._id", select: "precio nombre unidad" },
             { path: "avios._id", select: "precio nombre unidad" },
             { path: "diseños._id", select: "precio nombre" },
           ]);
 
         const articulosConPrecios = articulos.map((articulo) => {
-
-            const precioConsumoProcesos = articulo.procesos
+          const precioConsumoProcesos = articulo.procesos
             ? Number(
                 articulo.procesos
                   .map(
-                    ({ _id: { precio }, cantidad }) =>
-                      cantidad * (precio ? precio : 0)
+                    ({ _id, cantidad }) =>
+                      cantidad * (_id?.precio ? _id.precio : 0)
                   )
                   .reduce((prev, curr) => prev + curr, 0)
               )
-            : 0;  
+            : 0;
 
-           const precioConsumoTelas = Number(
+          const precioConsumoTelas = Number(
             articulo.telas
               .map(({ _id: { precio, unidad }, cantidad }) => {
                 switch (unidad) {
@@ -73,13 +72,13 @@ export default async function handler(req, res) {
                   .reduce((prev, curr) => prev + curr, 0)
                   .toFixed(2)
               )
-            : 0; 
+            : 0;
 
-          const costoDirecto = 
+          const costoDirecto =
             precioConsumoProcesos +
             precioConsumoTelas +
             precioConsumoAvios +
-            precioConsumoDiseño; 
+            precioConsumoDiseño;
 
           return {
             ...articulo.toObject(),

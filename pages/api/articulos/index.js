@@ -19,27 +19,27 @@ export default async function handler(req, res) {
           ]);
 
         const articulosConPrecios = articulos.map((articulo) => {
-          const precioConsumoProcesos = articulo.procesos
+           const precioConsumoProcesos = articulo.procesos
             ? Number(
                 articulo.procesos
-                  .map(
+                  ?.map(
                     ({ _id, cantidad }) =>
                       cantidad * (_id?.precio ? _id.precio : 0)
                   )
                   .reduce((prev, curr) => prev + curr, 0)
               )
-            : 0;
+            : 0; 
 
           const precioConsumoTelas = Number(
             articulo.telas
-              .map(({ _id: { precio, unidad }, cantidad }) => {
-                switch (unidad) {
+              ?.map(({ _id, cantidad }) => {
+                switch (_id?.unidad) {
                   case "kg.":
-                    return (cantidad * (precio ? precio : 0)) / 1000;
+                    return (cantidad * (_id?.precio)) / 1000;
                   case "m.":
-                    return (cantidad * precio) / 100;
+                    return (cantidad * _id?.precio) / 100;
                   default:
-                    return cantidad * precio;
+                    return cantidad * _id?.precio;
                 }
               })
               .reduce((prev, curr) => prev + curr, 0)
@@ -48,26 +48,26 @@ export default async function handler(req, res) {
 
           const precioConsumoAvios = Number(
             articulo.avios
-              .map(({ _id: { precio, unidad }, cantidad }) => {
-                switch (unidad) {
-                  case "kg.":
-                    return (cantidad * (precio ? precio : 0)) / 1000;
-                  case "m.":
-                    return (cantidad * precio) / 100;
-                  default:
-                    return cantidad * precio;
-                }
-              })
-              .reduce((prev, curr) => prev + curr, 0)
-              .toFixed(2)
+            ?.map(({ _id, cantidad }) => {
+              switch (_id?.unidad) {
+                case "kg.":
+                  return (cantidad * (_id?.precio)) / 1000;
+                case "m.":
+                  return (cantidad * _id?.precio) / 100;
+                default:
+                  return cantidad * _id?.precio;
+              }
+            })
+            .reduce((prev, curr) => prev + curr, 0)
+            .toFixed(2)
           );
 
           const precioConsumoDiseño = articulo.diseños
             ? Number(
-                articulo.diseños
-                  .map(
-                    ({ _id: { precio }, cantidad }) =>
-                      cantidad * (precio ? precio : 0)
+                articulo.diseños  
+                  ?.map(
+                    ({ _id, cantidad }) =>
+                      cantidad * (_id?.precio ? _id.precio : 0)
                   )
                   .reduce((prev, curr) => prev + curr, 0)
                   .toFixed(2)

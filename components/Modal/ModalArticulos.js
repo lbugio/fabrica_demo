@@ -36,7 +36,7 @@ export const ModalArticulos = ({
   diseñosBack,
   initialItem,
 }) => {
-  const { numero, tipo, linea, descripcion, procesos, telas, avios, diseños } =
+  const { numero, tipo, linea, descripcion, procesos=[], telas=[], avios=[], diseños=[] } =
     item;
   const nameInput = useRef(null);
 
@@ -445,7 +445,7 @@ export const ModalArticulos = ({
                                     ))}
                                   </div>
 
-                                  {procesos.map(({ cantidad, _id }, index) => {
+                                  {procesos?.map((proceso, index) => {
                                     return (
                                       <div
                                         className="grid grid-cols-2 gap-4 mt-3"
@@ -463,7 +463,7 @@ export const ModalArticulos = ({
                                               onChange={(e) =>
                                                 handleChangeProcesos(index, e)
                                               }
-                                              value={_id || ""}
+                                              value={proceso?._id || ""}
                                             >
                                               {procesosOptions}
                                             </select>
@@ -490,7 +490,7 @@ export const ModalArticulos = ({
                                               onChange={(e) =>
                                                 handleChangeProcesos(index, e)
                                               }
-                                              value={cantidad}
+                                              value={proceso?.  cantidad}
                                               className="placeholder:italic mt-1 mr-2 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                             />
                                             {errors[

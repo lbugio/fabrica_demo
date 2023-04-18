@@ -17,10 +17,10 @@ export const ModalArticulo = ({
     tipo,
     linea,
     descripcion,
-    procesos,
-    telas,
-    avios,
-    diseños,
+    procesos = [],
+    telas = [],
+    avios = [],
+    diseños = [],
     costoDirecto,
     costoAdministrativo,
     costoTotal,
@@ -28,8 +28,9 @@ export const ModalArticulo = ({
     mayorConIva,
     precioVenta,
   } = item;
+  console.log("🚀 ~ file: ModalArticulo.js:31 ~ item:", item);
 
-  const componentes = [...procesos,  ...telas, ...avios, ...diseños ];
+  const componentes = [...procesos, ...telas, ...avios, ...diseños];
 
   const printRef = useRef();
 
@@ -61,7 +62,7 @@ export const ModalArticulo = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"/>
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -94,7 +95,7 @@ export const ModalArticulo = ({
                           setItem(initialItem);
                         }}
                       >
-                        <XMarkIcon className="h-6 w-6" aria-hidden="true"/>
+                        <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                       </button>
                     </div>
                     <div className="max-w-5xl mx-auto bg-white" ref={printRef}>
@@ -174,7 +175,12 @@ export const ModalArticulo = ({
                                         >
                                           <td className="py-1 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                                             <div className="font-medium text-slate-700">
-                                              {nombre}
+                                              {nombre || (
+                                                <span className="text-red-500 italic">
+                                                  Chequear la existencia de este
+                                                  valor
+                                                </span>
+                                              )}
                                             </div>
                                           </td>
                                           <td className="hidden px-3 text-sm text-right text-slate-500 sm:table-cell">

@@ -26,13 +26,17 @@ export default async function articulosHandler(req, res) {
           { path: "avios._id", select: "precio nombre unidad" },
           { path: "diseños._id", select: "precio nombre" },
         ]);
+        console.log(
+          "🚀 ~ file: [id].js:29 ~ articulosHandler ~ articulo:",
+          articulo
+        );
 
         const precioConsumoProcesos = articulo.procesos
           ? Number(
               articulo.procesos
                 .map(
-                  ({ _id: { precio }, cantidad }) =>
-                    cantidad * (precio ? precio : 0)
+                  ({ _id, cantidad }) =>
+                    cantidad * (_id?.precio ? _id?.precio : 0)
                 )
                 .reduce((prev, curr) => prev + curr, 0)
             )
@@ -40,30 +44,30 @@ export default async function articulosHandler(req, res) {
 
         const precioConsumoTelas = Number(
           articulo.telas
-            .map(({ _id: { precio, unidad }, cantidad }) => {
-              switch (unidad) {
+            ?.map(({ _id, cantidad }) => {
+              switch (_id?.unidad) {
                 case "kg.":
-                  return (cantidad * (precio ? precio : 0)) / 1000;
+                  return (cantidad * (_id?.precio ? _id?.precio : 0)) / 1000;
                 case "m.":
-                  return (cantidad * precio) / 100;
+                  return (cantidad * _id?.precio) / 100;
                 default:
-                  return cantidad * precio;
+                  return cantidad * _id?.precio;
               }
             })
             .reduce((prev, curr) => prev + curr, 0)
             .toFixed(2)
         );
 
-        const precioConsumoAvios = Number(
+         const precioConsumoAvios = Number(
           articulo.avios
-            .map(({ _id: { precio, unidad }, cantidad }) => {
-              switch (unidad) {
+            ?.map(({ _id, cantidad }) => {
+              switch (_id?.unidad) {
                 case "kg.":
-                  return (cantidad * (precio ? precio : 0)) / 1000;
+                  return (cantidad * (_id?.precio ? _id?.precio : 0)) / 1000;
                 case "m.":
-                  return (cantidad * precio) / 100;
+                  return (cantidad * _id?.precio) / 100;
                 default:
-                  return cantidad * precio;
+                  return cantidad * _id?.precio;
               }
             })
             .reduce((prev, curr) => prev + curr, 0)
@@ -73,14 +77,14 @@ export default async function articulosHandler(req, res) {
         const precioConsumoDiseño = articulo.diseños
           ? Number(
               articulo.diseños
-                .map(
-                  ({ _id: { precio }, cantidad }) =>
-                    cantidad * (precio ? precio : 0)
+                ?.map(
+                  ({ _id, cantidad }) =>
+                    cantidad * (_id?.precio ? _id?.precio : 0)
                 )
                 .reduce((prev, curr) => prev + curr, 0)
                 .toFixed(2)
             )
-          : 0;
+          : 0; 
 
         const costoDirecto =
           precioConsumoProcesos +
@@ -96,44 +100,37 @@ export default async function articulosHandler(req, res) {
 
         const formattedArticulo = {
           ...articulo.toObject(),
-          procesos: articulo.procesos.map(
-            ({ _id: { _id, nombre, precio }, cantidad }) => ({
-              _id,
-              nombre,
-              precio,
-              cantidad,
-            })
-          ),
-          telas: articulo.telas.map(
-            ({ _id: { _id, nombre, precio, unidad }, cantidad }) => ({
-              _id,
-              nombre,
-              cantidad,
-              precio,
-              unidad,
-              unidadConsumo: unidadConsumoLookup[unidad] || "",
-            })
-          ),
-          avios: articulo.avios.map(
-            ({ _id: { _id, nombre, precio, unidad }, cantidad }) => ({
-              _id,
-              nombre,
-              cantidad,
-              precio,
-              unidad,
-              unidadConsumo: unidadConsumoLookup[unidad] || "",
-            })
-          ),
-          diseños: articulo.diseños.map(
-            ({ _id: { _id, nombre, precio, unidad }, cantidad }) => ({
-              _id,
-              nombre,
-              cantidad,
-              precio,
-              unidad,
-              unidadConsumo: unidadConsumoLookup[unidad] || "u.",
-            })
-          ),
+          procesos: articulo.procesos?.map(({ _id, cantidad }) => ({
+            _id: _id?._id,
+            nombre: _id?.nombre,
+            precio: _id?.precio,
+            cantidad,
+          })),
+
+          telas: articulo.telas?.map(({ _id, cantidad }) => ({
+            _id: _id?._id,
+            nombre: _id?.nombre,
+            precio: _id?.precio,
+            unidad: _id?.unidad,
+            cantidad,
+            unidadConsumo: unidadConsumoLookup[_id?.unidad] || "",
+          })),
+          avios: articulo.avios?.map(({ _id, cantidad }) => ({
+            _id: _id?._id,
+            nombre: _id?.nombre,
+            precio: _id?.precio,
+            unidad: _id?.unidad,
+            cantidad,
+            unidadConsumo: unidadConsumoLookup[_id?.unidad] || "",
+          })),
+          diseños: articulo.diseños?.map(({ _id, cantidad }) => ({
+            _id: _id?._id,
+            nombre: _id?.nombre,
+            precio: _id?.precio,
+            unidad: _id?.unidad,
+            cantidad,
+            unidadConsumo: unidadConsumoLookup[_id?.unidad] || "u.",
+          })),
           precioConsumoProcesos,
           precioConsumoTelas,
           precioConsumoAvios,

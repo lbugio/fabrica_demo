@@ -29,7 +29,7 @@ export const Table = ({
   const [sortDirection, setSortDirection] = useState("asc");
 
   //searchData
-   const filteredData = data.filter((row) => {
+  const filteredData = data.filter((row) => {
     return Object.values(row).some(
       (value) =>
         typeof value === "string" &&
@@ -42,14 +42,14 @@ export const Table = ({
     if (!sortColumn) return 0;
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
-  
+
     if (typeof aValue === "number" && typeof bValue === "number") {
       return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
     }
-  
+
     const aString = String(aValue).toLowerCase();
     const bString = String(bValue).toLowerCase();
-  
+
     if (sortDirection === "asc") {
       if (aString < bString) return -1;
       if (aString > bString) return 1;
@@ -60,7 +60,6 @@ export const Table = ({
       return 0;
     }
   });
-  
 
   //display de columnas
   const handleSort = useCallback(
@@ -74,7 +73,7 @@ export const Table = ({
       }
     },
     [sortColumn, sortDirection]
-  ); 
+  );
 
   const columnasMapped = useMemo(
     () =>
@@ -89,7 +88,7 @@ export const Table = ({
           {item}
         </th>
       )),
-    [columnas,  handleSort ]
+    [columnas, handleSort]
   );
 
   //paginador
@@ -100,25 +99,148 @@ export const Table = ({
   const paginatedData = sortedData.slice(
     (currentPage - 1) * pageSizeValue,
     currentPage * pageSizeValue
-  ); 
-
-  //formato fechas
-  const dateOptions = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  };
-
-  //impresion tabla
-  const printRef = useRef();
+  );
 
   //porcentaje aumento
   const porcentajeAumento = (precio, ultimoPrecio) => {
     const resultado = (precio / ultimoPrecio - 1) * 100;
     return isFinite(resultado) ? resultado.toFixed() + "%" : "0%";
   };
+
+  const memoizedPaginatedData = useMemo(() => {
+    const dateOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+
+    return paginatedData.map(
+      (
+        {
+          _id,
+          nombre,
+          numero,
+          precio,
+          unidad,
+          ultimoPrecio,
+          updatedAt,
+          costoDirecto,
+          costoAdministrativo,
+          costoTotal,
+          precioMayor,
+          mayorConIva,
+          precioVenta,
+        },
+        index
+      ) => (
+        <tr
+          key={index}
+          className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-indigo-500 hover:text-black hover:font-semibold dark:hover:bg-gray-600 px-1 font-medium"
+        >
+          <td className="px-4 py-3">
+            <div className="flex items-center">
+              <input
+                id="checkbox-table-search-1"
+                type="checkbox"
+                className="text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+              <label htmlFor="checkbox-table-search-1" className="sr-only">
+                checkbox
+              </label>
+            </div>
+          </td>
+          <td
+            scope="row"
+            className="flex items-center text-gray-900 whitespace-nowrap dark:text-white pl-3 text-base font-semibold"
+          >
+            {nombre || numero}
+          </td>
+          <td>
+            <span className="inline-block">
+              ${" "}
+              {precio ? (
+                <>
+                  {precio}
+                  {unidad && <span className="italic">/{unidad}</span>}
+                </>
+              ) : (
+                costoDirecto
+              )}
+            </span>
+          </td>
+
+          {tableName === "Articulos" ? (
+            <>
+              <td>{"$ " + costoAdministrativo}</td>
+              <td>{"$ " + costoTotal}</td>
+              <td>{"$ " + precioMayor}</td>
+              <td>{"$ " + mayorConIva}</td>
+              <td>{"$ " + precioVenta}</td>
+            </>
+          ) : null}
+
+          <td>{porcentajeAumento(precio, ultimoPrecio)}</td>
+          <td>
+            {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
+             */}{" "}
+            {`${new Date(updatedAt).toLocaleDateString(
+              "es-ES",
+              dateOptions
+            )} hs.`}
+          </td>
+          <td className="px-4 flex justify-between ">
+            {tableName == "Articulos" ? (
+              <button
+                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                onClick={() => {
+                  openFicha();
+                  setId(_id);
+                }}
+              >
+                <DocumentIcon
+                  className="h-6 w-6 text-blue-800 hover:brightness-200"
+                  aria-hidden="true"
+                />
+              </button>
+            ) : null}
+            <button
+              type="button"
+              data-modal-toggle="editUserModal"
+              className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              onClick={() => {
+                openCreateEdit();
+                setId(_id);
+              }}
+            >
+              <PencilSquareIcon
+                className="h-6 w-6 text-green-800 hover:brightness-200"
+                aria-hidden="true"
+              />
+            </button>
+            <button
+              className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              onClick={() => {
+                openDelete();
+                setId(_id);
+              }}
+            >
+              <TrashIcon
+                className="h-6 w-6 text-red-800 hover:brightness-200"
+                aria-hidden="true"
+              />
+            </button>
+          </td>
+        </tr>
+      )
+    );
+  }, [paginatedData, openCreateEdit, openDelete, openFicha, setId, tableName]);
+
+  //formato fechas
+
+  //impresion tabla
+  const printRef = useRef();
 
   return (
     <div className="overflow-x-auto relative shadow-md sm:rounded-lg w-full">
@@ -188,137 +310,15 @@ export const Table = ({
             <tbody>
               {paginatedData.length === 0 ? (
                 <tr>
-                  <td colSpan={columnasMapped.length + 1} className="text-center py-4 text-lg">
+                  <td
+                    colSpan={columnasMapped.length + 1}
+                    className="text-center py-4 text-lg"
+                  >
                     Dato no encontrado
                   </td>
                 </tr>
               ) : (
-                paginatedData.map(
-                  (
-                    {
-                      _id,
-                      nombre,
-                      numero,
-                      precio,
-                      unidad,
-                      ultimoPrecio,
-                      updatedAt,
-                      costoDirecto,
-                      costoAdministrativo,
-                      costoTotal,
-                      precioMayor,
-                      mayorConIva,
-                      precioVenta,
-                    },
-                    index
-                  ) => (
-                    <tr
-                      key={index}
-                      className="text-center bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-indigo-500 hover:text-black hover:font-semibold dark:hover:bg-gray-600 px-1 font-medium"
-                    >
-                      <td className="px-4 py-3">
-                        <div className="flex items-center">
-                          <input
-                            id="checkbox-table-search-1"
-                            type="checkbox"
-                            className="text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                          />
-                          <label
-                            htmlFor="checkbox-table-search-1"
-                            className="sr-only"
-                          >
-                            checkbox
-                          </label>
-                        </div>
-                      </td>
-                      <td
-                        scope="row"
-                        className="flex items-center text-gray-900 whitespace-nowrap dark:text-white pl-3 text-base font-semibold"
-                      >
-                        {nombre || numero}
-                      </td>
-                      <td>
-                        <span className="inline-block">
-                          ${" "}
-                          {precio ? (
-                            <>
-                              {precio}
-                              {unidad && (
-                                <span className="italic">/{unidad}</span>
-                              )}
-                            </>
-                          ) : (
-                            costoDirecto
-                          )}
-                        </span>
-                      </td>
-
-                      {tableName === "Articulos" ? (
-                        <>
-                          <td>{"$ " + costoAdministrativo}</td>
-                          <td>{"$ " + costoTotal}</td>
-                          <td>{"$ " + precioMayor}</td>
-                          <td>{"$ " + mayorConIva}</td>
-                          <td>{"$ " + precioVenta}</td>
-                        </>
-                      ) : null}
-
-                      <td>
-                        {porcentajeAumento(precio, ultimoPrecio)}
-                      </td>
-                      <td>
-                        {/*                   <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
-                         */}{" "}
-                        {`${new Date(updatedAt).toLocaleDateString(
-                          "es-ES",
-                          dateOptions
-                        )} hs.`}
-                      </td>
-                      <td className="px-4 flex justify-between ">
-                        {tableName == "Articulos" ? (
-                          <button
-                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                            onClick={() => {
-                              openFicha();
-                              setId(_id);
-                            }}
-                          >
-                            <DocumentIcon
-                              className="h-6 w-6 text-blue-800 hover:brightness-200"
-                              aria-hidden="true"
-                            />
-                          </button>
-                        ) : null}
-                        <button
-                          type="button"
-                          data-modal-toggle="editUserModal"
-                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                          onClick={() => {
-                            openCreateEdit();
-                            setId(_id);
-                          }}
-                        >
-                          <PencilSquareIcon
-                            className="h-6 w-6 text-green-800 hover:brightness-200"
-                            aria-hidden="true"
-                          />
-                        </button>
-                        <button
-                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                          onClick={() => {
-                            openDelete();
-                            setId(_id);
-                          }}
-                        >
-                          <TrashIcon
-                            className="h-6 w-6 text-red-800 hover:brightness-200"
-                            aria-hidden="true"
-                          />
-                        </button>
-                      </td>
-                    </tr>
-                  )
-                )
+                [memoizedPaginatedData]
               )}
             </tbody>
           </table>
@@ -328,14 +328,8 @@ export const Table = ({
           <p className="animate-pulse italic">No hay datos cargados</p>
         </div>
       )}
-       <Paginator
-        data={data}
-        itemsPerPage={pageSizeValue}
-        currentPage={currentPage}
-        onPageChange={(page) => setCurrentPage(page)}
-        setPageSizeValue={setPageSizeValue}
-      /> 
-      <div className="flex justify-between px-4 pt-4 pb-4 lg:px-6 text-slate-800 hover:brightness-200">
+
+      <div className="flex justify-between items-center px-4 pt-4 pb-4 lg:px-6 text-slate-800">
         <Link
           href="/"
           type="button"
@@ -344,6 +338,13 @@ export const Table = ({
           <ChevronLeftIcon className="h-6 w-6" aria-hidden="true" />
           Volver
         </Link>
+        <Paginator
+          data={data}
+          itemsPerPage={pageSizeValue}
+          currentPage={currentPage}
+          onPageChange={(page) => setCurrentPage(page)}
+          setPageSizeValue={setPageSizeValue}
+        />{" "}
         <Tooltip text="Imprimir!">
           <ReactToPrint
             trigger={() => (

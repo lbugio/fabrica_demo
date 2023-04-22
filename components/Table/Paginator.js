@@ -45,22 +45,20 @@ export const Paginator = ({
         </a>
       </div>
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm text-gray-700">
-            Mostrando{" "}
-            <span className="font-medium">
-              {(currentPage - 1) * itemsPerPage + 1}
-            </span>{" "}
-            -
-            <span className="font-medium">
-              {currentPage * itemsPerPage > data.length
-                ? data.length
-                : currentPage * itemsPerPage}
-            </span>{" "}
-            de
-            <span className="font-medium">{data.length}</span> resultados
-          </p>
-        </div>
+        <p className="text-sm text-gray-700 px-4">
+          Mostrando{" "}
+          <span className="font-medium">
+            {(currentPage - 1) * itemsPerPage + 1}
+          </span>{" "}
+          -
+          <span className="font-medium">
+            {currentPage * itemsPerPage > data.length
+              ? data.length
+              : currentPage * itemsPerPage}
+          </span>{" "}
+          de
+          <span className="font-medium">{data.length}</span> resultados
+        </p>
 
         <div className="flex items-center">
           <label
@@ -89,8 +87,7 @@ export const Paginator = ({
             className="isolate inline-flex -space-x-px rounded-md shadow-sm"
             aria-label="Pagination"
           >
-            <a
-              href="#"
+            <button
               className={`relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
                 isFirstPage ? "pointer-events-none opacity-50" : ""
               }`}
@@ -98,9 +95,8 @@ export const Paginator = ({
             >
               <span className="sr-only">Primero</span>
               <ChevronDoubleLeftIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
-            <a
-              href="#"
+            </button>
+            <button
               className={`relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
                 isFirstPage ? "pointer-events-none opacity-50" : ""
               }`}
@@ -108,15 +104,14 @@ export const Paginator = ({
             >
               <span className="sr-only">Previous</span>
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
+            </button>
             {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
 
             {pages.map((page) => {
               const isActive = currentPage === page;
               return (
-                <a
+                <button
                   key={page}
-                  href="#"
                   aria-current={isActive ? "page" : undefined}
                   className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-indigo-500 focus:z-20 focus:outline-offset-0 ${
                     isActive
@@ -126,11 +121,10 @@ export const Paginator = ({
                   onClick={() => onPageChange(page)}
                 >
                   {page}
-                </a>
+                </button>
               );
             })}
-            <a
-              href="#"
+            <button
               className={`relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
                 isLastPage ? "pointer-events-none opacity-50" : ""
               }`}
@@ -138,9 +132,8 @@ export const Paginator = ({
             >
               <span className="sr-only">Next</span>
               <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
-            <a
-              href="#"
+            </button>
+            <button
               className={`elative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
                 isLastPage ? "pointer-events-none opacity-50" : ""
               }`}
@@ -148,7 +141,7 @@ export const Paginator = ({
             >
               <span className="sr-only">Next</span>
               <ChevronDoubleRightIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
+            </button>
           </nav>
         </div>
       </div>

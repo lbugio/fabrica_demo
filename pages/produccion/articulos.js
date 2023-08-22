@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { Table } from "components/Table/Table";
+import { BasicTable } from "components/Table/BasicTable";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalArticulos } from "components/Modal/ModalArticulos";
 import { ModalArticulo } from "components/Modal/ModalArticulo";
@@ -20,7 +21,6 @@ export default function Articulos({
   aviosBack,
   diseñosBack,
 }) {
-
   const { planchadoId, embolsadoId, terminadoId } = procesosBack.reduce(
     (acc, proceso) => {
       if (proceso.nombre === "Planchado") {
@@ -37,30 +37,35 @@ export default function Articulos({
     {}
   );
 
-  const { etiquetaId, cartonId, bolsaId } = aviosBack.reduce(
-    (acc, avio) => {
-      if (avio.nombre === "Etiqueta composición") {
-        return { ...acc, etiquetaId: avio._id };
-      }
-      if (avio.nombre === "Cartón Colgante") {
-        return { ...acc, cartonId: avio._id };
-      }
-      if (avio.nombre === "Bolsa PP 35x45") {
-        return { ...acc, bolsaId: avio._id };
-      }
-      return acc;
-    },
-    {}
-  );
+  const { etiquetaId, cartonId, bolsaId } = aviosBack.reduce((acc, avio) => {
+    if (avio.nombre === "Etiqueta composición") {
+      return { ...acc, etiquetaId: avio._id };
+    }
+    if (avio.nombre === "Cartón Colgante") {
+      return { ...acc, cartonId: avio._id };
+    }
+    if (avio.nombre === "Bolsa PP 35x45") {
+      return { ...acc, bolsaId: avio._id };
+    }
+    return acc;
+  }, {});
 
   const initialItem = {
     numero: "",
     tipo: "",
     descripcion: "",
     linea: "",
-    procesos: [{ _id: planchadoId, cantidad: "1" }, { _id: embolsadoId, cantidad: "1" },{ _id: terminadoId, cantidad: "1" } ],
+    procesos: [
+      { _id: planchadoId, cantidad: "1" },
+      { _id: embolsadoId, cantidad: "1" },
+      { _id: terminadoId, cantidad: "1" },
+    ],
     telas: [],
-    avios: [{ _id: etiquetaId, cantidad: "1" }, { _id: cartonId, cantidad: "1" },{ _id: bolsaId, cantidad: "1" } ],
+    avios: [
+      { _id: etiquetaId, cantidad: "1" },
+      { _id: cartonId, cantidad: "1" },
+      { _id: bolsaId, cantidad: "1" },
+    ],
     diseños: [],
   };
 
@@ -280,6 +285,8 @@ export default function Articulos({
 
   return (
     <>
+      {/*       <BasicTable />
+       */}{" "}
       <Table
         tableName="Articulos"
         columnas={columnas}
@@ -292,7 +299,6 @@ export default function Articulos({
         laoderImage={laoderImage}
         setIsLoading={setIsLoading}
       />
-
       <ModalArticulos
         createEdit={createEdit}
         errors={errors}
@@ -328,7 +334,6 @@ export default function Articulos({
         handleBlur={handleBlur}
         initialItem={initialItem}
       />
-
       <ModalDelete
         confirm={confirm}
         setConfirm={setConfirm}
@@ -339,7 +344,6 @@ export default function Articulos({
         setItem={setItem}
         initialItem={initialItem}
       />
-
       <Notification
         setShowNotification={setShowNotification}
         showNotification={showNotification}
@@ -384,13 +388,7 @@ export const getServerSideProps = async () => {
     "Accíón",
   ];
 
-  const lineas = [
-    "Bebe",
-    "Niño",
-    "Adulto"
-  ];
-
-
+  const lineas = ["Bebe", "Niño", "Adulto"];
 
   return {
     props: {
@@ -400,7 +398,7 @@ export const getServerSideProps = async () => {
       aviosBack,
       diseñosBack,
       columnas,
-      lineas
+      lineas,
     },
   };
 };

@@ -28,7 +28,6 @@ export const ModalArticulo = ({
     mayorConIva,
     precioVenta,
   } = item;
-  console.log("🚀 ~ file: ModalArticulo.js:31 ~ item:", item);
 
   const componentes = [...procesos, ...telas, ...avios, ...diseños];
 

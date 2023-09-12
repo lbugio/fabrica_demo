@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 import { Table } from "components/Table/Table";
-import { BasicTable } from "components/Table/BasicTable";
 import { ModalDelete } from "components/Modal/ModalDelete";
 import { ModalArticulos } from "components/Modal/ModalArticulos";
 import { ModalArticulo } from "components/Modal/ModalArticulo";
@@ -285,8 +284,6 @@ export default function Articulos({
 
   return (
     <>
-      {/*       <BasicTable />
-       */}{" "}
       <Table
         tableName="Articulos"
         columnas={columnas}
